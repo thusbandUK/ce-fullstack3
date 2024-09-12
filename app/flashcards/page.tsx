@@ -1,6 +1,7 @@
 //"use client";
 import * as jsonArray from '../lib/flashcard-seed-data.json';
 import FlashcardPresentation from '../ui/dashboard/flashcards';
+import DOMPurify from "isomorphic-dompurify";
 
 //import { Interweave, Markup } from "interweave"
 

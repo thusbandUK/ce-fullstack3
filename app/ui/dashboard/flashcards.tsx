@@ -1,4 +1,6 @@
 import { fetchFlashcards } from "@/app/lib/data"
+import DOMPurify from "isomorphic-dompurify";
+import IndividualFlashcard from "./individual-flashcard/IndividualFlashcard";
 
 export default async function FlashcardPresentation() {
 
@@ -12,14 +14,15 @@ export default async function FlashcardPresentation() {
         console.log(x.multiple_choice_responses);
         console.log(x.checklist);
     })
-
+   // const clean = DOMPurify.sanitize(dirtyString);
     
 return (
     <div>
         {flashcardData.map((flashcard) => (
             <div key={flashcard.id} className="flex flex-col items-center gap-2">
-              <p>{flashcard.question}</p>
-              <p>{flashcard.definition}</p>
+              <IndividualFlashcard 
+              flashcardData={flashcard}
+              />              
               {/*<p>{flashcard.multiple_choice_responses}</p>
               <p>{flashcard.checklist}</p>*/}
             </div>
