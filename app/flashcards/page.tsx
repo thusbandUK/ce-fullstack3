@@ -2,33 +2,58 @@
 import * as jsonArray from '../lib/flashcard-seed-data.json';
 import FlashcardPresentation from '../ui/dashboard/flashcards';
 import DOMPurify from "isomorphic-dompurify";
+//import { createContext, useContext, useState } from 'react';
+//import { Flashcard } from "@/app/lib/definitions";
+import { fetchFlashcards } from '../lib/data';
 
-//import { Interweave, Markup } from "interweave"
+//type ThemeContextType = "light" | "dark";
 
-export default function Page() {
-    const egHTML = "<p>Hello, I am a paragraph with <sup>superscript</sup></p>";
-    //console.log(json);
-    //const parsedJson: object[] = JSON.parse(jsonArray);
-    //const parsedJson = JSON.parse(jsonArray[0])
-    //console.log(JSON.stringify(jsonArray[0]))
-    /*jsonArray.map(x => {
-        console.log(x.id);
-    })*/
+//export const ThemeContext = createContext<ThemeContextType>("light");
+
+//export const FlashcardContext = createContext<Flashcard | null>(null);
+
+export default async function Page() {
+    //need to figure out how to avoid using "any" all the time
+    //const [stateFlashcardData, setStateFlashcardData] = useState<any>([]);
+
+    //const [theme, setTheme] = useState<ThemeContextType>("dark");
+    //const [theme, setTheme] = useState<string>("light");
+    //fetch data from server
+    const flashcardData = await fetchFlashcards();
+
+    //assign database data to state
+    //setStateFlashcardData(flashcardData);
+
+    //setTheme("dark");
+    //create context - this enables it either to be null or to have a type that matches the imported Flashcard type
+    //const FlashcardContext = createContext<Flashcard | null>(null);
+    //const FlashcardContext = createContext<any>("light");
 
     //const newArray = jsonArray;
+    //{/*<FlashcardContext.Provider value={{ stateFlashcardData }}>*/}
 
     return (
-        <main>
+        <FlashcardPresentation           
+        />        
+    )
+}
+
+/*
+<ThemeContext.Provider value={theme}>
+            <FlashcardContext.Provider value={stateFlashcardData}>
+                <FlashcardPresentation />
+            </FlashcardContext.Provider>
+        </ThemeContext.Provider>
+<div>
             <p>Welcome to flashcards</p>
-            <FlashcardPresentation />
-           
+            <ThemeContext.Provider value={theme}>
+              <FlashcardPresentation />
+            </ThemeContext.Provider>
              {/*<Interweave content="This string contains <b>HTML</b> and will safely be rendered!" />;
             
             <Interweave
               content={egHTML}
             />            
-            <Markup content="This string <b>contains</b> HTML." />*/}
-        </main>
-
-    )
-}
+            <Markup content="This string <b>contains</b> HTML." />*//*}
+            </div>
+*/
