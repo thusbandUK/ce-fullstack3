@@ -21,6 +21,10 @@ export default async function Page() {
     //fetch data from server
     const flashcardData = await fetchFlashcards();
 
+    if (!flashcardData || flashcardData.length === 0) {        
+      return <p className="mt-4 text-gray-400">No data available.</p>;
+    }
+
     //assign database data to state
     //setStateFlashcardData(flashcardData);
 
@@ -33,7 +37,8 @@ export default async function Page() {
     //{/*<FlashcardContext.Provider value={{ stateFlashcardData }}>*/}
 
     return (
-        <FlashcardPresentation           
+        <FlashcardPresentation
+          flashcardData={flashcardData}
         />        
     )
 }
