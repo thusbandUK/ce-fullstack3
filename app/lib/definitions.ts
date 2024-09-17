@@ -2,16 +2,44 @@
 // It describes the shape of the data, and what data type each property should accept.
 // For simplicity of teaching, we're manually defining these types.
 // However, these types are generated automatically if you're using an ORM such as Prisma.
+
+// create a new type HTMLElementEvent that has a target of type you pass
+// type T must be a HTMLElement (e.g. HTMLTextAreaElement extends HTMLElement)
+
+//MouseEventHandler
+export type customMouseEventHandler<T extends React.MouseEventHandler> = Event & {
+  target: T;
+  currentTarget: T;
+}
+
+export type HTMLElementEvent<T extends HTMLElement> = Event & {
+  target: T; 
+  // probably you might want to add the currentTarget as well
+  currentTarget: T;
+}
+
+export type MCQData = {
+  A: string,
+  B: string,
+  C: string,
+  D: string
+}
+
+export type topic = {  
+  OCRA: string
+}
+
+//these all said string before
 export type Flashcard = {
   id: string;
   definition: string;
   question: string;
   name: string;
-  multiple_choice_responses: string;
+  multiple_choice_responses: MCQData;
   correct_answer: string;
-  checklist: string;
-  examboards: string;
-  topic: string;
+  checklist: string[];
+  examboards: string[];
+  topic: topic;
 };
 
 /*

@@ -1,34 +1,22 @@
 import React from 'react';
-import { Flashcard } from '@/app/lib/definitions';
+import { Flashcard, MCQData, HTMLElementEvent, customMouseEventHandler } from '@/app/lib/definitions';
 
-export default function MultipleChoiceQuestion(props: any) {
+export default function MultipleChoiceQuestion(
+    {questionBundle, handleQuestionClick,}: 
+    {questionBundle: Flashcard; handleQuestionClick: React.MouseEventHandler<HTMLDivElement>}
+) {
 
-    /*
-    
-    {questionBundle}: {questionBundle: Flashcard},
-    {handleQuestionClick}: {handleQuestionClick: any}
-
-
-    */
-    //{handleQuestionClick: (event: string)}
-    //if (props){
-    const {name, multiple_choice_responses: multipleChoiceResponses, question} = props.questionBundle;
-//}
-    //{questionBundle}: {questionBundle: Flashcard}
-    //console.log(props);
-    //{questionBundle, handleQuestionClick}: {questionBundle: Flashcard}
-
+    const {name, multiple_choice_responses: multipleChoiceResponses, question} = questionBundle;
 
     return (
-        <div>
-            {/*<p>I am the multiple choice question component</p>*/}
+        <div>           
             <div>                
                     <h2>{question}</h2>
                     
-                   {Object.keys(multipleChoiceResponses).map((MCQ) => (
-                     <div onClick={props.handleQuestionClick} key={MCQ} id={MCQ} style={{cursor:'pointer'}}>
+                   {Object.keys(multipleChoiceResponses as MCQData).map((MCQ: string) => (
+                     <div onClick={handleQuestionClick} key={MCQ} id={MCQ} style={{cursor:'pointer'}}>
                         <p>{MCQ}</p>                        
-                        <p>{multipleChoiceResponses[MCQ]}</p>
+                        <p>{multipleChoiceResponses[MCQ as keyof MCQData]}</p>
                     </div>
                     ))}
                 

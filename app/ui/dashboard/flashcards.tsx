@@ -3,11 +3,12 @@
 import { fetchFlashcards } from "@/app/lib/data"
 import DOMPurify from "isomorphic-dompurify";
 import IndividualFlashcard from "./individual-flashcard/IndividualFlashcard";
-import { createContext, useContext, useState } from 'react';
+import { createContext, MouseEventHandler, useContext, useState } from 'react';
 import { Flashcard } from "@/app/lib/definitions";
 //import { ThemeContext } from "@/app/flashcards/page";
 import MultipleChoiceQuestion from "./multipleChoiceQuestion";
 import Response from "./response";
+import { HTMLElementEvent, customMouseEventHandler } from "@/app/lib/definitions";
 
 export default function FlashcardPresentation({flashcardData}: {flashcardData: Flashcard[]}) {
 
@@ -38,7 +39,6 @@ export default function FlashcardPresentation({flashcardData}: {flashcardData: F
     //OBSOLETE? intended to store the user's written response, but now logged in Redux state
     const [writtenResponse, setWrittenResponse] = useState(null);
 
-    console.log(flashcardData[0]);
     /*
     Ask question initiates a set of questions, it will work through all of the questions in the stated array
     */
@@ -144,20 +144,19 @@ export default function FlashcardPresentation({flashcardData}: {flashcardData: F
       }
       //increments count of question attempts
       setCount(count+1);
-      setResponse("");            
-          return askQuestion();
+      //setResponse("");            
+          //return askQuestion();
       //sets a timer so user has time to read success message before next question
-      /*setTimeout(() => {
+      setTimeout(() => {
           setResponse("");            
           return askQuestion();
-      }, [500]);*/
+      }, 500);
   }
 
   //event listener passes div id for clicked question to the answerQuestion function
-  const handleQuestionClick = (event: Event) => {
-    console.log(event.currentTarget.id)
-    return answerQuestion(event.currentTarget.id);
-}  
+  const handleQuestionClick = (event: React.MouseEvent<HTMLDivElement>) => {     
+    return answerQuestion(event.currentTarget.id);    
+  }  
     
 return (
   
