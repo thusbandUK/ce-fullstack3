@@ -124,10 +124,14 @@ export default function FlashcardPresentation({flashcardData}: {flashcardData: F
         const marksOutOf = harvestAssessmentData(assessmentData);
         return setResponse(`Great job! ${completeSet.length} multiple choice questions answered correctly in ${count} attempts and in ${timeElapsed} seconds and ${marksOutOf.correctAnswers} marks out of ${marksOutOf.maximumMark} in written response Woop!`);
     }
+    console.log('remainingWrittenQuestions...')
+    console.log(remainingWrittenQuestions);
     //a random number is generated to select at random from one of the remainingNonRecent questions
     let randomNumber = Math.floor(Math.random() * remainingWrittenQuestions.length);
+    console.log(`random number: ${randomNumber}`);
     let selectedCard = remainingWrittenQuestions[randomNumber];
-    setWrittenFlashcard(selectedCard);        
+    console.log(`selectedCard: ${selectedCard}`)
+    setWrittenFlashcard(selectedCard);
     //setCurrentQuestion(flashcards[flashcard]);
     return
 }
@@ -141,7 +145,9 @@ export default function FlashcardPresentation({flashcardData}: {flashcardData: F
 }
 
 const handleWrittenClick = () => {
-    //function creates an area and helps to create a context
+    //function creates an array and helps to create a context
+    console.log('flashcardData...')
+    console.log(flashcardData);
     
     let arrayOfResponsesInitiator: assessedResponse[] = [];
     completeSet.forEach((x: number) => {
@@ -156,7 +162,8 @@ const handleWrittenClick = () => {
             }
         })        
     })
-    //console.log(arrayOfResponsesInitiator);
+    console.log("arrayOfResponsesInitiator...");
+    console.log(arrayOfResponsesInitiator);
     setResponseAssessment(arrayOfResponsesInitiator);
     
     return askWrittenResponseQuestion();
