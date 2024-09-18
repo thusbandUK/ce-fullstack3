@@ -1,11 +1,26 @@
 import React from 'react';
 import { ResponseAssessmentContext } from './flashcards';
 import { useContext } from "react";
-import { assessedResponse } from '@/app/lib/definitions';
+import { assessedResponse, Flashcard } from '@/app/lib/definitions';
 
 const WrittenFlashcard = (props: any) => {    
 
+  /*
+  {
+  question, 
+  //questionId,
+  ...props
+
+}: {
+  question: Flashcard,
+  questionId: number
+
+}
+  */
+  //question
+//props: any
     const {name, checklist, question, id: questionId} = props.question;
+    //const {name, checklist,  id: questionId} = props.question;
 
     const responseAssessment = useContext(ResponseAssessmentContext);    
    

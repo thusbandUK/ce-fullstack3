@@ -124,15 +124,14 @@ export default function FlashcardPresentation({flashcardData}: {flashcardData: F
         const marksOutOf = harvestAssessmentData(assessmentData);
         return setResponse(`Great job! ${completeSet.length} multiple choice questions answered correctly in ${count} attempts and in ${timeElapsed} seconds and ${marksOutOf.correctAnswers} marks out of ${marksOutOf.maximumMark} in written response Woop!`);
     }
-    console.log('remainingWrittenQuestions...')
-    console.log(remainingWrittenQuestions);
+    
     //a random number is generated to select at random from one of the remainingNonRecent questions
     let randomNumber = Math.floor(Math.random() * remainingWrittenQuestions.length);
-    console.log(`random number: ${randomNumber}`);
+    
     let selectedCard = remainingWrittenQuestions[randomNumber];
-    console.log(`selectedCard: ${selectedCard}`)
+    
     setWrittenFlashcard(selectedCard);
-    //setCurrentQuestion(flashcards[flashcard]);
+    
     return
 }
 
