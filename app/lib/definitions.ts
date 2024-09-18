@@ -8,6 +8,7 @@
 
 export type assessedResponse = {
   id: number;
+  flashcardDataIndex: number;  
   response: string;
   checkedPoints: {
     W: boolean;

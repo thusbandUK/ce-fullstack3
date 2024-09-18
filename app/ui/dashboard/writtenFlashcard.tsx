@@ -3,6 +3,24 @@ import { ResponseAssessmentContext } from './flashcards';
 import { useContext } from "react";
 import { assessedResponse, FlashcardData } from '@/app/lib/definitions';
 
+//takes the index position of the checklist array and converts it into a letter, to match the corresponding keys
+    //in the assessedResponse checklist (in ResponseAssessmentContext)
+    export const numericalIndexToLetter = (arrayIndex: number) => {
+      switch (arrayIndex){
+        case 0:
+          return "W";          
+        case 1: 
+          return "X";          
+        case 2:
+          return "Y";          
+        case 3:
+          return "Z";
+        default:
+          return "W";
+      }
+      //return
+    }
+
 const WrittenFlashcard = (
   {
     oneFlashcardData,
@@ -32,21 +50,7 @@ const WrittenFlashcard = (
       return x !== null;
     })
 
-    //takes the index position of the checklist array and converts it into a letter, to match the corresponding keys
-    //in the assessedResponse checklist (in ResponseAssessmentContext)
-    const numericalIndexToLetter = (arrayIndex: number) => {
-      switch (arrayIndex){
-        case 0:
-          return "W";          
-        case 1: 
-          return "X";          
-        case 2:
-          return "Y";          
-        case 3:
-          return "Z";        
-      }
-      return
-    }
+    
     
     //harvests answer written into the form field and dispatches it to ResponseAssessmentContext
     const handleResponseChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {

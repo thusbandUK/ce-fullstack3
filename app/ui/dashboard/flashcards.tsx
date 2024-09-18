@@ -145,6 +145,7 @@ const handleWrittenClick = () => {
     completeSet.forEach((x: number) => {
         arrayOfResponsesInitiator.push({
             id: Number(allFlashcardsData[x].id),
+            flashcardDataIndex: x,
             response: "",
             checkedPoints: {
               W: false,
@@ -261,9 +262,12 @@ return (
             }
 
             { response ? 
-            <Response               
-              summary={response}
-            />  
+            <ResponseAssessmentContext.Provider value={responseAssessment}>
+              <Response               
+                summary={response}
+                allFlashcardsData={allFlashcardsData}
+              />
+            </ResponseAssessmentContext.Provider>
             : null}
 
             { writtenFlashcard === -1 ? 
@@ -271,11 +275,9 @@ return (
             : 
             <ResponseAssessmentContext.Provider value={responseAssessment}>
               <WrittenFlashcard
-                oneFlashcardData={allFlashcardsData[writtenFlashcard]}
-                
+                oneFlashcardData={allFlashcardsData[writtenFlashcard]}                
                 submitResponse={processResponse}            
-                writtenStage={writtenStage}
-                
+                writtenStage={writtenStage}                
                 submitChecklist={handleSubmitChecklist}
               />
             </ResponseAssessmentContext.Provider>

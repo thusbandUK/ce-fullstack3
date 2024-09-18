@@ -1,45 +1,40 @@
 import React from 'react';
+import { ResponseAssessmentContext } from './flashcards';
+import { useContext } from "react";
+import { assessedResponse, FlashcardData } from '@/app/lib/definitions';
+import ChecklistFeedback from './checklistFeedback';
 
-const Response = ({summary}: {summary: string}) => {
-
-    //const { assessmentData, summary } = props;
+const Response = (
+    {
+        summary,
+        allFlashcardsData
+    }: 
+    {
+        summary: string,
+        allFlashcardsData: FlashcardData[]
+    }
+) => {
     
-
+    const responseAssessment = useContext(ResponseAssessmentContext);
 
     return (
         <div>
             <p>{summary}</p>
-            {/*{Object.keys(assessmentData).map((x) => {
+            {responseAssessment.map((x: assessedResponse) => {
 
                 return (
                     <div>
-                      <p>Question {x}</p>
-                      <p>{assessmentData[x].question}</p>
+                      <p>Question: </p>
+                      <p>{allFlashcardsData[x.flashcardDataIndex].question}</p>
                       <p>Response</p>
-                      <p>{assessmentData[x].response}</p>
-                      <p>Correct</p>
-                      {assessmentData[x].checklist.map((y) => {
-                        if (y.checked === true){
-                            return (
-                                <div>
-                                    {y.markingPoint}
-                                </div>
-                            )
-                        }
-                      })}
-                      <p>Not included</p>
-                      {assessmentData[x].checklist.map((y) => {
-                        if (y.checked === false){
-                            return (
-                                <div>
-                                    {y.markingPoint}
-                                </div>
-                            )
-                        }
-                      })}
+                      <p>{x.response}</p>
+                      <ChecklistFeedback
+                        responseAssessment={x}
+                        allFlashcardsData={allFlashcardsData}                      
+                      />                      
                     </div>
                 )
-            })}*/}
+            })}
 
         </div>
     )
