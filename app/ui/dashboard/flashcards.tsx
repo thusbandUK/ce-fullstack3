@@ -42,8 +42,33 @@ export default function FlashcardPresentation({allFlashcardsData}: {allFlashcard
 
     const assessmentData: string[] = [];
 
-    const harvestAssessmentData = (data: string[]) => {
-        return 'harvested data';
+    //const harvestAssessmentData = (data: string[]) => {
+        //return 'harvested data';
+    //}
+    function harvestAssessmentData(){
+        //let questionNumbers = Object.keys(feedbackObject);
+        let maximumMark = 0;
+        let correctAnswers = 0;
+        responseAssessment.forEach((a) => {
+            Object.keys(a.checkedPoints).forEach((b: string)=> {
+                maximumMark ++;
+                if (a.checkedPoints[b as keyof assessedResponse["checkedPoints"]]){
+                    correctAnswers ++;
+                }
+            })
+        })
+        return {correctAnswers: correctAnswers, maximumMark: maximumMark};
+
+
+        /*questionNumbers.forEach((x)=> {
+            feedbackObject[x].checklist.forEach((y) => {
+                maximumMark ++;
+                if (y.checked === true){
+                    correctAnswers ++;
+                }                
+            })            
+        })
+        return {correctAnswers: correctAnswers, maximumMark: maximumMark};*/
     }
     /*
     Ask question initiates a set of questions, it will work through all of the questions in the stated array
@@ -113,13 +138,14 @@ export default function FlashcardPresentation({allFlashcardsData}: {allFlashcard
     [ADD CODE HERE ABOUT THE TOTAL MARKS FOR WRITTEN RESPONSE]
     */
     if (remainingWrittenQuestions.length === 0){
-        const finishingTime = Date.now();
-        const timeElapsed = (finishingTime - startTime)/1000;
+        //const finishingTime = Date.now();
+        //const timeElapsed = (finishingTime - startTime)/1000;
+        //resets the question in hand to -1 to remove the WrittenFlashcard component
         setWrittenFlashcard(-1);
-        const marksOutOf = harvestAssessmentData(assessmentData);
-        return setResponse("Finished, great job!");
-        //modify the below to remove the problems (links to harvestAssessmentData)
-        //return setResponse(`Great job! ${completeSet.length} multiple choice questions answered correctly in ${count} attempts and in ${timeElapsed} seconds and ${marksOutOf.correctAnswers} marks out of ${marksOutOf.maximumMark} in written response Woop!`);
+        //iterates through the assessment data to calculate how many ticks they got out of a possible total
+        const marksHarvest = harvestAssessmentData();
+        //returns a response summarising performance
+        return setResponse(`Great job!  ${marksHarvest.correctAnswers} marks out of ${marksHarvest.maximumMark} in written response. See your points to work on below.`);
     }
     
     //a random number is generated to select at random from one of the remainingNonRecent questions
@@ -132,14 +158,20 @@ export default function FlashcardPresentation({allFlashcardsData}: {allFlashcard
     return
 }
 
+//this function initiates the multiple choice format of questions
   const handleClick = () => {
     const startingTime = Date.now();
     setStartTime(startingTime);    
     return askQuestion();
 }
 
+//this function initiates the written response format of question
 const handleWrittenClick = () => {
-    //function creates an array and helps to create a context    
+    //function creates an array of objects in which assessment data will be stored, then passes it to state to 
+    //create a context which can be used in children components
+    
+    //resets response statement
+    setResponse("");
     
     let arrayOfResponsesInitiator: assessedResponse[] = [];
     completeSet.forEach((x: number) => {
@@ -210,8 +242,7 @@ const handleWrittenClick = () => {
       }
       //increments count of question attempts
       setCount(count+1);
-      //setResponse("");            
-          //return askQuestion();
+      
       //sets a timer so user has time to read success message before next question
       setTimeout(() => {
           setResponse("");            
@@ -247,29 +278,27 @@ return (
   
     <div>
       <p>Flashcards presentation page</p>
-            <button onClick={handleClick}>Click for question</button>
-            <button onClick={handleWrittenClick}>Click for written response question</button>
-            <p>Question: {flashcard}</p>
+
+            { (flashcard !== -1) || (writtenFlashcard !== -1) ?
+            null:
+            <div>
+              <button onClick={handleClick}>Click to answer using multiple choice responses</button>
+              <button onClick={handleWrittenClick}>Click to answer with your own written responses</button>
+            </div>        
+            }
             
+            
+            {/*Renders a multiple choice question*/}
             { flashcard === -1 ? 
             null
             :
             <MultipleChoiceQuestion 
-            oneFlashcardData={allFlashcardsData[flashcard]}            
-            handleQuestionClick={handleQuestionClick}
-            />              
-             
+              oneFlashcardData={allFlashcardsData[flashcard]}            
+              handleQuestionClick={handleQuestionClick}
+            />             
             }
 
-            { response ? 
-            <ResponseAssessmentContext.Provider value={responseAssessment}>
-              <Response               
-                summary={response}
-                allFlashcardsData={allFlashcardsData}
-              />
-            </ResponseAssessmentContext.Provider>
-            : null}
-
+            {/*Renders a written response question */}
             { writtenFlashcard === -1 ? 
             null
             : 
@@ -282,17 +311,17 @@ return (
               />
             </ResponseAssessmentContext.Provider>
             }
-
-      
-        {/*{flashcardData.map((flashcard) => (
-            <div key={flashcard.id} className="flex flex-col items-center gap-2">
-              <IndividualFlashcard 
-              flashcardData={flashcard}
-              />              
-              {/*<p>{flashcard.multiple_choice_responses}</p>
-              <p>{flashcard.checklist}</p>*//*}
-            </div>
-          ))}*/}
+            
+            {/*Renders the response once all flashcards completed */}
+            { response ? 
+            <ResponseAssessmentContext.Provider value={responseAssessment}>
+              <Response               
+                summary={response}
+                allFlashcardsData={allFlashcardsData}
+              />
+            </ResponseAssessmentContext.Provider>
+            : null}
+        
     </div>
     
 )
