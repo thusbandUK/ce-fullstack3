@@ -8,7 +8,10 @@ import { Flashcard } from "@/app/lib/definitions";
 //import { ThemeContext } from "@/app/flashcards/page";
 import MultipleChoiceQuestion from "./multipleChoiceQuestion";
 import Response from "./response";
-import { HTMLElementEvent, customMouseEventHandler } from "@/app/lib/definitions";
+import { HTMLElementEvent, customMouseEventHandler, assessedResponse } from "@/app/lib/definitions";
+import WrittenFlashcard from "./writtenFlashcard";
+
+export const ResponseAssessmentContext = createContext<assessedResponse[]>([]);
 
 export default function FlashcardPresentation({flashcardData}: {flashcardData: Flashcard[]}) {
 
@@ -16,13 +19,13 @@ export default function FlashcardPresentation({flashcardData}: {flashcardData: F
     //for MCQ
     const [flashcard, setFlashcard] = useState<number>(-1);
     //for written response
-    const [writtenFlashcard, setWrittenFlashcard] = useState(null);
+    const [writtenFlashcard, setWrittenFlashcard] = useState<number>(-1);
     //this sets the feedback response given by the app to the user, once they have completed everything
     const [response, setResponse] = useState<string>("");
     //this stores the question numbers of correctly answered multiple choice questions
     const [correctlyAnsweredQuestions, setCorrectlyAnsweredQuestions] = useState<number[]>([]);
     //this stores the question numbers of questions answered with a written response
-    const [answeredWrittenQuestions, setAnsweredWrittenQuestions] = useState([]);
+    const [answeredWrittenQuestions, setAnsweredWrittenQuestions] = useState<number[]>([]);
     //this counts the number of attempts required by the user to answer every multiple choice question correctly
     const [count, setCount] = useState(1);
     //this stores the three most recently attempted questions that the user got wrong (see queueQuestion function below)
@@ -37,8 +40,18 @@ export default function FlashcardPresentation({flashcardData}: {flashcardData: F
     //and "feedback", when user checks off their correct answers
     const [writtenStage, setWrittenStage] = useState("response");
     //OBSOLETE? intended to store the user's written response, but now logged in Redux state
-    const [writtenResponse, setWrittenResponse] = useState(null);
+    const [writtenResponse, setWrittenResponse] = useState<string | null>(null);
+    //state management for written responses and checklist of points made (assessment data)
+    const [responseAssessment, setResponseAssessment] = useState<assessedResponse[]>([]);
+    
 
+    //console.log(writtenFlashcard);
+
+    const assessmentData: string[] = [];
+
+    const harvestAssessmentData = (data: string[]) => {
+        return 'harvested data';
+    }
     /*
     Ask question initiates a set of questions, it will work through all of the questions in the stated array
     */
@@ -89,10 +102,64 @@ export default function FlashcardPresentation({flashcardData}: {flashcardData: F
       return         
   }
 
+  function askWrittenResponseQuestion(){
+        
+    let remainingWrittenQuestions: number[] = [];
+
+    //filters the correctlyAnsweredQuestions state array and pushes any questions yet to be correctly answered to 
+    //the remaining questions array
+    completeSet.forEach((x)=>{
+        if (!answeredWrittenQuestions.includes(x)){
+            return remainingWrittenQuestions.push(x);
+        }
+    })        
+    //if there are no remaining questions, the time to complete the set is computed and delivered as part of a success message
+    /*
+    [ADD CODE HERE ABOUT THE TOTAL MARKS FOR WRITTEN RESPONSE]
+    */
+    if (remainingWrittenQuestions.length === 0){
+        const finishingTime = Date.now();
+        const timeElapsed = (finishingTime - startTime)/1000;
+        setWrittenFlashcard(-1);
+        const marksOutOf = harvestAssessmentData(assessmentData);
+        return setResponse(`Great job! ${completeSet.length} multiple choice questions answered correctly in ${count} attempts and in ${timeElapsed} seconds and ${marksOutOf.correctAnswers} marks out of ${marksOutOf.maximumMark} in written response Woop!`);
+    }
+    //a random number is generated to select at random from one of the remainingNonRecent questions
+    let randomNumber = Math.floor(Math.random() * remainingWrittenQuestions.length);
+    let selectedCard = remainingWrittenQuestions[randomNumber];
+    setWrittenFlashcard(selectedCard);        
+    //setCurrentQuestion(flashcards[flashcard]);
+    return
+}
+
   const handleClick = () => {
     const startingTime = Date.now();
     setStartTime(startingTime);
+    console.log('start time...')
+    console.log(startTime);
     return askQuestion();
+}
+
+const handleWrittenClick = () => {
+    //function creates an area and helps to create a context
+    
+    let arrayOfResponsesInitiator: assessedResponse[] = [];
+    completeSet.forEach((x: number) => {
+        arrayOfResponsesInitiator.push({
+            id: Number(flashcardData[x].id),
+            response: "",
+            checkedPoints: {
+              W: false,
+              X: false,
+              Y: false,
+              Z: false
+            }
+        })        
+    })
+    //console.log(arrayOfResponsesInitiator);
+    setResponseAssessment(arrayOfResponsesInitiator);
+    
+    return askWrittenResponseQuestion();
 }
   /*
     Queue question logs the three most recent incorrect answers so that the same question is only ever asked twice in a row once
@@ -156,14 +223,42 @@ export default function FlashcardPresentation({flashcardData}: {flashcardData: F
   //event listener passes div id for clicked question to the answerQuestion function
   const handleQuestionClick = (event: React.MouseEvent<HTMLDivElement>) => {     
     return answerQuestion(event.currentTarget.id);    
-  }  
+  }
+  
+  //used to submit written response, now seems unnecessary
+  /*
+  const handleEnteredValue = (event) => {
+    //console.log(event.target.value);
+    return setEnteredValue(event.target.value)
+}*/
+
+//this removes the question and input box and replaces it with the user's response and an assessment checklist to tick off
+const processResponse = () => {
+    console.log("process response called");
+    console.log(responseAssessment);
+    return setWrittenStage("feedback");
+}
+
+const handleSubmitChecklist = (event) => {
+    //there is a feedback / response toggle that alternately shows either the flashcard or the assessment checklist, this
+    //effectively calls teh next flashcard
+    setWrittenStage("response");
+    //this creates a mutable copy of the answeredWrittenQuestions (an array of the numbers of the questions already answered)
+    let updatedAnsweredQuestionsArray = answeredWrittenQuestions;
+    //pushes in the id of the question just answered
+    updatedAnsweredQuestionsArray.push(writtenFlashcard);
+    //updates the state with the new array including all the questions answered
+    setAnsweredWrittenQuestions(updatedAnsweredQuestionsArray);
     
+    return askWrittenResponseQuestion();
+}
+
 return (
   
     <div>
       <p>Flashcards presentation page</p>
             <button onClick={handleClick}>Click for question</button>
-            {/*<button onClick={handleWrittenClick}>Click for written response question</button>*/}
+            <button onClick={handleWrittenClick}>Click for written response question</button>
             <p>Question: {flashcard}</p>
             
             { flashcard === -1 ? 
@@ -181,6 +276,21 @@ return (
               summary={response}
             />  
             : null}
+
+            { writtenFlashcard === -1 ? 
+            null
+            : 
+            <ResponseAssessmentContext.Provider value={responseAssessment}>
+              <WrittenFlashcard
+                question={flashcardData[writtenFlashcard]}
+                questionId={writtenFlashcard}
+                submitResponse={processResponse}            
+                writtenStage={writtenStage}
+                writtenResponse={writtenResponse}
+                submitChecklist={handleSubmitChecklist}
+              />
+            </ResponseAssessmentContext.Provider>
+            }
 
       
         {/*{flashcardData.map((flashcard) => (

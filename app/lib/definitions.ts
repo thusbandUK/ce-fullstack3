@@ -6,7 +6,18 @@
 // create a new type HTMLElementEvent that has a target of type you pass
 // type T must be a HTMLElement (e.g. HTMLTextAreaElement extends HTMLElement)
 
-//MouseEventHandler
+export type assessedResponse = {
+  id: number;
+  response: string;
+  checkedPoints: {
+    W: boolean;
+    X: boolean;
+    Y: boolean;
+    Z: boolean;
+  }
+}
+
+//MouseEventHandler - not sure if this is needed now, delete?
 export type customMouseEventHandler<T extends React.MouseEventHandler> = Event & {
   target: T;
   currentTarget: T;
