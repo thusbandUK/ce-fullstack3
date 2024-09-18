@@ -16,36 +16,25 @@ const WrittenFlashcard = (
     writtenStage: string,    
     submitChecklist: React.MouseEventHandler<HTMLButtonElement>
   }
-) => {    
-
-  /*
-  writtenStage={writtenStage}
-                writtenResponse={writtenResponse}
-                submitChecklist
-
-  {
-  question, 
-  //questionId,
-  ...props
-
-}: {
-  question: Flashcard,
-  questionId: number
-
-}
-  */
-  //question
-//props: any
-    const {name, checklist, question, id: questionId} = oneFlashcardData;
-    //const {name, checklist,  id: questionId} = props.question;
+) => {
+  
+    const {checklist, question, id: questionId} = oneFlashcardData;    
 
     const responseAssessment = useContext(ResponseAssessmentContext);    
    
+    //returns the index in the ResponseAssementContext of the question being answered
     const index: number = responseAssessment.findIndex((x: assessedResponse) => {
         return x.id === Number(questionId);
     })    
 
-    const key = (arrayIndex: number) => {
+    //creates a copy of checklist but leaves out any entered as NULL
+    const noNullItemsChecklist = checklist.filter((x) => {
+      return x !== null;
+    })
+
+    //takes the index position of the checklist array and converts it into a letter, to match the corresponding keys
+    //in the assessedResponse checklist (in ResponseAssessmentContext)
+    const numericalIndexToLetter = (arrayIndex: number) => {
       switch (arrayIndex){
         case 0:
           return "W";          
@@ -97,17 +86,17 @@ const WrittenFlashcard = (
                 <legend>Check the points you got right</legend>
                 <p>{responseAssessment ? responseAssessment[index].response : null}</p>
               
-                {checklist.map((x: string) => {
+                {noNullItemsChecklist.map((x: string) => {
                   let arrayIndex = checklist.findIndex((item: string) => item === x);                  
                   return (
-                    <div key={key(arrayIndex)}>
+                    <div key={arrayIndex}>
                       <input                        
                         onChange={handleCheckboxChange}
                         type="checkbox" 
-                        id={`checkbox-${key}`}                        
-                        value={key(arrayIndex)} 
-                        name={`checkbox-${key}`} />
-                      <label htmlFor={`checkbox-${key}`}>{x}</label>
+                        id={`checkbox-${arrayIndex}`}                        
+                        value={numericalIndexToLetter(arrayIndex)} 
+                        name={`checkbox-${arrayIndex}`} />
+                      <label htmlFor={`checkbox-${arrayIndex}`}>{x}</label>
                     </div>      
                 )})}              
               
