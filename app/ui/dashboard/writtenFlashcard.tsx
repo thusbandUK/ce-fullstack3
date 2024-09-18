@@ -3,9 +3,26 @@ import { ResponseAssessmentContext } from './flashcards';
 import { useContext } from "react";
 import { assessedResponse, FlashcardData } from '@/app/lib/definitions';
 
-const WrittenFlashcard = (props: any) => {    
+const WrittenFlashcard = (
+  {
+    oneFlashcardData,
+    submitResponse,
+    writtenStage,    
+    submitChecklist
+  }:
+  {
+    oneFlashcardData: FlashcardData,
+    submitResponse: React.MouseEventHandler<HTMLButtonElement>,
+    writtenStage: string,    
+    submitChecklist: React.MouseEventHandler<HTMLButtonElement>
+  }
+) => {    
 
   /*
+  writtenStage={writtenStage}
+                writtenResponse={writtenResponse}
+                submitChecklist
+
   {
   question, 
   //questionId,
@@ -19,13 +36,13 @@ const WrittenFlashcard = (props: any) => {
   */
   //question
 //props: any
-    const {name, checklist, question, id: questionId} = props.oneFlashcardData;
+    const {name, checklist, question, id: questionId} = oneFlashcardData;
     //const {name, checklist,  id: questionId} = props.question;
 
     const responseAssessment = useContext(ResponseAssessmentContext);    
    
     const index: number = responseAssessment.findIndex((x: assessedResponse) => {
-        return x.id === questionId;
+        return x.id === Number(questionId);
     })    
 
     const key = (arrayIndex: number) => {
@@ -62,7 +79,7 @@ const WrittenFlashcard = (props: any) => {
         <div>
             <p>{question}</p> 
             
-            { (props.writtenStage === "response") ?
+            { (writtenStage === "response") ?
                 
                   <div className="d-flex flex-column">
                     <label htmlFor="response">Write your answer:</label>
@@ -70,11 +87,11 @@ const WrittenFlashcard = (props: any) => {
                     <textarea id="response" onChange={handleResponseChange} name="response" rows={5} cols={33}>
                 
                     </textarea>
-                    <button onClick={props.submitResponse}>Submit</button>
+                    <button onClick={submitResponse}>Submit</button>
                   </div>
                 
             : null}
-            { (props.writtenStage === "feedback") ?
+            { (writtenStage === "feedback") ?
               <div>
             
                 <legend>Check the points you got right</legend>
@@ -94,7 +111,7 @@ const WrittenFlashcard = (props: any) => {
                     </div>      
                 )})}              
               
-                <button onClick={props.submitChecklist}>Submit</button>
+                <button onClick={submitChecklist}>Submit</button>
               </div>                           
               
             : null

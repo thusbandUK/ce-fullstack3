@@ -1,14 +1,13 @@
 "use client";
 
-import { fetchFlashcards } from "@/app/lib/data"
-import DOMPurify from "isomorphic-dompurify";
-import IndividualFlashcard from "./individual-flashcard/IndividualFlashcard";
-import { createContext, MouseEventHandler, useContext, useState } from 'react';
+//import { fetchFlashcards } from "@/app/lib/data"
+//import DOMPurify from "isomorphic-dompurify";
+//import IndividualFlashcard from "./individual-flashcard/IndividualFlashcard";
+import { createContext, useState } from 'react';
 import { FlashcardData } from "@/app/lib/definitions";
-//import { ThemeContext } from "@/app/flashcards/page";
 import MultipleChoiceQuestion from "./multipleChoiceQuestion";
 import Response from "./response";
-import { HTMLElementEvent, customMouseEventHandler, assessedResponse } from "@/app/lib/definitions";
+import { assessedResponse } from "@/app/lib/definitions";
 import WrittenFlashcard from "./writtenFlashcard";
 
 export const ResponseAssessmentContext = createContext<assessedResponse[]>([]);
@@ -31,21 +30,15 @@ export default function FlashcardPresentation({allFlashcardsData}: {allFlashcard
     //this stores the three most recently attempted questions that the user got wrong (see queueQuestion function below)
     const [recentQuestions, setRecentQuestions] = useState<number[]>([]);
     //this stores the time (in milliseconds) at which the user starts
-    const [startTime, setStartTime] = useState<number>();
+    const [startTime, setStartTime] = useState<number>(0);
     //this stores the question numbers of all the questions loaded up from the data source
-    const [completeSet, setCompleteSet] = useState([0,1,2,3,4,5,6,7,8,9])
-    //OBSOLETE? intended to store the responses to the written response questions
-    const [enteredValue, setEnteredValue] = useState(null);
+    const [completeSet, setCompleteSet] = useState([0,1,2,3,4,5,6,7,8,9]);    
     //this stores the stage for the written response. It is toggled between "response", when user enters response
     //and "feedback", when user checks off their correct answers
-    const [writtenStage, setWrittenStage] = useState("response");
-    //OBSOLETE? intended to store the user's written response, but now logged in Redux state
-    const [writtenResponse, setWrittenResponse] = useState<string | null>(null);
+    const [writtenStage, setWrittenStage] = useState("response");    
     //state management for written responses and checklist of points made (assessment data)
     const [responseAssessment, setResponseAssessment] = useState<assessedResponse[]>([]);
     
-
-    //console.log(writtenFlashcard);
 
     const assessmentData: string[] = [];
 
@@ -103,6 +96,8 @@ export default function FlashcardPresentation({allFlashcardsData}: {allFlashcard
   }
 
   function askWrittenResponseQuestion(){
+    //keep this for the time being, just to check that info is getting updated
+    console.log(responseAssessment);
         
     let remainingWrittenQuestions: number[] = [];
 
@@ -122,7 +117,9 @@ export default function FlashcardPresentation({allFlashcardsData}: {allFlashcard
         const timeElapsed = (finishingTime - startTime)/1000;
         setWrittenFlashcard(-1);
         const marksOutOf = harvestAssessmentData(assessmentData);
-        return setResponse(`Great job! ${completeSet.length} multiple choice questions answered correctly in ${count} attempts and in ${timeElapsed} seconds and ${marksOutOf.correctAnswers} marks out of ${marksOutOf.maximumMark} in written response Woop!`);
+        return setResponse("Finished, great job!");
+        //modify the below to remove the problems (links to harvestAssessmentData)
+        //return setResponse(`Great job! ${completeSet.length} multiple choice questions answered correctly in ${count} attempts and in ${timeElapsed} seconds and ${marksOutOf.correctAnswers} marks out of ${marksOutOf.maximumMark} in written response Woop!`);
     }
     
     //a random number is generated to select at random from one of the remainingNonRecent questions
@@ -137,16 +134,12 @@ export default function FlashcardPresentation({allFlashcardsData}: {allFlashcard
 
   const handleClick = () => {
     const startingTime = Date.now();
-    setStartTime(startingTime);
-    console.log('start time...')
-    console.log(startTime);
+    setStartTime(startingTime);    
     return askQuestion();
 }
 
 const handleWrittenClick = () => {
-    //function creates an array and helps to create a context
-    //console.log('flashcardData...')
-    //console.log(flashcardData);
+    //function creates an array and helps to create a context    
     
     let arrayOfResponsesInitiator: assessedResponse[] = [];
     completeSet.forEach((x: number) => {
@@ -161,8 +154,7 @@ const handleWrittenClick = () => {
             }
         })        
     })
-    console.log("arrayOfResponsesInitiator...");
-    console.log(arrayOfResponsesInitiator);
+    
     setResponseAssessment(arrayOfResponsesInitiator);
     
     return askWrittenResponseQuestion();
@@ -229,25 +221,16 @@ const handleWrittenClick = () => {
   //event listener passes div id for clicked question to the answerQuestion function
   const handleQuestionClick = (event: React.MouseEvent<HTMLDivElement>) => {     
     return answerQuestion(event.currentTarget.id);    
-  }
-  
-  //used to submit written response, now seems unnecessary
-  /*
-  const handleEnteredValue = (event) => {
-    //console.log(event.target.value);
-    return setEnteredValue(event.target.value)
-}*/
+  }  
 
 //this removes the question and input box and replaces it with the user's response and an assessment checklist to tick off
 const processResponse = () => {
-    console.log("process response called");
-    console.log(responseAssessment);
     return setWrittenStage("feedback");
 }
 
-const handleSubmitChecklist = (event) => {
+const handleSubmitChecklist = () => {
     //there is a feedback / response toggle that alternately shows either the flashcard or the assessment checklist, this
-    //effectively calls teh next flashcard
+    //effectively calls the next flashcard
     setWrittenStage("response");
     //this creates a mutable copy of the answeredWrittenQuestions (an array of the numbers of the questions already answered)
     let updatedAnsweredQuestionsArray = answeredWrittenQuestions;
@@ -289,10 +272,10 @@ return (
             <ResponseAssessmentContext.Provider value={responseAssessment}>
               <WrittenFlashcard
                 oneFlashcardData={allFlashcardsData[writtenFlashcard]}
-                questionId={writtenFlashcard}
+                
                 submitResponse={processResponse}            
                 writtenStage={writtenStage}
-                writtenResponse={writtenResponse}
+                
                 submitChecklist={handleSubmitChecklist}
               />
             </ResponseAssessmentContext.Provider>
