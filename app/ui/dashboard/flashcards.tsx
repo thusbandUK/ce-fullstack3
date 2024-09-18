@@ -271,7 +271,7 @@ return (
             null
             :
             <MultipleChoiceQuestion 
-            questionBundle={allFlashcardsData[flashcard]}            
+            oneFlashcardData={allFlashcardsData[flashcard]}            
             handleQuestionClick={handleQuestionClick}
             />              
              
@@ -288,7 +288,7 @@ return (
             : 
             <ResponseAssessmentContext.Provider value={responseAssessment}>
               <WrittenFlashcard
-                question={allFlashcardsData[writtenFlashcard]}
+                oneFlashcardData={allFlashcardsData[writtenFlashcard]}
                 questionId={writtenFlashcard}
                 submitResponse={processResponse}            
                 writtenStage={writtenStage}

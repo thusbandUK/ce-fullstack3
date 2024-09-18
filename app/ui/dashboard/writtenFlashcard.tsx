@@ -19,7 +19,7 @@ const WrittenFlashcard = (props: any) => {
   */
   //question
 //props: any
-    const {name, checklist, question, id: questionId} = props.question;
+    const {name, checklist, question, id: questionId} = props.oneFlashcardData;
     //const {name, checklist,  id: questionId} = props.question;
 
     const responseAssessment = useContext(ResponseAssessmentContext);    

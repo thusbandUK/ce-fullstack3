@@ -2,11 +2,11 @@ import React from 'react';
 import { FlashcardData, MCQData, HTMLElementEvent, customMouseEventHandler } from '@/app/lib/definitions';
 
 export default function MultipleChoiceQuestion(
-    {questionBundle, handleQuestionClick,}: 
-    {questionBundle: FlashcardData; handleQuestionClick: React.MouseEventHandler<HTMLDivElement>}
+    {oneFlashcardData, handleQuestionClick,}: 
+    {oneFlashcardData: FlashcardData; handleQuestionClick: React.MouseEventHandler<HTMLDivElement>}
 ) {
 
-    const {name, multiple_choice_responses: multipleChoiceResponses, question} = questionBundle;
+    const {name, multiple_choice_responses: multipleChoiceResponses, question} = oneFlashcardData;
 
     return (
         <div>           
