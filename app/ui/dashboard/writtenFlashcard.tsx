@@ -1,7 +1,7 @@
 import React from 'react';
 import { ResponseAssessmentContext } from './flashcards';
 import { useContext } from "react";
-import { assessedResponse, Flashcard } from '@/app/lib/definitions';
+import { assessedResponse, FlashcardData } from '@/app/lib/definitions';
 
 const WrittenFlashcard = (props: any) => {    
 

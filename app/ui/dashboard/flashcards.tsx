@@ -4,7 +4,7 @@ import { fetchFlashcards } from "@/app/lib/data"
 import DOMPurify from "isomorphic-dompurify";
 import IndividualFlashcard from "./individual-flashcard/IndividualFlashcard";
 import { createContext, MouseEventHandler, useContext, useState } from 'react';
-import { Flashcard } from "@/app/lib/definitions";
+import { FlashcardData } from "@/app/lib/definitions";
 //import { ThemeContext } from "@/app/flashcards/page";
 import MultipleChoiceQuestion from "./multipleChoiceQuestion";
 import Response from "./response";
@@ -13,7 +13,7 @@ import WrittenFlashcard from "./writtenFlashcard";
 
 export const ResponseAssessmentContext = createContext<assessedResponse[]>([]);
 
-export default function FlashcardPresentation({flashcardData}: {flashcardData: Flashcard[]}) {
+export default function FlashcardPresentation({allFlashcardsData}: {allFlashcardsData: FlashcardData[]}) {
 
     //below two variables assign the number of the question...
     //for MCQ
@@ -145,13 +145,13 @@ export default function FlashcardPresentation({flashcardData}: {flashcardData: F
 
 const handleWrittenClick = () => {
     //function creates an array and helps to create a context
-    console.log('flashcardData...')
-    console.log(flashcardData);
+    //console.log('flashcardData...')
+    //console.log(flashcardData);
     
     let arrayOfResponsesInitiator: assessedResponse[] = [];
     completeSet.forEach((x: number) => {
         arrayOfResponsesInitiator.push({
-            id: Number(flashcardData[x].id),
+            id: Number(allFlashcardsData[x].id),
             response: "",
             checkedPoints: {
               W: false,
@@ -202,7 +202,7 @@ const handleWrittenClick = () => {
 
     const answerQuestion = (suggestedAnswer: string) => {
       //obtains the correct answer from the flashcards data object
-      const correctAnswer = flashcardData[flashcard].correct_answer;
+      const correctAnswer = allFlashcardsData[flashcard].correct_answer;
       //if the selected answer is the correct answer, that question is pushed into the correctly answered questions array in state
       //if the selected answer is wrong, that question is placed into the queue in state for recently answered wrong questions
       
@@ -271,7 +271,7 @@ return (
             null
             :
             <MultipleChoiceQuestion 
-            questionBundle={flashcardData[flashcard]}            
+            questionBundle={allFlashcardsData[flashcard]}            
             handleQuestionClick={handleQuestionClick}
             />              
              
@@ -288,7 +288,7 @@ return (
             : 
             <ResponseAssessmentContext.Provider value={responseAssessment}>
               <WrittenFlashcard
-                question={flashcardData[writtenFlashcard]}
+                question={allFlashcardsData[writtenFlashcard]}
                 questionId={writtenFlashcard}
                 submitResponse={processResponse}            
                 writtenStage={writtenStage}

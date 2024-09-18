@@ -41,7 +41,7 @@ export type topic = {
 }
 
 //these all said string before
-export type Flashcard = {
+export type FlashcardData = {
   id: string;
   definition: string;
   question: string;

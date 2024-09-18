@@ -19,9 +19,9 @@ export default async function Page() {
     //const [theme, setTheme] = useState<ThemeContextType>("dark");
     //const [theme, setTheme] = useState<string>("light");
     //fetch data from server
-    const flashcardData = await fetchFlashcards();
+    const allFlashcardsData = await fetchFlashcards();
 
-    if (!flashcardData || flashcardData.length === 0) {        
+    if (!allFlashcardsData || allFlashcardsData.length === 0) {        
       return <p className="mt-4 text-gray-400">No data available.</p>;
     }
 
@@ -38,7 +38,7 @@ export default async function Page() {
 
     return (
         <FlashcardPresentation
-          flashcardData={flashcardData}
+          allFlashcardsData={allFlashcardsData}
         />        
     )
 }
