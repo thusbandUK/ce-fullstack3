@@ -1,12 +1,13 @@
 import React from 'react';
 import { FlashcardData, MCQData, HTMLElementEvent, customMouseEventHandler } from '@/app/lib/definitions';
+import DOMPurify from "isomorphic-dompurify";
 
 export default function MultipleChoiceQuestion(
     {oneFlashcardData, handleQuestionClick,}: 
     {oneFlashcardData: FlashcardData; handleQuestionClick: React.MouseEventHandler<HTMLDivElement>}
 ) {
 
-    const {name, multiple_choice_responses: multipleChoiceResponses, question} = oneFlashcardData;
+    const {multiple_choice_responses: multipleChoiceResponses, question} = oneFlashcardData;
 
     return (
         <div>           
@@ -16,7 +17,9 @@ export default function MultipleChoiceQuestion(
                    {Object.keys(multipleChoiceResponses as MCQData).map((MCQ: string) => (
                      <div onClick={handleQuestionClick} key={MCQ} id={MCQ} style={{cursor:'pointer'}}>
                         <p>{MCQ}</p>                        
-                        <p>{multipleChoiceResponses[MCQ as keyof MCQData]}</p>
+                        <p
+                        dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(multipleChoiceResponses[MCQ as keyof MCQData])}}
+                        ></p>
                     </div>
                     ))}
                 

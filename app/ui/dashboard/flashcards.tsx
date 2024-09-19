@@ -32,7 +32,7 @@ export default function FlashcardPresentation({allFlashcardsData}: {allFlashcard
     //this stores the time (in milliseconds) at which the user starts
     const [startTime, setStartTime] = useState<number>(0);
     //this stores the question numbers of all the questions loaded up from the data source
-    const [completeSet, setCompleteSet] = useState([0,1,2,3,4,5,6,7,8,9]);    
+    const [completeSet, setCompleteSet] = useState<number[]>([]);    
     //this stores the stage for the written response. It is toggled between "response", when user enters response
     //and "feedback", when user checks off their correct answers
     const [writtenStage, setWrittenStage] = useState("response");    
@@ -40,11 +40,24 @@ export default function FlashcardPresentation({allFlashcardsData}: {allFlashcard
     const [responseAssessment, setResponseAssessment] = useState<assessedResponse[]>([]);
     
 
-    const assessmentData: string[] = [];
+    //this creates an array of sequential integers, one for each flashcard, and sets completeSet in state
+    //(rather than using the native id values in allFlashcardsData, which are unlikely to be sequential)
+    const assignCompleteSet = (inputArray: FlashcardData[]) => {
+        //immediate return if the function has already been used, otherwise the app gets stuck in an infinite loop
+        //because the page rerenders every time the state is edited
+        if (completeSet.length > 0){
+            return;
+        }
+        let outputArray: number[] = [];
+        for (let x = 0; x < inputArray.length; x ++){            
+            outputArray.push(x);
+        }        
+        return setCompleteSet(outputArray);
+    }
 
-    //const harvestAssessmentData = (data: string[]) => {
-        //return 'harvested data';
-    //}
+    //calls above function w incoming allFlashcardsData
+    assignCompleteSet(allFlashcardsData);
+
     function harvestAssessmentData(){
         //let questionNumbers = Object.keys(feedbackObject);
         let maximumMark = 0;
@@ -91,7 +104,7 @@ export default function FlashcardPresentation({allFlashcardsData}: {allFlashcard
       if (remainingQuestions.length === 0){
           const finishingTime = Date.now();
           const timeElapsed = (finishingTime - startTime)/1000;
-          setResponse(`Great job! 10 questions answered correctly in ${count} attempts and in ${timeElapsed} seconds. Woop!`);
+          setResponse(`Great job! ${completeSet.length} questions answered correctly in ${count} attempts and in ${timeElapsed} seconds. Woop!`);
           setFlashcard(-1);
           return;
           //return askWrittenResponseQuestion();

@@ -36,11 +36,12 @@ async function seedFlashcards() {
     flashcardSeedArray.map(async (flashcard) => {
 
       return client.sql`
-        INSERT INTO flashcards (id, definition, question, multiple_choice_responses, correct_answer, checklist, examboards, topic)
+        INSERT INTO flashcards (id, definition, question, name, multiple_choice_responses, correct_answer, checklist, examboards, topic)
         VALUES (
           ${flashcard.id}, 
           ${flashcard.definition}, 
-          ${flashcard.question}, 
+          ${flashcard.question},
+          ${flashcard.name},
           ${JSON.stringify(flashcard.multiple_choice_responses)},
           ${flashcard.correct_answer},
           ${jsonToPostgresArray(flashcard.checklist)},          
