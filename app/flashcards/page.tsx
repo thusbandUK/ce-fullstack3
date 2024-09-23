@@ -6,6 +6,7 @@ import DOMPurify from "isomorphic-dompurify";
 //import { Flashcard } from "@/app/lib/definitions";
 import { fetchFlashcards, fetchExamboards } from '../lib/data';
 import { FlashcardData, ExamboardData } from '../lib/definitions';
+import Link from 'next/link';
 
 
 
@@ -19,8 +20,8 @@ export default async function Page() {
     //console.log(allFlashcardsData.length === 0)
     const examboardsData = await fetchExamboards();
 
-    console.log(examboardsData);
-
+    //console.log(examboardsData);
+/*
     const handleSelectionAllCards = async () => {
       const collectedFlashcardsData = await fetchFlashcards();
       return allFlashcardsData = collectedFlashcardsData;
@@ -28,7 +29,7 @@ export default async function Page() {
 
     
 
-    /*
+    
     if (!allFlashcardsData || allFlashcardsData.length === 0) {        
       return <p className="mt-4 text-gray-400">No data available.</p>;
     }*/
@@ -38,7 +39,12 @@ export default async function Page() {
         <p>Select your examboard</p>
         {examboardsData.map((x: ExamboardData) => (
           <div key={x.id}>
-            <p>{x.examboard}</p>
+            <Link
+              href={`/flashcards/${x.id}/topic`}
+            >
+              {x.examboard}
+            </Link>
+
           </div>
         ))}
         
