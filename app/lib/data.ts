@@ -7,13 +7,27 @@ import { sql } from '@vercel/postgres';
   LatestInvoiceRaw,
   Revenue,
 } from './definitions';*/
-import { Flashcard } from './definitions';
+import { FlashcardData, ExamboardData } from './definitions';
 //import { formatCurrency } from './utils';
 
 export async function fetchFlashcards() {
   try {    
 
-    const data = await sql<Flashcard>`SELECT * FROM flashcards`;
+    const data = await sql<FlashcardData>`SELECT * FROM flashcards`;
+
+    console.log('Flashcards data fetch completed.');
+
+    return data.rows;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch flashcard data.');
+  }
+}
+
+export async function fetchExamboards() {
+  try {    
+
+    const data = await sql<ExamboardData>`SELECT * FROM examboards`;
 
     console.log('Flashcards data fetch completed.');
 

@@ -54,6 +54,11 @@ export type FlashcardData = {
   topic: topic;
 };
 
+export type ExamboardData = {
+  id: number;
+  examboard: string;
+};
+
 /*
 export type User = {
   id: string;

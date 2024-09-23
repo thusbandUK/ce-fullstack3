@@ -3,6 +3,9 @@
 # flashcard content
 /app/lib/flashcard-seed-data.json
 
+# db init content
+/app/seed/initiation.sql
+
 # dependencies
 /node_modules
 /.pnp
