@@ -12,6 +12,11 @@ import { FlashcardData, ExamboardData, TopicData, QuestionsData } from './defini
 //import { formatCurrency } from './utils';
 import { queryMaker } from './functions';
 
+const ExamboardScheme = z.object({
+  examboard_id: z.string()
+
+})
+
 export async function fetchFlashcards() {
   try {    
 
@@ -40,16 +45,24 @@ export async function fetchExamboards() {
   }
 }
 
-export async function fetchTopics(query: string) {
+export async function fetchTopics(examboardId: string) {
   /*
-  Install zod to run safeParse on query
+  Install zod to run safeParse on 
   */
-  
-  //const validatedQuery = query.safeParse();
+   
+  const validatedExamboardId = ExamboardScheme.safeParse({
+    examboard_id: examboardId,
+  });
+
+  const query ='SELECT * FROM topics WHERE examboards_id = $1'
+
+  const argument = [validatedExamboardId.data?.examboard_id];
+  console.log(argument);
   try {    
 
-    const data = await sql<TopicData>`SELECT * FROM topics WHERE examboards_id = ${query}`;
+    //const data = await sql<TopicData>`SELECT * FROM topics WHERE examboards_id = ${validatedQuery}`;
 
+    const data = await sql.query<TopicData>(query, argument);
     console.log('Flashcards data fetch completed.');
 
     return data.rows;
