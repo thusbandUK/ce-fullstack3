@@ -10,7 +10,7 @@ import { z } from 'zod';
 } from './definitions';*/
 import { FlashcardData, ExamboardData, TopicData, QuestionsData } from './definitions';
 //import { formatCurrency } from './utils';
-import { queryMaker } from './functions';
+import { queryMaker, questionSetSimplifiedArray } from './functions';
 
 const ExamboardSchema = z.object({
   examboard_id: z.string()
@@ -71,38 +71,31 @@ export async function fetchTopics(examboardId: string) {
 }
 
 export async function fetchFlashcardsByTopic(topicId: string) {
-  //sanitises the argument passed to examboardId parameter 
+  //sanitises the argument passed to topicId parameter 
   const validatedExamboardId = TopicSchema.safeParse({
     topic_id: topicId,
   });
 
-  const initialQuery = 'SELECT * FROM questions WHERE topics_id = $1';
+  const initialQuery = 'SELECT question FROM questions WHERE topics_id = $1';
   const initialArgument = [validatedExamboardId.data?.topic_id]
   
   //const validatedQuery = query.safeParse();
   try {    
 
-    //const questionSet = await sql<QuestionsData>`SELECT * FROM questions WHERE topics_id = ${topicId}`;
-    const questionSet = await sql.query<QuestionsData>(initialQuery, initialArgument);    
-
-    //make this numbers only, or meeting one of the types and maybe make above not only use validated data but
-    //also do that thing where..., you substitute the $n for what follows in the array (of sanitised data)
-    const parsedQuestionSet: string[] = questionSet.rows.map((x: QuestionsData) => {
-      return x.question.toString();
-    })
-    console.log(parsedQuestionSet);
-
-    //if anything it's safer for the fact that it doesn't return the output but feeds it into another function
-    const parameters = queryMaker(parsedQuestionSet);
-    console.log(parameters);
+    //this fetches the question numbers listed for the queried topic
+    const questionSet = await sql.query<QuestionsData>(initialQuery, initialArgument);
     
-    const query = `SELECT * FROM flashcards WHERE id IN (${parameters})`;
+    //uses imported function to parse questionSet into an array of numbers in string format
+    const parsedQuestionSet: string[] = questionSetSimplifiedArray(questionSet.rows);    
+
+    //uses imported function to generate a list of parameters for the sql query
+    const parameters: string = queryMaker(parsedQuestionSet);    
     
-    //get the reference to the type in here
-    const allFlashcardsData = await sql.query(query, parsedQuestionSet);    
+    const query: string = `SELECT * FROM flashcards WHERE id IN (${parameters})`;    
+    
+    const allFlashcardsData = await sql.query<FlashcardData>(query, parsedQuestionSet);
 
     return allFlashcardsData.rows;
-
    
   } catch (error) {
     console.error('Database Error:', error);
