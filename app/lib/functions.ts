@@ -22,8 +22,17 @@ export const questionSetSimplifiedArray = (questionSetArrayOfObjects: QuestionsD
 
 //takes an array of numbers in string format and selects 15 at random
 export const randomSelectionOfFifteen = (inputArray: string[]) => {
-    if (inputArray.length <= 15){        
-        return inputArray;
+    //edge case - if there are fewer than 15 id values passed to the function, the below if clause
+    //repeats different values in the argument array at random to make an array with 15 id values
+    //all from values pass in the inputArray
+    if (inputArray.length <= 15){
+        let modifiedInputArray = inputArray;
+        let shortfall: number = (15 - inputArray.length);
+        for (let y = 0; y < shortfall; y++){
+            const index = Math.floor(Math.random() * inputArray.length);
+            modifiedInputArray.push(inputArray[index]);
+        }
+        return modifiedInputArray;
     }
     let modifiedInputArray = inputArray;
     let outputArray: string[] = [];

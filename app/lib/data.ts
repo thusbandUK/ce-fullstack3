@@ -134,11 +134,13 @@ export async function fetchRandomSetOfFlashcards(examboardId: string) {
     const allQuestionNumbers = await sql.query(questionsQuery, parsedTopicSet);
 
     //uses imported function to parse output from allQuestionNumbers into an array of ids as strings
-    const parsedQuestionSet = questionSetSimplifiedArray(allQuestionNumbers.rows);    
+    const parsedQuestionSet = questionSetSimplifiedArray(allQuestionNumbers.rows);
+    //const parsedQuestionSet2 = ["1", "2", "3"];
 
     //uses imported function to select 15 questions at random
     const randomSelection = randomSelectionOfFifteen(parsedQuestionSet);
     //const randomSelection2 = ["1", "2", "3"];
+    //console.log(randomSelection);
 
     const flashcardQuery = 'SELECT * FROM flashcards WHERE id IN ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)'
     //const flashcardQuery2 = 'SELECT * FROM flashcards WHERE id IN ($1, $2, $3)'
