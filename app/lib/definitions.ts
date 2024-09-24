@@ -59,6 +59,20 @@ export type ExamboardData = {
   examboard: string;
 };
 
+export type TopicData = {
+  id: number;
+  examboards_id: number;
+  topic: string;
+}
+
+export type QuestionsData = {
+  id: number;
+  topics_id: number;
+  question: number;
+
+}
+
+
 /*
 export type User = {
   id: string;

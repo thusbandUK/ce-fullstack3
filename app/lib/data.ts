@@ -7,8 +7,9 @@ import { sql } from '@vercel/postgres';
   LatestInvoiceRaw,
   Revenue,
 } from './definitions';*/
-import { FlashcardData, ExamboardData } from './definitions';
+import { FlashcardData, ExamboardData, TopicData, QuestionsData } from './definitions';
 //import { formatCurrency } from './utils';
+import { queryMaker } from './functions';
 
 export async function fetchFlashcards() {
   try {    
@@ -32,6 +33,60 @@ export async function fetchExamboards() {
     console.log('Flashcards data fetch completed.');
 
     return data.rows;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch flashcard data.');
+  }
+}
+
+export async function fetchTopics(query: string) {
+  /*
+  Install zod to run safeParse on query
+  */
+  
+  //const validatedQuery = query.safeParse();
+  try {    
+
+    const data = await sql<TopicData>`SELECT * FROM topics WHERE examboards_id = ${query}`;
+
+    console.log('Flashcards data fetch completed.');
+
+    return data.rows;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch flashcard data.');
+  }
+}
+
+export async function fetchFlashcardsByTopic(topicQuery: string) {
+  /*
+  Install zod to run safeParse on query
+  */
+  
+  //const validatedQuery = query.safeParse();
+  try {    
+
+    const questionSet = await sql<QuestionsData>`SELECT * FROM questions WHERE topics_id = ${topicQuery}`;    
+
+    //make this numbers only, or meeting one of the types and maybe make above not only use validated data but
+    //also do that thing where..., you substitute the $n for what follows in the array (of sanitised data)
+    const parsedQuestionSet: string[] = questionSet.rows.map((x: QuestionsData) => {
+      return x.question.toString();
+    })
+    console.log(parsedQuestionSet);
+
+    //if anything it's safer for the fact that it doesn't return the output but feeds it into another function
+    const parameters = queryMaker(parsedQuestionSet);
+    console.log(parameters);
+    
+    const query = `SELECT * FROM flashcards WHERE id IN (${parameters})`;
+    
+    //get the reference to the type in here
+    const allFlashcardsData = await sql.query(query, parsedQuestionSet);    
+
+    return allFlashcardsData.rows;
+
+   
   } catch (error) {
     console.error('Database Error:', error);
     throw new Error('Failed to fetch flashcard data.');
