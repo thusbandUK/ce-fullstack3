@@ -23,7 +23,12 @@ export default async function Page({ params }: { params: { examboard_id: string 
 
     return (
       <div>
-        <p>Select your topic</p>
+        <p>Select your set of flashcards</p>
+        <Link
+          href={`/flashcards/${params.examboard_id}/topic/all/set`}
+        >
+          A random selection of 15 flashcards from the whole of A-level chemistry
+        </Link>
         {topics.map((x: TopicData) => (
             <div key={x.id}>
                 <Link

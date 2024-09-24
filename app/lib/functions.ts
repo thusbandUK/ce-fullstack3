@@ -19,3 +19,18 @@ export const questionSetSimplifiedArray = (questionSetArrayOfObjects: QuestionsD
     })
     return questionSetArray;
 }
+
+//takes an array of numbers in string format and selects 15 at random
+export const randomSelectionOfFifteen = (inputArray: string[]) => {
+    if (inputArray.length <= 15){        
+        return inputArray;
+    }
+    let modifiedInputArray = inputArray;
+    let outputArray: string[] = [];
+    for (let x = 0; x < 15; x++){
+        const index = Math.floor(Math.random() * modifiedInputArray.length);
+        outputArray.push(modifiedInputArray[index]);
+        modifiedInputArray.splice(index, 1);
+    }
+    return outputArray;
+}
