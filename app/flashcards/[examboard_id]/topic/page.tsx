@@ -11,14 +11,14 @@ import { fetchTopics } from "@/app/lib/data";
 import { TopicData } from "@/app/lib/definitions";
 import Link from "next/link";
 
-export default async function Page({ params }: { params: { id: string } }) {
+export default async function Page({ params }: { params: { examboard_id: string } }) {
     
 
-    console.log(`from params the id is: ${params.id}`);
+    //console.log(`from params the id is: ${params.id}`);
 
-    const topics = await fetchTopics(params.id);
+    const topics = await fetchTopics(params.examboard_id);
 
-    console.log(topics);  
+    //console.log(topics);  
 
 
     return (

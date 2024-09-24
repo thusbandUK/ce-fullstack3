@@ -1,4 +1,5 @@
 import { sql } from '@vercel/postgres';
+import { z } from 'zod';
 /*import {
   CustomerField,
   CustomersTableType,
