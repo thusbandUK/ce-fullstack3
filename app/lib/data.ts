@@ -12,10 +12,13 @@ import { FlashcardData, ExamboardData, TopicData, QuestionsData } from './defini
 //import { formatCurrency } from './utils';
 import { queryMaker } from './functions';
 
-const ExamboardScheme = z.object({
+const ExamboardSchema = z.object({
   examboard_id: z.string()
+});
 
-})
+const TopicSchema = z.object({
+  topic_id: z.string()
+});
 
 export async function fetchFlashcards() {
   try {    
@@ -46,24 +49,19 @@ export async function fetchExamboards() {
 }
 
 export async function fetchTopics(examboardId: string) {
-  /*
-  Install zod to run safeParse on 
-  */
-   
-  const validatedExamboardId = ExamboardScheme.safeParse({
+  
+  //sanitises the argument passed to examboardId parameter 
+  const validatedExamboardId = ExamboardSchema.safeParse({
     examboard_id: examboardId,
   });
 
   const query ='SELECT * FROM topics WHERE examboards_id = $1'
 
   const argument = [validatedExamboardId.data?.examboard_id];
-  console.log(argument);
+  
   try {    
 
-    //const data = await sql<TopicData>`SELECT * FROM topics WHERE examboards_id = ${validatedQuery}`;
-
-    const data = await sql.query<TopicData>(query, argument);
-    console.log('Flashcards data fetch completed.');
+    const data = await sql.query<TopicData>(query, argument);    
 
     return data.rows;
   } catch (error) {
@@ -72,15 +70,20 @@ export async function fetchTopics(examboardId: string) {
   }
 }
 
-export async function fetchFlashcardsByTopic(topicQuery: string) {
-  /*
-  Install zod to run safeParse on query
-  */
+export async function fetchFlashcardsByTopic(topicId: string) {
+  //sanitises the argument passed to examboardId parameter 
+  const validatedExamboardId = TopicSchema.safeParse({
+    topic_id: topicId,
+  });
+
+  const initialQuery = 'SELECT * FROM questions WHERE topics_id = $1';
+  const initialArgument = [validatedExamboardId.data?.topic_id]
   
   //const validatedQuery = query.safeParse();
   try {    
 
-    const questionSet = await sql<QuestionsData>`SELECT * FROM questions WHERE topics_id = ${topicQuery}`;    
+    //const questionSet = await sql<QuestionsData>`SELECT * FROM questions WHERE topics_id = ${topicId}`;
+    const questionSet = await sql.query<QuestionsData>(initialQuery, initialArgument);    
 
     //make this numbers only, or meeting one of the types and maybe make above not only use validated data but
     //also do that thing where..., you substitute the $n for what follows in the array (of sanitised data)
