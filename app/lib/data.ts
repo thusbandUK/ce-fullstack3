@@ -1,15 +1,6 @@
 import { sql } from '@vercel/postgres';
 import { z } from 'zod';
-/*import {
-  CustomerField,
-  CustomersTableType,
-  InvoiceForm,
-  InvoicesTable,
-  LatestInvoiceRaw,
-  Revenue,
-} from './definitions';*/
 import { FlashcardData, ExamboardData, TopicData, QuestionsData } from './definitions';
-//import { formatCurrency } from './utils';
 import { queryMaker, questionSetSimplifiedArray, randomSelectionOfFifteen } from './functions';
 
 const ExamboardSchema = z.object({

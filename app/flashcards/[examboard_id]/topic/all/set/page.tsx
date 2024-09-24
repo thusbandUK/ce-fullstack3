@@ -1,5 +1,5 @@
-import { fetchFlashcardsByTopic, fetchRandomSetOfFlashcards } from "@/app/lib/data";
-import { FlashcardData } from "@/app/lib/definitions";
+import { fetchRandomSetOfFlashcards } from "@/app/lib/data";
+import FlashcardPresentation from "@/app/ui/dashboard/flashcards";
 
 export default async function Page({ params }: { params: { examboard_id: string } }) {    
 
@@ -7,13 +7,12 @@ export default async function Page({ params }: { params: { examboard_id: string 
 
 return (
     <div>
-        <p>A random selection of flashcards</p>
-        <div>{allFlashcardsData.map((x: any) => (
-            <p key={x.id}
-            >{x.question}</p>
-        ))}</div>
+        {allFlashcardsData.length === 0 ?
+        null:
+        <FlashcardPresentation
+          allFlashcardsData={allFlashcardsData}
+        />
+        }
     </div>
 )
-
-
 }
