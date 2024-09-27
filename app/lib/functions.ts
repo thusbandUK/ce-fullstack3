@@ -1,4 +1,18 @@
-import { QuestionsData } from "./definitions";
+import { FlashcardData, QuestionsData } from "./definitions";
+
+export const shuffle = (array: string[]) => { 
+    for (let i = array.length - 1; i > 0; i--) { 
+      const j = Math.floor(Math.random() * (i + 1)); 
+      [array[i], array[j]] = [array[j], array[i]]; 
+    } 
+    return array; 
+  }; 
+  
+  // Usage 
+  //const myArray = ["apple", "banana", "cherry", "date", "elderberry"]; 
+ //const shuffledArray = shuffle(myArray); 
+  
+  //console.log(shuffledArray);
 
 //returns string, receives an array of numbers in string format, returns a string of sql.query parameters
 //eg input ["5","8","9"] returns '$1, $2, $3'

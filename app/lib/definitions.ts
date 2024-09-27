@@ -73,7 +73,7 @@ export type QuestionsData = {
 }
 
 
-/*
+
 export type User = {
   id: string;
   name: string;
@@ -81,6 +81,7 @@ export type User = {
   password: string;
 };
 
+/*
 export type Customer = {
   id: string;
   name: string;

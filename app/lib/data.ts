@@ -67,24 +67,26 @@ export async function fetchFlashcardsByTopic(topicId: string) {
     topic_id: topicId,
   });
 
-  const initialQuery = 'SELECT question FROM questions WHERE topics_id = $1';
+  //const initialQuery = 'SELECT question FROM questions WHERE topics_id = $1';
+  const initialQuery = 'SELECT flashcards.id, flashcards.definition, flashcards.question, flashcards.name, flashcards.multiple_choice_responses, flashcards.correct_answer, flashcards.checklist FROM questions LEFT JOIN flashcards ON flashcards.id = questions.question WHERE topics_id = $1'
   const initialArgument = [validatedExamboardId.data?.topic_id]
   
   //const validatedQuery = query.safeParse();
   try {    
 
     //this fetches the question numbers listed for the queried topic
-    const questionSet = await sql.query<QuestionsData>(initialQuery, initialArgument);
-    
+    //const questionSet = await sql.query<QuestionsData>(initialQuery, initialArgument);
+    const allFlashcardsData = await sql.query<QuestionsData>(initialQuery, initialArgument);
+
     //uses imported function to parse questionSet into an array of numbers in string format
-    const parsedQuestionSet: string[] = questionSetSimplifiedArray(questionSet.rows);    
+    //const parsedQuestionSet: string[] = questionSetSimplifiedArray(questionSet.rows);    
 
     //uses imported function to generate a list of parameters for the sql query
-    const parameters: string = queryMaker(parsedQuestionSet);    
+    //const parameters: string = queryMaker(parsedQuestionSet);    
     
-    const query: string = `SELECT * FROM flashcards WHERE id IN (${parameters})`;    
+    //const query: string = `SELECT * FROM flashcards WHERE id IN (${parameters})`;    
     
-    const allFlashcardsData = await sql.query<FlashcardData>(query, parsedQuestionSet);
+    //const allFlashcardsData = await sql.query<FlashcardData>(query, parsedQuestionSet);
 
     return allFlashcardsData.rows;
    
@@ -102,41 +104,43 @@ export async function fetchRandomSetOfFlashcards(examboardId: string) {
   });
   
   //returns all topics for the examboard passed as argument
-  const initialQuery ='SELECT * FROM topics WHERE examboards_id = $1'
+  //const initialQuery ='SELECT * FROM topics WHERE examboards_id = $1'
+  const initialQuery ='SELECT * FROM topics LEFT JOIN questions ON topics.id = questions.topics_id LEFT JOIN flashcards ON flashcards.id = questions.question WHERE topics.examboards_id = ($1) ORDER BY random() LIMIT 15'
 
   const initialArgument = [validatedExamboardId.data?.examboard_id];
   
   try {    
 
     //this fetches the question numbers listed for the queried topic
-    const topicSet = await sql.query<TopicData>(initialQuery, initialArgument);
+    const allFlashcardsData = await sql.query<TopicData>(initialQuery, initialArgument);
+    //const randomSelectionFifteenQuestions = await sql.query<TopicData>(initialQuery, initialArgument);
 
     //parses the topicSet.rows array from db into an array of topic ids as strings
-    const parsedTopicSet: string[] = topicSet.rows.map((x: TopicData) => {
-      return x.id.toString();
-    });    
+    //const parsedQuestionSet: string[] = randomSelectionFifteenQuestions.rows.map((x: TopicData) => {
+      //return x.id.toString();
+    //});    
 
     //uses imported function to generate a list of parameters for the questionQuery sql query below
-    const parameters: string = queryMaker(parsedTopicSet);    
+    //const parameters: string = queryMaker(parsedQuestionSet);    
     
-    const questionsQuery: string = `SELECT question FROM questions WHERE topics_id IN (${parameters})`;    
+    //const questionsQuery: string = `SELECT question FROM questions WHERE topics_id IN (${parameters})`;    
 
     //this query returns all of the question numbers for all of the topics
-    const allQuestionNumbers = await sql.query(questionsQuery, parsedTopicSet);
+    //const allQuestionNumbers = await sql.query(questionsQuery, parsedTopicSet);
 
     //uses imported function to parse output from allQuestionNumbers into an array of ids as strings
-    const parsedQuestionSet = questionSetSimplifiedArray(allQuestionNumbers.rows);
+    //const parsedQuestionSet = questionSetSimplifiedArray(allQuestionNumbers.rows);
     //const parsedQuestionSet2 = ["1", "2", "3"];
 
     //uses imported function to select 15 questions at random
-    const randomSelection = randomSelectionOfFifteen(parsedQuestionSet);
+    //const randomSelection = randomSelectionOfFifteen(parsedQuestionSet);
     //const randomSelection2 = ["1", "2", "3"];
     //console.log(randomSelection);
 
-    const flashcardQuery = 'SELECT * FROM flashcards WHERE id IN ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)'
+    //const flashcardQuery = 'SELECT * FROM flashcards WHERE id IN ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)'
     //const flashcardQuery2 = 'SELECT * FROM flashcards WHERE id IN ($1, $2, $3)'
     //makes final db call to fetch flashcard data for the randomly selected 15 questions
-    const allFlashcardsData = await sql.query<FlashcardData>(flashcardQuery, randomSelection);
+    //const allFlashcardsData = await sql.query<FlashcardData>(flashcardQuery, parsedQuestionSet);
 
     return allFlashcardsData.rows;
    

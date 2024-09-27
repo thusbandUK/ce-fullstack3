@@ -1,6 +1,7 @@
 import React from 'react';
 import { FlashcardData, MCQData, HTMLElementEvent, customMouseEventHandler } from '@/app/lib/definitions';
 import DOMPurify from "isomorphic-dompurify";
+import { shuffle } from '@/app/lib/functions';
 
 export default function MultipleChoiceQuestion(
     {oneFlashcardData, handleQuestionClick,}: 
@@ -14,7 +15,7 @@ export default function MultipleChoiceQuestion(
             <div>                
                     <h2>{question}</h2>
                     
-                   {Object.keys(multipleChoiceResponses as MCQData).map((MCQ: string) => (
+                   {shuffle(Object.keys(multipleChoiceResponses as MCQData)).map((MCQ: string) => (
                      <div onClick={handleQuestionClick} key={MCQ} id={MCQ} style={{cursor:'pointer'}}>
                         <p>{MCQ}</p>                        
                         <p

@@ -10,6 +10,7 @@ import Link from 'next/link';
 
 
 
+
 export default async function Page() {
     
     //const allFlashcardsData = await fetchFlashcards();
@@ -36,6 +37,7 @@ export default async function Page() {
 
     return (
       <div>
+        
         <p>Select your examboard</p>
         {examboardsData.map((x: ExamboardData) => (
           <div key={x.id}>
