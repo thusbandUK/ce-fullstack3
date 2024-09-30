@@ -1,5 +1,6 @@
 import NextAuth from 'next-auth';
 import { authConfig } from './auth.config';
+import Google from "next-auth/providers/google"
 
 
 import Credentials from 'next-auth/providers/credentials';
@@ -19,9 +20,9 @@ async function getUser(email: string): Promise<User | undefined> {
   }
 }
  
-export const { auth, signIn, signOut } = NextAuth({
+export const { handlers, auth, signIn, signOut } = NextAuth({
   ...authConfig,
-  providers: [Credentials({
+  providers: [Google, Credentials({
     async authorize(credentials) {
       const parsedCredentials = z
         .object({ email: z.string().email(), password: z.string().min(6) })

@@ -1,5 +1,6 @@
 //import AcmeLogo from '@/app/ui/acme-logo';
 import LoginForm from '@/app/ui/login-form';
+import LoginForm2 from '../ui/login-form2';
  
 export default function LoginPage() {
   return (
@@ -10,7 +11,7 @@ export default function LoginPage() {
             <p>Chemistry Elephant</p>
           </div>
         </div>
-        <LoginForm />
+        <LoginForm2 />
       </div>
     </main>
   );
