@@ -14,6 +14,7 @@ import { useFormState } from 'react-dom';
 //import { handlers } from "@/auth"
 //export const { GET, POST } = handlers
 import { signIn } from "@/auth"
+//import { signIn } from '@/auth';
 
 
 export default function LoginForm2() {
@@ -27,7 +28,7 @@ export default function LoginForm2() {
     <form
       action={async () => {
         "use server"
-        await signIn("google")
+        await signIn("google", { redirectTo: "/welcome" })
       }}
     >
       <button type="submit">Signin with Google</button>
