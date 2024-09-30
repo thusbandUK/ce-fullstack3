@@ -7,6 +7,7 @@ import DOMPurify from "isomorphic-dompurify";
 import { fetchFlashcards, fetchExamboards } from '../lib/data';
 import { FlashcardData, ExamboardData } from '../lib/definitions';
 import Link from 'next/link';
+//import { auth } from "auth";
 
 
 
@@ -20,6 +21,9 @@ export default async function Page() {
     //console.log(allFlashcardsData);
     //console.log(allFlashcardsData.length === 0)
     const examboardsData = await fetchExamboards();
+
+    
+
 
     //console.log(examboardsData);
 /*
@@ -37,6 +41,7 @@ export default async function Page() {
 
     return (
       <div>
+        
         
         <p>Select your examboard</p>
         {examboardsData.map((x: ExamboardData) => (

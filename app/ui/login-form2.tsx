@@ -27,7 +27,7 @@ export default function LoginForm2() {
     <form
       action={async () => {
         "use server"
-        await signIn("google")
+        await signIn("google", { redirectTo: "/welcome" })
       }}
     >
       <button type="submit">Signin with Google</button>

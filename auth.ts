@@ -9,7 +9,7 @@ import { z } from 'zod';
 import { sql } from '@vercel/postgres';
 import type { User } from '@/app/lib/definitions';
 import bcrypt from 'bcrypt';
- 
+ /*
 async function getUser(email: string): Promise<User | undefined> {
   try {
     const user = await sql<User>`SELECT * FROM users WHERE email=${email}`;
@@ -18,11 +18,17 @@ async function getUser(email: string): Promise<User | undefined> {
     console.error('Failed to fetch user:', error);
     throw new Error('Failed to fetch user.');
   }
-}
+}*/
  
 export const { handlers, auth, signIn, signOut } = NextAuth({
   ...authConfig,
-  providers: [Google, Credentials({
+  providers: [Google],
+});
+
+/*
+This was the old style of sign in where our database stores their login details incl hashed password
+
+, Credentials({
     async authorize(credentials) {
       const parsedCredentials = z
         .object({ email: z.string().email(), password: z.string().min(6) })
@@ -41,5 +47,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         return null;
     },
   
-  })],
-});
+  })
+
+*/
