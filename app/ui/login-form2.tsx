@@ -14,7 +14,6 @@ import { useFormState } from 'react-dom';
 //import { handlers } from "@/auth"
 //export const { GET, POST } = handlers
 import { signIn } from "@/auth"
-//import { signIn } from '@/auth';
 
 
 export default function LoginForm2() {
