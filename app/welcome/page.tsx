@@ -1,35 +1,40 @@
+//"use client";
+import * as jsonArray from '../lib/flashcard-seed-data.json';
+import FlashcardPresentation from '../ui/dashboard/flashcards';
+import DOMPurify from "isomorphic-dompurify";
+//import { createContext, useContext, useState } from 'react';
+//import { Flashcard } from "@/app/lib/definitions";
+import { fetchFlashcards, fetchExamboards } from '../lib/data';
+import { FlashcardData, ExamboardData } from '../lib/definitions';
+import Link from 'next/link';
+//import { auth } from "auth"
 import { auth } from '@/auth';
-import Image from 'next/image'
+
+
+
 
 export default async function Page() {
-    //const session = await auth()
-   //console.log('below should appear session...')
-    //console.log(session);
 
-    //let image: string = '';
-    //if (session){
-    //  if (session.user){
-     //   if (session.user.image){
-     //     image = session.user.image;
-     //   }
-     // }      
-    //}
+    const session = await auth();
+    console.log(session);
+    
+    
 
     return (
-      <main>
+      <div>
+        
         <p>Welcome!</p>
-        {/** 
-        { image ? 
-        <Image
-          src={image}
-          alt="user image"
-          width={500}
-          height={500}
-        ></Image>
-        :
-        null
-      }
-        */}
-      </main>
-    );
-  }
+        {
+            session?.user ?
+            <div>
+            <p>Welcome {session.user.name}</p> 
+            <p>Please confirm your email address {session.user.email}</p>
+            </div>
+            :
+            null
+        }
+        
+      </div>
+    )
+}
+
