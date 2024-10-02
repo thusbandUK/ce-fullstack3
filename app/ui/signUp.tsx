@@ -9,13 +9,15 @@ import { useFormState } from 'react-dom';
 export default function SignUpForm({
   username,
   email,
+  location,
 }: {
   username: string;
   email: string;
+  location: string | null;
 }) {
   //const initialState: State = { message: null, errors: {} };
   const initialState: State = { message: null, errors: {username: [], email: []}};
-  const signUpUserWithEmail = signUpUser.bind(null, email);
+  const signUpUserWithEmail = signUpUser.bind(null, email, location);
   const [state, formAction] = useFormState(signUpUserWithEmail, initialState);
   //const [state, formAction] = useFormState(email, signUpUser, initialState)
 

@@ -14,7 +14,7 @@ import { auth } from '@/auth';
 import { redirect } from 'next/navigation';
 import SignUpForm from '../../ui/signUp';
 
-export default async function Page() {
+export default async function Page({ searchParams }: { searchParams: { location: string } }) {
 
     const session: any = await auth();
     console.log(session);
@@ -35,6 +35,7 @@ export default async function Page() {
             <SignUpForm 
               username={session.user?.name}
               email={session.user?.email}
+              location={searchParams.location}
             />        
       </div>
     )

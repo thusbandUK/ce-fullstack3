@@ -14,7 +14,7 @@ import { notFound } from 'next/navigation';
 import { redirect } from 'next/navigation';
 import SignUpForm from '../ui/signUp';
 
-export default async function Page() {
+export default async function Page({ searchParams }: { searchParams: { location: string } }) {
 
     const session: any = await auth();
     console.log(session);
@@ -35,8 +35,24 @@ export default async function Page() {
     const userDetails: UserData[] = await fetchUser(userEmail);
 
     if (!userDetails || userDetails.length === 0){
-      redirect('/welcome/signup');
+      redirect(`/welcome/signup?location=${searchParams.location}`);
     }
+
+    //if (searchParams.location){
+     // setTimeout(() => {
+       // redirect(`${searchParams.location}`);
+      //}, 500)      
+    //}
+
+    // Wait 3 seconds.
+    await new Promise((resolve) => setTimeout(resolve, 3000));
+    
+    // Redirect to another route.
+    redirect(`${searchParams.location}`);
+
+    //setTimeout(() => {
+      //redirect(`${searchParams.location}`);
+    //}, 500) 
     
     
     
@@ -44,9 +60,16 @@ export default async function Page() {
     return (
       <div>
         
-        <p>Welcome!</p>
+        <p>Welcome {session.user ? session.user.name : null}!</p>
+
+        { searchParams.location ? 
+          <p>Please wait to be redirected</p>  
+          :
+          null
+        }
         
-        {
+        {/**
+         * {
             userDetails.length === 0 ?
             <div>
             <p>Looks like this is your first time signing in, welcome, please enter your details below...</p>
@@ -61,7 +84,7 @@ export default async function Page() {
             <p>Welcome back {userDetails[0].name}</p>
             
 
-        }
+        }*/}
         
       </div>
     )

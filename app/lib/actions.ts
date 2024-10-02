@@ -26,7 +26,7 @@ export type State = {
   };
 };
 
-export async function signUpUser(email: string, prevState: State, formData: FormData) {  
+export async function signUpUser(email: string, location: string | null, prevState: State, formData: FormData) {  
   
   //validates email
   const emailValidation = UserEmailSchema.safeParse({
@@ -69,7 +69,7 @@ export async function signUpUser(email: string, prevState: State, formData: Form
   }
   
   revalidatePath('/welcome');
-  redirect('/welcome');  
+  redirect(`/welcome?location=${location}`);  
 
 }
 

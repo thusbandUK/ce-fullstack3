@@ -23,7 +23,10 @@ export default async function Page({ params }: { params: { examboard_id: string 
                 </Link>
 
             </div>
-        ))}       
+        ))}
+        <p>You must be signed in to view this content - <Link
+          href={`/login?location=/flashcards/${params.examboard_id}/topic`}
+        >log in now?</Link></p>
         
       </div>
     )
