@@ -1,6 +1,6 @@
 import { sql } from '@vercel/postgres';
 import { z } from 'zod';
-import { FlashcardData, ExamboardData, TopicData, QuestionsData } from './definitions';
+import { FlashcardData, ExamboardData, TopicData, QuestionsData, UserData } from './definitions';
 import { queryMaker, questionSetSimplifiedArray, randomSelectionOfFifteen } from './functions';
 
 const ExamboardSchema = z.object({
@@ -10,6 +10,38 @@ const ExamboardSchema = z.object({
 const TopicSchema = z.object({
   topic_id: z.string()
 });
+
+export const UserEmailSchema = z.object({
+  validatedEmail: z.string().email("This is not a valid email.")
+})
+
+export async function fetchUser(email: string | undefined | null) {
+  if ((email === undefined) || email === null){
+    throw new Error('Problems finding user.'); 
+  }
+
+  //sanitises the argument passed to examboardId parameter 
+  const validatedData = UserEmailSchema.safeParse({
+    validatedEmail: email,
+  });
+
+  const query ='SELECT * FROM users WHERE email = $1'
+
+  const argument = [validatedData.data?.validatedEmail];
+  
+  try {    
+
+    const data = await sql.query<UserData>(query, argument);    
+  
+    console.log('User data fetch completed.');
+
+    return data.rows;
+
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch flashcard data.');
+  }
+}
 
 export async function fetchFlashcards() {
   try {    

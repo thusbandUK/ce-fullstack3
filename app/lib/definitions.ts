@@ -72,14 +72,27 @@ export type QuestionsData = {
 
 }
 
+//consider revising - this links to the session data, produced by eg: google login
+export type userData = {
+  user: {
+    name: string,
+    email: string,
+    image: string,
+  },
+  expires: string,
+}
 
-
-export type User = {
+//this is the userData as in the data stored in the ChemistryElephant database
+export type UserData = {
   id: string;
   name: string;
-  email: string;
-  password: string;
+  email: string;  
 };
+
+export type UserDetails = {
+  name: string;
+  email: string;
+}
 
 /*
 export type Customer = {
