@@ -15,7 +15,7 @@ import { redirect } from 'next/navigation';
 import SignUpForm from '../ui/signUp';
 
 export default async function Page({ searchParams }: { searchParams: { location: string } }) {
-
+  
     const session: any = await auth();
     console.log(session);
 
