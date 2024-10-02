@@ -41,7 +41,7 @@ export default function SignUpForm({
             >              
             </input>            
           </div>
-          <div id="amount-error" aria-live="polite" aria-atomic="true">
+          <div id="username-error" aria-live="polite" aria-atomic="true">
               {state.errors?.username &&
               state.errors.username.map((error: any) => (
                 <p className="mt-2 text-sm text-red-500" key={error}>
