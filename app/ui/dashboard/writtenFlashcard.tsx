@@ -71,7 +71,9 @@ const WrittenFlashcard = (
     
     return (
         <div>
-            <p>{question}</p> 
+            <p
+              dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(question)}}
+            ></p> 
             
             { (writtenStage === "response") ?
                 

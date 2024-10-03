@@ -3,6 +3,7 @@ import { ResponseAssessmentContext } from './flashcards';
 import { useContext } from "react";
 import { assessedResponse, FlashcardData } from '@/app/lib/definitions';
 import ChecklistFeedback from './checklistFeedback';
+import DOMPurify from "isomorphic-dompurify";
 
 const Response = (
     {
@@ -25,7 +26,9 @@ const Response = (
                 return (
                     <div>
                       <p>Question: </p>
-                      <p>{allFlashcardsData[x.flashcardDataIndex].question}</p>
+                      <p
+                        dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(allFlashcardsData[x.flashcardDataIndex].question)}}
+                      ></p>
                       <p>Response</p>
                       <p>{x.response}</p>
                       <ChecklistFeedback

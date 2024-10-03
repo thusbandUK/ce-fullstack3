@@ -1,6 +1,7 @@
 import React from "react";
 import { assessedResponse, FlashcardData } from "@/app/lib/definitions";
 import { numericalIndexToLetter } from "./writtenFlashcard";
+import DOMPurify from "isomorphic-dompurify";
 
 const ChecklistFeedback = (
     {
@@ -36,12 +37,16 @@ const ChecklistFeedback = (
         <div>
             <p>Checked points</p>
               {checkedAnswers.map((y) => {
-                return <p>{y}</p>
+                return <p
+                         dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(y)}}
+                       ></p>
                 })
               }
             <p>Unchecked points</p>
               {uncheckedAnswers.map((z) => {
-                return <p>{z}</p>
+                return <p
+                         dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(z)}}                
+                       ></p>
                 })
               }
 
