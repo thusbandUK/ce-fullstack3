@@ -2,6 +2,7 @@ import React from 'react';
 import { ResponseAssessmentContext } from './flashcards';
 import { useContext } from "react";
 import { assessedResponse, FlashcardData } from '@/app/lib/definitions';
+import DOMPurify from "isomorphic-dompurify";
 
 //takes the index position of the checklist array and converts it into a letter, to match the corresponding keys
     //in the assessedResponse checklist (in ResponseAssessmentContext)
@@ -36,7 +37,7 @@ const WrittenFlashcard = (
   }
 ) => {
   
-    const {checklist, question, id: questionId} = oneFlashcardData;    
+    const {checklist, definition, question, id: questionId} = oneFlashcardData;    
 
     const responseAssessment = useContext(ResponseAssessmentContext);    
    
@@ -88,6 +89,11 @@ const WrittenFlashcard = (
               <div>
             
                 <legend>Check the points you got right</legend>
+                <h2>Model answer:</h2>
+                <p
+                  dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(definition)}}
+                ></p>
+                <h2>Your answer:</h2>
                 <p>{responseAssessment ? responseAssessment[index].response : null}</p>
               
                 {noNullItemsChecklist.map((x: string) => {
@@ -100,7 +106,10 @@ const WrittenFlashcard = (
                         id={`checkbox-${arrayIndex}`}                        
                         value={numericalIndexToLetter(arrayIndex)} 
                         name={`checkbox-${arrayIndex}`} />
-                      <label htmlFor={`checkbox-${arrayIndex}`}>{x}</label>
+                      <label 
+                        htmlFor={`checkbox-${arrayIndex}`}
+                        dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(x)}}
+                      ></label>
                     </div>      
                 )})}              
               
