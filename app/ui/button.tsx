@@ -3,8 +3,8 @@ import styles from './button.module.css'
 import React from 'react';
 
 
-interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  children: React.ReactNode;
+export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  asChild?: boolean
 }
 
 export function Button({ children, className, ...rest }: ButtonProps) {
@@ -18,4 +18,3 @@ export function Button({ children, className, ...rest }: ButtonProps) {
     </button>
   );
 }
-/**/

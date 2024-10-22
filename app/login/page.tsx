@@ -1,8 +1,11 @@
-import LoginForm2 from '../ui/login-form2';
+//import LoginForm2 from '../ui/login-form2';
 import React from 'react';
+import { SignIn } from '../ui/login-form2';
  
 
-export default function LoginPage({ searchParams, children }: { searchParams: { location: string }, children: React.ReactNode }) {
+export default function LoginPage({ searchParams }: { searchParams: { location: string } }) {
+
+  //return <SignIn />
 
   return (
     <main className="flex items-center justify-center md:h-screen">
@@ -12,14 +15,14 @@ export default function LoginPage({ searchParams, children }: { searchParams: { 
             <p>Chemistry Elephant</p>
           </div>
         </div>
-        <LoginForm2 
-          location={searchParams.location ? searchParams.location : null}          
-        >
-          {children}
+        <SignIn 
+          location={searchParams.location ? searchParams.location : null}
+        />
           
-          </LoginForm2>
+          
+          
       </div>
     </main>
   );
 }
-  
+  //location={searchParams.location ? searchParams.location : null}    

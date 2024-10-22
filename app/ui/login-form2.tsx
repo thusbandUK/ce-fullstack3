@@ -1,7 +1,27 @@
 import { Button } from './button';
 import { signIn } from "@/auth"
+//location,
 
+//location: string | null, 
 
+export function SignIn({
+  location,
+  provider,
+  ...props
+}: { location: string | null, provider?: string } & React.ComponentPropsWithRef<typeof Button>) {
+  return (
+    <form
+      action={async () => {
+        "use server"
+        await signIn(provider, { redirectTo: `/welcome?location=${location}` })
+      }}
+    >
+      <Button {...props}>Sign In</Button>
+    </form>
+  )
+}
+
+/*
 export default function LoginForm2(
   {
     location, 
@@ -13,10 +33,7 @@ export default function LoginForm2(
   }
   & React.ComponentPropsWithRef<typeof Button>) {
   
-  //console.log('children')
-  //console.log(children);
-  console.log('props');
-  console.log(props);
+  
 
   return (
     <form
@@ -33,4 +50,4 @@ export default function LoginForm2(
 
 //<button type="submit">Signin with Google</button>
 
-
+*/
