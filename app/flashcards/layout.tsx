@@ -14,8 +14,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             await signOut();
           }}
         >
-          <button className={styles.button}>
-            <p>This said &apos;power icon&apos;</p>
+          <button className={styles.button}>            
             <div >Sign Out</div>
           </button>
         </form>
