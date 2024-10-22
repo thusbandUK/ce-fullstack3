@@ -1,11 +1,8 @@
 //"use client";
-import * as jsonArray from '../lib/flashcard-seed-data.json';
-import FlashcardPresentation from '../ui/dashboard/flashcards';
-import DOMPurify from "isomorphic-dompurify";
 //import { createContext, useContext, useState } from 'react';
 //import { Flashcard } from "@/app/lib/definitions";
-import { fetchFlashcards, fetchExamboards } from '../lib/data';
-import { FlashcardData, ExamboardData } from '../lib/definitions';
+import { fetchExamboards } from '../lib/data';
+import { ExamboardData } from '../lib/definitions';
 import Link from 'next/link';
 //import { auth } from "auth";
 
