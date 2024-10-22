@@ -1,14 +1,8 @@
-//import AcmeLogo from '@/app/ui/acme-logo';
-import LoginForm from '@/app/ui/login-form';
 import LoginForm2 from '../ui/login-form2';
-//import { getSearchResults } from '@/lib/search'
+import React from 'react';
  
 
- 
 export default function LoginPage({ searchParams }: { searchParams: { location: string } }) {
-
-//console.log(params.location);
-//console.log(searchParams.location)
 
   return (
     <main className="flex items-center justify-center md:h-screen">
@@ -19,9 +13,10 @@ export default function LoginPage({ searchParams }: { searchParams: { location: 
           </div>
         </div>
         <LoginForm2 
-          location={searchParams.location ? searchParams.location : null}
+          location={searchParams.location ? searchParams.location : null} children={undefined}          
         />
       </div>
     </main>
   );
 }
+  

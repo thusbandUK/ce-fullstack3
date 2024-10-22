@@ -1,5 +1,6 @@
 //import clsx from 'clsx';
 import styles from './button.module.css'
+import React from 'react';
 
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -7,6 +8,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 export function Button({ children, className, ...rest }: ButtonProps) {
+  console.log(children);
   return (
     <button
       {...rest}
@@ -16,3 +18,4 @@ export function Button({ children, className, ...rest }: ButtonProps) {
     </button>
   );
 }
+/**/

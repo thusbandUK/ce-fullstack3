@@ -1,38 +1,22 @@
-//'use client';
-
-//import { lusitana } from '@/app/ui/fonts';
-//import {
-  //AtSymbolIcon,
-  //KeyIcon,
-  //ExclamationCircleIcon,
-//} from '@heroicons/react/24/outline';
-//import { ArrowRightIcon } from '@heroicons/react/20/solid';
 import { Button } from './button';
-import { useActionState } from 'react';
-import { authenticate } from '@/app/lib/actions';
-import { useFormState } from 'react-dom';
-//import { handlers } from "@/auth"
-//export const { GET, POST } = handlers
 import { signIn } from "@/auth"
 
 
 export default function LoginForm2(
   {
     location, 
-    provider,
+    provider,    
   ...props
   }: {
     location: string | null,
-    provider?: string
+    provider?: string    
   }
   & React.ComponentPropsWithRef<typeof Button>) {
   
-  
-  //useFormState *was* useActionState
-  //const [errorMessage, formAction, isPending] = useFormState(
-    //authenticate,
-    //undefined,
- // );
+  //console.log('children')
+  //console.log(children);
+  console.log('props');
+  console.log(props);
 
   return (
     <form
