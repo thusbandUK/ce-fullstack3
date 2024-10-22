@@ -2,7 +2,7 @@ import LoginForm2 from '../ui/login-form2';
 import React from 'react';
  
 
-export default function LoginPage({ searchParams }: { searchParams: { location: string } }) {
+export default function LoginPage({ searchParams, children }: { searchParams: { location: string }, children: undefined }) {
 
   return (
     <main className="flex items-center justify-center md:h-screen">
@@ -13,8 +13,10 @@ export default function LoginPage({ searchParams }: { searchParams: { location: 
           </div>
         </div>
         <LoginForm2 
-          location={searchParams.location ? searchParams.location : null} children={undefined}          
-        />
+          location={searchParams.location ? searchParams.location : null}          
+        >
+          {children}
+          </LoginForm2>
       </div>
     </main>
   );
