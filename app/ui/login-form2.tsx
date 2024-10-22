@@ -16,7 +16,18 @@ import { useFormState } from 'react-dom';
 import { signIn } from "@/auth"
 
 
-export default function LoginForm2({location}: {location: string | null}) {
+export default function LoginForm2(
+  {
+    location, 
+    provider,
+  ...props
+  }: {
+    location: string | null,
+    provider?: string
+  }
+  & React.ComponentPropsWithRef<typeof Button>) {
+  
+  
   //useFormState *was* useActionState
   //const [errorMessage, formAction, isPending] = useFormState(
     //authenticate,
@@ -27,13 +38,15 @@ export default function LoginForm2({location}: {location: string | null}) {
     <form
       action={async () => {
         "use server"
-        await signIn("google", { redirectTo: `/welcome?location=${location}` })
+        await signIn(provider, { redirectTo: `/welcome?location=${location}` })
       }}
     >
-      <button type="submit">Signin with Google</button>
+      
+      <Button {...props}>Sign In</Button>
     </form>
   );
 }
 
+//<button type="submit">Signin with Google</button>
 
 

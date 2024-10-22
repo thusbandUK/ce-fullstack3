@@ -12,6 +12,7 @@ import { UserDetails } from './definitions';
 const FormSchema = z.object({
   username: z.coerce.string({invalid_type_error: "Name must be a string",}).max(20).min(5),
   //email: z.string().email(),  
+  mailTick: z.coerce.boolean(),
 });
  
 const NewUser = FormSchema;
@@ -35,12 +36,15 @@ export async function signUpUser(email: string, location: string | null, prevSta
 
   //validates username to ensure string between 5 and 20 characters long
   const validatedFields = NewUser.safeParse({    
-    username: formData.get('username'),        
+    username: formData.get('username'),
+    mailTick: formData.get('mailTick'),
   });
     
   // If form validation fails, return errors early. Otherwise, continue.
   
-  if (!validatedFields.success) {    
+  if (!validatedFields.success) {
+    console.log('validated fields not successful');
+    console.log(validatedFields.error.flatten());
     return {
       message: 'Username rejected. Try again.',      
       errors: {        
@@ -51,13 +55,17 @@ export async function signUpUser(email: string, location: string | null, prevSta
     };
   }
   
+  const validatedMailTick = validatedFields.data?.mailTick;
+
+  console.log(validatedMailTick);
+
   const validatedUsername = validatedFields.data?.username;
   
   const validatedEmail = emailValidation.data?.validatedEmail;
 
-  const query = 'INSERT INTO users (name, email) VALUES ($1, $2) ON CONFLICT (id) DO NOTHING;'
+  const query = 'INSERT INTO users (name, email, receive_email) VALUES ($1, $2, $3) ON CONFLICT (id) DO NOTHING;'
 
-  const argumentData = [validatedUsername, validatedEmail];
+  const argumentData = [validatedUsername, validatedEmail, validatedMailTick];
   
   try {
     const userDetails = await sql.query<UserDetails>(query, argumentData);

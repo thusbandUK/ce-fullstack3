@@ -38,8 +38,7 @@ export default function SignUpForm({
             <input
               id="username"
               name="username"              
-              defaultValue={username}
-              
+              defaultValue={username}              
             >              
             </input>            
           </div>
@@ -61,17 +60,20 @@ export default function SignUpForm({
           <div className="relative">
             <p>{email}</p>           
           </div>
+          <label
+            htmlFor="mailTick"
+          >Tick if you are happy for Chemistry Elephant to send you emails about special offers and new additions to the website</label>
+          <input
+            id="mailTick"
+            name="mailTick"
+            type="checkbox"
+          ></input>
         </div>
         
       </div>
       <div className="mt-6 flex justify-end gap-4">
-        <Link
-          href="/dashboard/invoices"
-          className="flex h-10 items-center rounded-lg bg-gray-100 px-4 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200"
-        >
-          Cancel
-        </Link>
-        <Button type="submit">Edit Invoice</Button>
+        
+        <Button type="submit">Sign up</Button>
       </div>
       
     </form>
