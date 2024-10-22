@@ -2,7 +2,7 @@
 import { signOut } from '@/auth';
 import styles from '../ui/button.module.css';
 
-export const experimental_ppr = true;
+//export const experimental_ppr = true;
  
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
