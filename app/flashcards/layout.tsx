@@ -15,7 +15,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           }}
         >
           <button className={styles.button}>
-            <p>This said 'power icon'</p>
+            <p>This said &apos;power icon&apos;</p>
             <div >Sign Out</div>
           </button>
         </form>

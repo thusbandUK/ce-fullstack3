@@ -48,7 +48,7 @@ export default function FlashcardPresentation({allFlashcardsData}: {allFlashcard
         if (completeSet.length > 0){
             return;
         }
-        let outputArray: number[] = [];
+        const outputArray: number[] = [];
         for (let x = 0; x < inputArray.length; x ++){            
             outputArray.push(x);
         }        
@@ -90,9 +90,9 @@ export default function FlashcardPresentation({allFlashcardsData}: {allFlashcard
     function askQuestion(){
       //Creates an iterable array of the keys for the different flashcards in the object
       //correctly answered questions will be successively removed until the array is empty
-      let completeQuestionSet = completeSet;
+      const completeQuestionSet = completeSet;
       //creates an array of the questions yet to be answered correctly
-      let remainingQuestions: number[] = [];
+      const remainingQuestions: number[] = [];
       //filters the correctlyAnsweredQuestions state array and pushes any questions yet to be correctly answered to 
       //the remaining questions array
       completeQuestionSet.forEach((x: number)=>{
@@ -112,7 +112,7 @@ export default function FlashcardPresentation({allFlashcardsData}: {allFlashcard
       //if the number of recently answered questions is greater than or equal to the number or remaining questions, the question
       //at the front of the recentQuestions queue is assigned
       if (remainingQuestions.length <= recentQuestions.length){
-          let updatedRecentQuestions: number[] = recentQuestions;
+          const updatedRecentQuestions: number[] = recentQuestions;
           //come back and sort out the any, should be number but that wasn't accepted
           const selectedQuestion: any = updatedRecentQuestions.shift();
           setRecentQuestions(updatedRecentQuestions);
@@ -122,12 +122,12 @@ export default function FlashcardPresentation({allFlashcardsData}: {allFlashcard
       //if more questions remain than are stored in the recently answered queue, the remaining questions are filtered to remove
       //any of those in the recently answered array, to ensure that the same question is only answered twice in a row if it is the
       //last remaining question
-      let remainingNonRecentQuestions = remainingQuestions.filter((question)=> {
+      const remainingNonRecentQuestions = remainingQuestions.filter((question)=> {
           return !recentQuestions.includes(question);
       })
       //a random number is generated to select at random from one of the remainingNonRecent questions
-      let randomNumber = Math.floor(Math.random() * remainingNonRecentQuestions.length);
-      let selectedCard = remainingNonRecentQuestions[randomNumber];
+      const randomNumber = Math.floor(Math.random() * remainingNonRecentQuestions.length);
+      const selectedCard = remainingNonRecentQuestions[randomNumber];
       setFlashcard(selectedCard);        
       //setCurrentQuestion(flashcards[flashcard]);
       return         
@@ -137,7 +137,7 @@ export default function FlashcardPresentation({allFlashcardsData}: {allFlashcard
     //keep this for the time being, just to check that info is getting updated
     console.log(responseAssessment);
         
-    let remainingWrittenQuestions: number[] = [];
+    const remainingWrittenQuestions: number[] = [];
 
     //filters the correctlyAnsweredQuestions state array and pushes any questions yet to be correctly answered to 
     //the remaining questions array
@@ -162,9 +162,9 @@ export default function FlashcardPresentation({allFlashcardsData}: {allFlashcard
     }
     
     //a random number is generated to select at random from one of the remainingNonRecent questions
-    let randomNumber = Math.floor(Math.random() * remainingWrittenQuestions.length);
+    const randomNumber = Math.floor(Math.random() * remainingWrittenQuestions.length);
     
-    let selectedCard = remainingWrittenQuestions[randomNumber];
+    const selectedCard = remainingWrittenQuestions[randomNumber];
     
     setWrittenFlashcard(selectedCard);
     
@@ -186,7 +186,7 @@ const handleWrittenClick = () => {
     //resets response statement
     setResponse("");
     
-    let arrayOfResponsesInitiator: assessedResponse[] = [];
+    const arrayOfResponsesInitiator: assessedResponse[] = [];
     completeSet.forEach((x: number) => {
         arrayOfResponsesInitiator.push({
             id: Number(allFlashcardsData[x].id),
@@ -246,7 +246,7 @@ const handleWrittenClick = () => {
       
       if (suggestedAnswer === correctAnswer){
           setResponse("You got it right. Woop!!");
-          let updatedArray = correctlyAnsweredQuestions;
+          const updatedArray = correctlyAnsweredQuestions;
           updatedArray.push(flashcard);
           setCorrectlyAnsweredQuestions(updatedArray);
       } else {
@@ -278,7 +278,7 @@ const handleSubmitChecklist = () => {
     //effectively calls the next flashcard
     setWrittenStage("response");
     //this creates a mutable copy of the answeredWrittenQuestions (an array of the numbers of the questions already answered)
-    let updatedAnsweredQuestionsArray = answeredWrittenQuestions;
+    const updatedAnsweredQuestionsArray = answeredWrittenQuestions;
     //pushes in the id of the question just answered
     updatedAnsweredQuestionsArray.push(writtenFlashcard);
     //updates the state with the new array including all the questions answered

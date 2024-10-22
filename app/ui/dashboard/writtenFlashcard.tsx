@@ -99,7 +99,7 @@ const WrittenFlashcard = (
                 <p>{responseAssessment ? responseAssessment[index].response : null}</p>
               
                 {noNullItemsChecklist.map((x: string) => {
-                  let arrayIndex = checklist.findIndex((item: string) => item === x);                  
+                  const arrayIndex = checklist.findIndex((item: string) => item === x);                  
                   return (
                     <div key={arrayIndex}>
                       <input                        

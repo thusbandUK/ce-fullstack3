@@ -17,7 +17,7 @@ export const shuffle = (array: string[]) => {
 //returns string, receives an array of numbers in string format, returns a string of sql.query parameters
 //eg input ["5","8","9"] returns '$1, $2, $3'
 export const queryMaker = (listOfIds: string[]) => {
-    let outputArray: string[] = [];
+    const outputArray: string[] = [];
     for (let x = 0; x < (listOfIds.length - 1); x++){
         outputArray.push(`$${(x + 1).toString()}, `)
     }
@@ -40,16 +40,16 @@ export const randomSelectionOfFifteen = (inputArray: string[]) => {
     //repeats different values in the argument array at random to make an array with 15 id values
     //all from values pass in the inputArray
     if (inputArray.length <= 15){
-        let modifiedInputArray = inputArray;
-        let shortfall: number = (15 - inputArray.length);
+        const modifiedInputArray = inputArray;
+        const shortfall: number = (15 - inputArray.length);
         for (let y = 0; y < shortfall; y++){
             const index = Math.floor(Math.random() * inputArray.length);
             modifiedInputArray.push(inputArray[index]);
         }
         return modifiedInputArray;
     }
-    let modifiedInputArray = inputArray;
-    let outputArray: string[] = [];
+    const modifiedInputArray = inputArray;
+    const outputArray: string[] = [];
     for (let x = 0; x < 15; x++){
         const index = Math.floor(Math.random() * modifiedInputArray.length);
         outputArray.push(modifiedInputArray[index]);

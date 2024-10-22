@@ -26,7 +26,7 @@ export default async function Page({ searchParams }: { searchParams: { location:
     }
 
     //let userEmail: string | null | undefined = '';
-    let userEmail: string = '';    
+    const userEmail: string = '';    
 
     return (
       <div>        

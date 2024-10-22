@@ -16,16 +16,16 @@ const ChecklistFeedback = (
 
     const masterChecklist = allFlashcardsData[responseAssessment.flashcardDataIndex].checklist;
 
-    let checkedAnswers: string[] = [];
-    let uncheckedAnswers: string[] = [];
+    const checkedAnswers: string[] = [];
+    const uncheckedAnswers: string[] = [];
 
     //this maps the checklist of available responses for the flashcard passed via props, then 
     //checks the responseAssessment to see whether they've been checked by the user
     //dividing all the responses between the above two arrays, which are then mapped individually in the return
     //statement below
     masterChecklist.map((x: string) => {
-        let checklistIndex: number = masterChecklist.findIndex((item) => item === x);
-        let checklistKey: keyof assessedResponse["checkedPoints"] = numericalIndexToLetter(checklistIndex);
+        const checklistIndex: number = masterChecklist.findIndex((item) => item === x);
+        const checklistKey: keyof assessedResponse["checkedPoints"] = numericalIndexToLetter(checklistIndex);
           if (responseAssessment.checkedPoints[checklistKey]){
             return checkedAnswers.push(x);
           } else {
@@ -36,15 +36,17 @@ const ChecklistFeedback = (
     return (
         <div>
             <p>Checked points</p>
-              {checkedAnswers.map((y) => {
+              {checkedAnswers.map((y, i) => {
                 return <p
+                         key={i}
                          dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(y)}}
                        ></p>
                 })
               }
             <p>Unchecked points</p>
-              {uncheckedAnswers.map((z) => {
+              {uncheckedAnswers.map((z, j) => {
                 return <p
+                         key={j}
                          dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(z)}}                
                        ></p>
                 })

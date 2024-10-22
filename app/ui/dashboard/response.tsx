@@ -21,10 +21,12 @@ const Response = (
     return (
         <div>
             <p>{summary}</p>
-            {responseAssessment.map((x: assessedResponse) => {
+            {responseAssessment.map((x: assessedResponse, i) => {
 
                 return (
-                    <div>
+                    <div
+                      key={i}
+                    >
                       <p>Question: </p>
                       <p
                         dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(allFlashcardsData[x.flashcardDataIndex].question)}}
