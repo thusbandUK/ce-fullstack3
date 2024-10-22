@@ -5,6 +5,7 @@
 
 # db init content
 /app/seed/initiation.sql
+/app/seed/route.ts
 
 # dependencies
 /node_modules
