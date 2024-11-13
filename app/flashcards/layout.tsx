@@ -10,7 +10,17 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     <div >
       <div >
        
-      <form
+      
+        
+      </div>
+      <div >{children}</div>
+    </div>
+  );
+}
+
+
+/**
+ * <form
           action={async () => {
             'use server';
             await signOut();
@@ -20,11 +30,4 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             <div >Sign Out</div>
           </button>
         </form>
-        
-      </div>
-      <div >{children}</div>
-    </div>
-  );
-}
-
-
+ */
