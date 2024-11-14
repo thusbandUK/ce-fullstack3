@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import NavLinks from "./ui/dashboard/nav-links";
+import Navbar from "./ui/dashboard/navbar";
 import { signOut } from '@/auth';
 import styles from './ui/button.module.css';
 
@@ -32,7 +33,18 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <div>
-        <form
+        
+        
+        <Navbar />
+        </div>
+        {children}
+      </body>
+    </html>
+  );
+}
+
+/*
+<form
           action={async () => {
             'use server';
             await signOut();
@@ -42,11 +54,4 @@ export default function RootLayout({
             <div >Sign Out</div>
           </button>
         </form>
-        
-        <NavLinks />
-        </div>
-        {children}
-      </body>
-    </html>
-  );
-}
+*/

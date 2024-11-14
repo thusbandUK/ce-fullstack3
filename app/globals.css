@@ -20,6 +20,30 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+/*Nav bar*/
+
+.navlink {
+  margin: 2%;
+  padding: 2%;
+}
+
+.navbar-container {
+  position: fixed;
+
+}
+
+.navbar-links-container {
+  margin-left: auto;
+    /* padding: 5%; */
+    /* margin-right: 0%; */
+    /* right: 0; */
+    flex-basis: auto;
+    width: 100%;
+    justify-content: flex-end;
+}
+
+/*Nav bar ends*/
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;

@@ -32,7 +32,8 @@ export default function NavLinks() {
         return (
           <Link
             key={link.name}
-            href={link.href}            
+            href={link.href}
+            className="navlink"
           >            
             <p className="hidden md:block">{link.name}</p>
           </Link>
