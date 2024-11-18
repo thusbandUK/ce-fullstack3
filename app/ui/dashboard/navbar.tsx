@@ -19,7 +19,7 @@ export default function Navbar() {
           width={100}
           height={76}
         />
-      <div className="flex navbar-links-container">
+      <div className="flex navbar-links-container my-auto">
         <form
           action={async () => {
             'use server';

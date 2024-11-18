@@ -23,8 +23,16 @@ body {
 /*Nav bar*/
 
 .navlink {
-  margin: 2%;
-  padding: 2%;
+  /*margin: 2%;
+  margin-left: 2px;*/
+  padding: 10px 20px;
+  border: black solid 1px;  
+  border-radius: 15px;
+}
+
+.navlink:hover {
+  border-radius: 30px;
+  transition: border-radius 0.5s;
 }
 
 .navbar-container {
