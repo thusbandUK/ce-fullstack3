@@ -1,17 +1,17 @@
 'use client';
 
+//all the commented out have potential value
+
 /*import {
   UserGroupIcon,
   HomeIcon,
   DocumentDuplicateIcon,
 } from '@heroicons/react/24/outline';*/
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+//import { usePathname } from 'next/navigation';
 //import clsx from 'clsx';
+import Link from 'next/link';
 import { useState } from 'react';
 import Image from 'next/image';
-
-
 
 // Map of links to display in the side navigation.
 // Depending on the size of the application, this would be stored in a database.
@@ -28,28 +28,10 @@ export default function NavLinks({session}: {session: any}) {
   //see clsx part below
   //const pathname = usePathname();
   
-  const [dropMenu, setDropMenu] = useState(false);
-
-  console.log(session);
+  const [dropMenu, setDropMenu] = useState(false);  
   
-  const dropMenuStyle = {
-    display: dropMenu ? 'flex' : 'none',
-    flexDirection: dropMenu? 'column' : 'row'
-    //padding: show ? '10px' : '0px'
-}    
-
-  const handleDropDown = () => {
-    return setDropMenu(!dropMenu);
-  }
   return (
-    
-
-    <>
-    <button
-        onClick={handleDropDown}
-      >Press here</button>
-      
-    
+    <>    
       {links.map((link) => {
         //const LinkIcon = link.icon;
         return (
@@ -75,21 +57,16 @@ export default function NavLinks({session}: {session: any}) {
             style={{border: 'black solid 1px', borderRadius: '50%'}}
           ></Image>
           :
-          null
-          
-        
+          null        
         }
 
         </div>
-      </Link>
-         
+      </Link>         
     </>
   );
 }
 
 /*
-
-<div className="navbar-links-container-inner" style={dropMenuStyle}></div>
 
 This was a link prop:
 

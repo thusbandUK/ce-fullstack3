@@ -50,6 +50,20 @@ body {
     justify-content: flex-end;
 }
 
+.desktop-nav {
+  display: none !important;
+}
+
+@media screen and (min-width: 992px) {
+  .mobile-nav {
+    display: none  !important;
+  }
+  
+  .desktop-nav {
+    display: flex !important;
+  }
+}
+
 /*Nav bar ends*/
 
 @layer utilities {
