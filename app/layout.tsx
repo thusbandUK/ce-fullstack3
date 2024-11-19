@@ -1,10 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-import NavLinks from "./ui/dashboard/nav-links";
 import Navbar from "./ui/dashboard/navbar";
-import { signOut } from '@/auth';
-import styles from './ui/button.module.css';
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -26,7 +23,8 @@ export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
-}>) {
+}>) {  
+
   return (
     <html lang="en">
       <body
@@ -34,24 +32,14 @@ export default function RootLayout({
       >
         <div>
         
-        
-        <Navbar />
+        <header>
+          <Navbar />
+        </header>
         </div>
+        <main style={{paddingTop: '100px'}}>
         {children}
+        </main>
       </body>
     </html>
   );
 }
-
-/*
-<form
-          action={async () => {
-            'use server';
-            await signOut();
-          }}
-        >
-          <button className={styles.button}>            
-            <div >Sign Out</div>
-          </button>
-        </form>
-*/
