@@ -1,16 +1,20 @@
 import NavLinks from './nav-links';
 import Image from 'next/image';
-import { signOut } from '@/auth';
-import styles from '../button.module.css';
+import SignOut from './signOut';
+import { auth } from '@/auth';
+
 
 //import clsx from 'clsx';
 
 // Map of links to display in the side navigation.
 // Depending on the size of the application, this would be stored in a database.
 
-export default function Navbar() {
+export default async function Navbar() {
   //see clsx part below
   //const pathname = usePathname();
+  //console.log(session);
+  const session: any = await auth();
+  
   return (
     <>
       <div className="flex w-full navbar-container">
@@ -20,22 +24,19 @@ export default function Navbar() {
           height={76}
         />
       <div className="flex navbar-links-container my-auto">
-        <form
-          action={async () => {
-            'use server';
-            await signOut();
-          }}
-          className="navlink"
-        >
-          <button className={styles.button}>            
-            <div >Sign Out</div>
-          </button>
-        </form>
+        
     
-      <NavLinks />
+      
+      <NavLinks 
+        session={session}
+      />
+      
+      
+      
       </div>
       </div>
     </>
   );
 }
 
+//{session ? <SignOut /> : null}

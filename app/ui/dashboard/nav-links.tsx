@@ -8,6 +8,10 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 //import clsx from 'clsx';
+import { useState } from 'react';
+import Image from 'next/image';
+
+
 
 // Map of links to display in the side navigation.
 // Depending on the size of the application, this would be stored in a database.
@@ -20,13 +24,32 @@ const links = [
   { name: 'About', href: '/about' },
 ];
 
-export default function NavLinks() {
+export default function NavLinks({session}: {session: any}) {
   //see clsx part below
   //const pathname = usePathname();
+  
+  const [dropMenu, setDropMenu] = useState(false);
+
+  console.log(session);
+  
+  const dropMenuStyle = {
+    display: dropMenu ? 'flex' : 'none',
+    flexDirection: dropMenu? 'column' : 'row'
+    //padding: show ? '10px' : '0px'
+}    
+
+  const handleDropDown = () => {
+    return setDropMenu(!dropMenu);
+  }
   return (
-    <>{/**
-    <p>Hi I'm NavLinks!</p>
-    */}
+    
+
+    <>
+    <button
+        onClick={handleDropDown}
+      >Press here</button>
+      
+    
       {links.map((link) => {
         //const LinkIcon = link.icon;
         return (
@@ -39,12 +62,34 @@ export default function NavLinks() {
           </Link>
         );
       })}
+      <Link
+        href={'/account'}
+      >
+        <div className="account-icon">
+          {session ? 
+          <Image
+            src={session.user.image}
+            alt=""
+            width={50}
+            height={50}
+            style={{border: 'black solid 1px', borderRadius: '50%'}}
+          ></Image>
+          :
+          null
+          
+        
+        }
+
+        </div>
+      </Link>
          
     </>
   );
 }
 
 /*
+
+<div className="navbar-links-container-inner" style={dropMenuStyle}></div>
 
 This was a link prop:
 
