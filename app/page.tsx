@@ -4,26 +4,26 @@ import elephantPic from '../public/site-logo.png';
 export default function Home() {
   return (
     <div>
-      <div className="grid grid-cols-6 gap-4 w-4/5 mx-auto">
+      <div className="grid grid-cols-6 w-4/5 mx-auto mt-16">
         <div className="col-start-1 rounded-lg col-span-6 flex" style={{border: 'black solid 1px'}}>
           <h1 className="m-auto md:ml-10 p-5">Welcome to Chemistry Elephant</h1>
         </div>
         <div className="col-start-1 rounded-lg col-end-3 ..." >
           <Image
-            src={elephantPic} alt="chemistry elephant logo"
-            
+            src={elephantPic} 
+            alt="chemistry elephant logo"
+            className="rounded-lg"
+            style={{border: 'black solid 1px'}}
           >
-
           </Image>
-
         </div>
         <div className="col-start-3 flex rounded-lg col-end-7 ..." style={{border: 'black solid 1px'}}>
           <p className="p-5 m-auto md:p-10">
             Stride through chemistry with the majesty of an elephant
           </p>
-          </div>        
+          </div>
       </div>
-    </div>      
+    </div>
   );
 }
 

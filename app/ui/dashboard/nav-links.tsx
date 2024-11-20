@@ -40,7 +40,7 @@ export default function NavLinks({session}: {session: any}) {
             href={link.href}
             className="navlink"
           >            
-            <p className="hidden md:block menu-dropdown-toggle">{link.name}</p>
+            <p className="hidden text-base md:block menu-dropdown-toggle">{link.name}</p>
           </Link>
         );
       })}
