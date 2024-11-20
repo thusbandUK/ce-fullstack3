@@ -1,41 +1,30 @@
+import Image from "next/image";
+import elephantPic from '../public/site-logo.png';
+
 export default function Home() {
   return (
     <div>
-      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras posuere, tortor et molestie consectetur, mi turpis maximus urna, vel ullamcorper purus metus et massa. In lacinia tellus eget metus egestas elementum vitae eget ante. Mauris vitae purus enim. Aenean suscipit sit amet ante nec feugiat. Morbi at nulla vel sem finibus vestibulum. Maecenas vitae aliquet felis, eu feugiat orci. Aliquam erat volutpat. Aenean convallis consequat risus a pretium. Donec pellentesque pharetra magna, eu blandit tellus. Quisque at lacinia purus.
+      <div className="grid grid-cols-6 gap-4 w-4/5 mx-auto">
+        <div className="col-start-1 rounded-lg col-span-6 flex" style={{border: 'black solid 1px'}}>
+          <h1 className="m-auto md:ml-10 p-5">Welcome to Chemistry Elephant</h1>
+        </div>
+        <div className="col-start-1 rounded-lg col-end-3 ..." >
+          <Image
+            src={elephantPic} alt="chemistry elephant logo"
+            
+          >
 
-Quisque ornare, ex id dictum tempus, dui mauris consequat enim, ut molestie augue nisi eget orci. Cras rhoncus quam sed felis euismod hendrerit. Sed rhoncus pellentesque velit ac bibendum. Cras laoreet varius sollicitudin. Morbi sagittis lorem at congue semper. Cras sagittis pulvinar posuere. Duis non nibh nulla. Suspendisse ut sem eros. Ut lorem ligula, mattis sed lectus non, pulvinar porttitor velit. Proin fringilla nec erat vitae consequat. Nullam elementum, felis a dignissim egestas, lectus ex sodales nibh, non consectetur leo sem eu sem. Proin quis lacus at tortor maximus tincidunt ut sit amet quam. Suspendisse cursus tortor nec enim mollis fermentum eget sit amet tortor.
+          </Image>
 
-Sed rutrum lobortis tortor, vel ullamcorper dui vulputate vel. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Quisque pellentesque vestibulum faucibus. Vestibulum ornare porttitor nunc id mattis. Vivamus ut eleifend nunc. Ut mattis faucibus nisl a faucibus. Curabitur nunc sapien, interdum non diam et, aliquam luctus mauris. Duis et vehicula dolor. Cras id orci vitae nulla ultricies pharetra.
-
-Etiam ut vehicula diam, et rhoncus lorem. Integer in dignissim urna. Sed non ipsum aliquam libero aliquam cursus in scelerisque lectus. Morbi sit amet pretium nunc. Nam placerat erat a interdum dignissim. Duis pharetra lorem sapien, at pulvinar eros mollis nec. Quisque interdum lorem augue, et porttitor neque euismod ut. Maecenas leo leo, scelerisque vitae ultrices eget, semper sit amet dolor. Donec hendrerit aliquet lorem. Vivamus sollicitudin nisi sit amet ligula aliquet gravida. Sed eu quam lacus. Aenean ornare odio ac ligula aliquam gravida. Mauris sed libero sit amet lacus varius congue. Fusce pharetra tempor mi quis rutrum. Donec tortor velit, ornare a enim quis, cursus semper velit.</p>
-<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras posuere, tortor et molestie consectetur, mi turpis maximus urna, vel ullamcorper purus metus et massa. In lacinia tellus eget metus egestas elementum vitae eget ante. Mauris vitae purus enim. Aenean suscipit sit amet ante nec feugiat. Morbi at nulla vel sem finibus vestibulum. Maecenas vitae aliquet felis, eu feugiat orci. Aliquam erat volutpat. Aenean convallis consequat risus a pretium. Donec pellentesque pharetra magna, eu blandit tellus. Quisque at lacinia purus.
-
-Quisque ornare, ex id dictum tempus, dui mauris consequat enim, ut molestie augue nisi eget orci. Cras rhoncus quam sed felis euismod hendrerit. Sed rhoncus pellentesque velit ac bibendum. Cras laoreet varius sollicitudin. Morbi sagittis lorem at congue semper. Cras sagittis pulvinar posuere. Duis non nibh nulla. Suspendisse ut sem eros. Ut lorem ligula, mattis sed lectus non, pulvinar porttitor velit. Proin fringilla nec erat vitae consequat. Nullam elementum, felis a dignissim egestas, lectus ex sodales nibh, non consectetur leo sem eu sem. Proin quis lacus at tortor maximus tincidunt ut sit amet quam. Suspendisse cursus tortor nec enim mollis fermentum eget sit amet tortor.
-
-Sed rutrum lobortis tortor, vel ullamcorper dui vulputate vel. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Quisque pellentesque vestibulum faucibus. Vestibulum ornare porttitor nunc id mattis. Vivamus ut eleifend nunc. Ut mattis faucibus nisl a faucibus. Curabitur nunc sapien, interdum non diam et, aliquam luctus mauris. Duis et vehicula dolor. Cras id orci vitae nulla ultricies pharetra.
-
-Etiam ut vehicula diam, et rhoncus lorem. Integer in dignissim urna. Sed non ipsum aliquam libero aliquam cursus in scelerisque lectus. Morbi sit amet pretium nunc. Nam placerat erat a interdum dignissim. Duis pharetra lorem sapien, at pulvinar eros mollis nec. Quisque interdum lorem augue, et porttitor neque euismod ut. Maecenas leo leo, scelerisque vitae ultrices eget, semper sit amet dolor. Donec hendrerit aliquet lorem. Vivamus sollicitudin nisi sit amet ligula aliquet gravida. Sed eu quam lacus. Aenean ornare odio ac ligula aliquam gravida. Mauris sed libero sit amet lacus varius congue. Fusce pharetra tempor mi quis rutrum. Donec tortor velit, ornare a enim quis, cursus semper velit.</p>
-<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras posuere, tortor et molestie consectetur, mi turpis maximus urna, vel ullamcorper purus metus et massa. In lacinia tellus eget metus egestas elementum vitae eget ante. Mauris vitae purus enim. Aenean suscipit sit amet ante nec feugiat. Morbi at nulla vel sem finibus vestibulum. Maecenas vitae aliquet felis, eu feugiat orci. Aliquam erat volutpat. Aenean convallis consequat risus a pretium. Donec pellentesque pharetra magna, eu blandit tellus. Quisque at lacinia purus.
-
-Quisque ornare, ex id dictum tempus, dui mauris consequat enim, ut molestie augue nisi eget orci. Cras rhoncus quam sed felis euismod hendrerit. Sed rhoncus pellentesque velit ac bibendum. Cras laoreet varius sollicitudin. Morbi sagittis lorem at congue semper. Cras sagittis pulvinar posuere. Duis non nibh nulla. Suspendisse ut sem eros. Ut lorem ligula, mattis sed lectus non, pulvinar porttitor velit. Proin fringilla nec erat vitae consequat. Nullam elementum, felis a dignissim egestas, lectus ex sodales nibh, non consectetur leo sem eu sem. Proin quis lacus at tortor maximus tincidunt ut sit amet quam. Suspendisse cursus tortor nec enim mollis fermentum eget sit amet tortor.
-
-Sed rutrum lobortis tortor, vel ullamcorper dui vulputate vel. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Quisque pellentesque vestibulum faucibus. Vestibulum ornare porttitor nunc id mattis. Vivamus ut eleifend nunc. Ut mattis faucibus nisl a faucibus. Curabitur nunc sapien, interdum non diam et, aliquam luctus mauris. Duis et vehicula dolor. Cras id orci vitae nulla ultricies pharetra.
-
-Etiam ut vehicula diam, et rhoncus lorem. Integer in dignissim urna. Sed non ipsum aliquam libero aliquam cursus in scelerisque lectus. Morbi sit amet pretium nunc. Nam placerat erat a interdum dignissim. Duis pharetra lorem sapien, at pulvinar eros mollis nec. Quisque interdum lorem augue, et porttitor neque euismod ut. Maecenas leo leo, scelerisque vitae ultrices eget, semper sit amet dolor. Donec hendrerit aliquet lorem. Vivamus sollicitudin nisi sit amet ligula aliquet gravida. Sed eu quam lacus. Aenean ornare odio ac ligula aliquam gravida. Mauris sed libero sit amet lacus varius congue. Fusce pharetra tempor mi quis rutrum. Donec tortor velit, ornare a enim quis, cursus semper velit.</p>
-<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras posuere, tortor et molestie consectetur, mi turpis maximus urna, vel ullamcorper purus metus et massa. In lacinia tellus eget metus egestas elementum vitae eget ante. Mauris vitae purus enim. Aenean suscipit sit amet ante nec feugiat. Morbi at nulla vel sem finibus vestibulum. Maecenas vitae aliquet felis, eu feugiat orci. Aliquam erat volutpat. Aenean convallis consequat risus a pretium. Donec pellentesque pharetra magna, eu blandit tellus. Quisque at lacinia purus.
-
-Quisque ornare, ex id dictum tempus, dui mauris consequat enim, ut molestie augue nisi eget orci. Cras rhoncus quam sed felis euismod hendrerit. Sed rhoncus pellentesque velit ac bibendum. Cras laoreet varius sollicitudin. Morbi sagittis lorem at congue semper. Cras sagittis pulvinar posuere. Duis non nibh nulla. Suspendisse ut sem eros. Ut lorem ligula, mattis sed lectus non, pulvinar porttitor velit. Proin fringilla nec erat vitae consequat. Nullam elementum, felis a dignissim egestas, lectus ex sodales nibh, non consectetur leo sem eu sem. Proin quis lacus at tortor maximus tincidunt ut sit amet quam. Suspendisse cursus tortor nec enim mollis fermentum eget sit amet tortor.
-
-Sed rutrum lobortis tortor, vel ullamcorper dui vulputate vel. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Quisque pellentesque vestibulum faucibus. Vestibulum ornare porttitor nunc id mattis. Vivamus ut eleifend nunc. Ut mattis faucibus nisl a faucibus. Curabitur nunc sapien, interdum non diam et, aliquam luctus mauris. Duis et vehicula dolor. Cras id orci vitae nulla ultricies pharetra.
-
-Etiam ut vehicula diam, et rhoncus lorem. Integer in dignissim urna. Sed non ipsum aliquam libero aliquam cursus in scelerisque lectus. Morbi sit amet pretium nunc. Nam placerat erat a interdum dignissim. Duis pharetra lorem sapien, at pulvinar eros mollis nec. Quisque interdum lorem augue, et porttitor neque euismod ut. Maecenas leo leo, scelerisque vitae ultrices eget, semper sit amet dolor. Donec hendrerit aliquet lorem. Vivamus sollicitudin nisi sit amet ligula aliquet gravida. Sed eu quam lacus. Aenean ornare odio ac ligula aliquam gravida. Mauris sed libero sit amet lacus varius congue. Fusce pharetra tempor mi quis rutrum. Donec tortor velit, ornare a enim quis, cursus semper velit.</p>
-<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras posuere, tortor et molestie consectetur, mi turpis maximus urna, vel ullamcorper purus metus et massa. In lacinia tellus eget metus egestas elementum vitae eget ante. Mauris vitae purus enim. Aenean suscipit sit amet ante nec feugiat. Morbi at nulla vel sem finibus vestibulum. Maecenas vitae aliquet felis, eu feugiat orci. Aliquam erat volutpat. Aenean convallis consequat risus a pretium. Donec pellentesque pharetra magna, eu blandit tellus. Quisque at lacinia purus.
-
-Quisque ornare, ex id dictum tempus, dui mauris consequat enim, ut molestie augue nisi eget orci. Cras rhoncus quam sed felis euismod hendrerit. Sed rhoncus pellentesque velit ac bibendum. Cras laoreet varius sollicitudin. Morbi sagittis lorem at congue semper. Cras sagittis pulvinar posuere. Duis non nibh nulla. Suspendisse ut sem eros. Ut lorem ligula, mattis sed lectus non, pulvinar porttitor velit. Proin fringilla nec erat vitae consequat. Nullam elementum, felis a dignissim egestas, lectus ex sodales nibh, non consectetur leo sem eu sem. Proin quis lacus at tortor maximus tincidunt ut sit amet quam. Suspendisse cursus tortor nec enim mollis fermentum eget sit amet tortor.
-
-Sed rutrum lobortis tortor, vel ullamcorper dui vulputate vel. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Quisque pellentesque vestibulum faucibus. Vestibulum ornare porttitor nunc id mattis. Vivamus ut eleifend nunc. Ut mattis faucibus nisl a faucibus. Curabitur nunc sapien, interdum non diam et, aliquam luctus mauris. Duis et vehicula dolor. Cras id orci vitae nulla ultricies pharetra.
-
-Etiam ut vehicula diam, et rhoncus lorem. Integer in dignissim urna. Sed non ipsum aliquam libero aliquam cursus in scelerisque lectus. Morbi sit amet pretium nunc. Nam placerat erat a interdum dignissim. Duis pharetra lorem sapien, at pulvinar eros mollis nec. Quisque interdum lorem augue, et porttitor neque euismod ut. Maecenas leo leo, scelerisque vitae ultrices eget, semper sit amet dolor. Donec hendrerit aliquet lorem. Vivamus sollicitudin nisi sit amet ligula aliquet gravida. Sed eu quam lacus. Aenean ornare odio ac ligula aliquam gravida. Mauris sed libero sit amet lacus varius congue. Fusce pharetra tempor mi quis rutrum. Donec tortor velit, ornare a enim quis, cursus semper velit.</p>
-    </div>
+        </div>
+        <div className="col-start-3 flex rounded-lg col-end-7 ..." style={{border: 'black solid 1px'}}>
+          <p className="p-5 m-auto md:p-10">
+            Stride through chemistry with the majesty of an elephant
+          </p>
+          </div>        
+      </div>
+    </div>      
   );
 }
+
+//, borderRadius: '30%' , height: '250px'
