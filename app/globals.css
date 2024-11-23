@@ -36,7 +36,7 @@ h5 {
 }
 
 h6 {
-  font-size: 0.5rem;
+  font-size: 1.2rem;
 }
 
 h7 {
@@ -47,7 +47,7 @@ p {
   font-size: 0.75rem;
 }
 
-@media screen and (min-width: 992px){
+@media screen and (min-width: 768px){
   h1 {
     font-size: 3.75rem;}
   
@@ -76,8 +76,12 @@ p {
   }
   
   p {
-    font-size: 1.75rem;
+    font-size: 1.5rem;
   }
+}
+
+.spacer {
+  height: 2rem;
 }
 
 body {
