@@ -15,7 +15,16 @@ export default function Modal({identifier}: {identifier: number}){
                 <p className="text-xs">
                 Click anywhere outside the box to close it.
               </p>
-              {/* 
+              
+            </div>
+            <label className="modal-backdrop" htmlFor={`my_modal_${identifier}`}>Close</label>
+          </div>
+        </>
+    )
+}
+
+/*
+{/* 
               <Link
                 href="/login?location=/flashcards"
               >
@@ -25,10 +34,5 @@ export default function Modal({identifier}: {identifier: number}){
                 href="/flashcards"
               >
                 Go back
-              </Link>*/}
-            </div>
-            <label className="modal-backdrop" htmlFor={`my_modal_${identifier}`}>Close</label>
-          </div>
-        </>
-    )
-}
+              </Link>*//*}
+*/
