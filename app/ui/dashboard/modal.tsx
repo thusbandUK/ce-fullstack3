@@ -9,8 +9,13 @@ export default function Modal({identifier}: {identifier: number}){
           <input type="checkbox" id={`my_modal_${identifier}`} className="modal-toggle" />
           <div className="modal" role="dialog">
             <div className="modal-box">
-              <h3 className="text-lg font-bold">Hello!</h3>
-              <p className="py-4">I am evil Homer!</p>
+              <h3 className="text-lg font-bold">Coming soon!</h3>
+              <p className="py-4">Sorry, flashcards for this examboard are not available yet, but don't worry, your interest has been logged.
+                </p>
+                <p className="text-xs">
+                Click anywhere outside the box to close it.
+              </p>
+              {/* 
               <Link
                 href="/login?location=/flashcards"
               >
@@ -20,7 +25,7 @@ export default function Modal({identifier}: {identifier: number}){
                 href="/flashcards"
               >
                 Go back
-              </Link>
+              </Link>*/}
             </div>
             <label className="modal-backdrop" htmlFor={`my_modal_${identifier}`}>Close</label>
           </div>
