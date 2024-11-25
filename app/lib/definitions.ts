@@ -57,6 +57,9 @@ export type FlashcardData = {
 export type ExamboardData = {
   id: number;
   examboard: string;
+  logged_interest: number;
+  description: string;
+  has_flashcards: boolean;
 };
 
 export type TopicData = {
