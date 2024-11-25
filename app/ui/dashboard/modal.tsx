@@ -10,7 +10,7 @@ export default function Modal({identifier}: {identifier: number}){
           <div className="modal" role="dialog">
             <div className="modal-box">
               <h3 className="text-lg font-bold">Coming soon!</h3>
-              <p className="py-4">Sorry, flashcards for this examboard are not available yet, but don't worry, your interest has been logged.
+              <p className="py-4">Sorry, flashcards for this examboard are not available yet, but don&#39;t worry, your interest has been logged.
                 </p>
                 <p className="text-xs">
                 Click anywhere outside the box to close it.
