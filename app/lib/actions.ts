@@ -104,4 +104,20 @@ export async function authenticate(
       throw error;
     }/**/
   }
-    
+  
+  export async function incrementExamboard(examboard: string){
+
+    const query = 'UPDATE examboards SET logged_interest = logged_interest + 1 WHERE examboard = $1;'
+    const argumentData = [examboard];
+
+    try {
+      const incrementedExamboard = await sql.query(query, argumentData);
+      console.log(`Success, examboard ${examboard} incremented by 1`);
+      return 
+          
+    } catch (error){
+      return {
+        message: 'Database Error: Failed to sign up new user.'
+      };
+  }
+}
