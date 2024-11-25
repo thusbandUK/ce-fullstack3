@@ -86,7 +86,8 @@ export type userData = {
 export type UserData = {
   id: string;
   name: string;
-  email: string;  
+  email: string;
+  receive_email: boolean;
 };
 
 export type UserDetails = {
