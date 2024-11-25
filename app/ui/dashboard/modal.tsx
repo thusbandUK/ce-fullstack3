@@ -1,6 +1,6 @@
 import Link from "next/link"
 
-export default function Modal({identifier, receiveEmail}: {identifier: number, receiveEmail: boolean | null}){
+export default function Modal({identifier}: {identifier: number}){
 
     return (
         <>
