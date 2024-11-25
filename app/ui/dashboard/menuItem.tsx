@@ -49,7 +49,7 @@ export default function MenuItem(
             </Link>
             :
             <>
-              <label htmlFor={`my_modal_${identifier}`} onClick={() => logInterest(heading)}>
+              <label htmlFor={`my_modal_${identifier}`} className="cursor-pointer" onClick={() => logInterest(heading)}>
                 <ArrowCommand
                   command={'INQUIRE'}
                   borderGray={modal}
