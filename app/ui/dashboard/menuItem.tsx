@@ -3,6 +3,7 @@
 import Link from "next/link"
 import Modal from "./modal"
 import ArrowCommand from "./arrowCommand"
+import clsx from 'clsx';
 
 export default function MenuItem(
   {
@@ -24,7 +25,12 @@ export default function MenuItem(
   }){
 
     return (
-        <div className="flex h-full flex-col justify-between">
+        <div className={clsx("flex h-full flex-col justify-between",
+          {
+            'text-black': modal === false,
+            'text-slate-400': modal === true
+          }
+        )}>
           <div>
             <h6>{heading}</h6>            
             <p>{content}</p>
@@ -37,6 +43,7 @@ export default function MenuItem(
             >
               <ArrowCommand
                   command={'SELECT'}
+                  borderGray={modal}
                 >                  
               </ArrowCommand>              
             </Link>
@@ -44,7 +51,8 @@ export default function MenuItem(
             <>
               <label htmlFor={`my_modal_${identifier}`} onClick={() => logInterest(heading)}>
                 <ArrowCommand
-                  command={'INQUIRE'}                  
+                  command={'INQUIRE'}
+                  borderGray={modal}
                 ></ArrowCommand>
               </label>
               <Modal
