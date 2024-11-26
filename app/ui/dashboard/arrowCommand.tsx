@@ -1,6 +1,6 @@
 import clsx from "clsx"
 
-export default function ArrowCommand({command, borderGray}: {command: string, borderGray: boolean}){
+export default function ArrowCommand({command, borderGray}: {command: string | null, borderGray: boolean}){
 
 
     return (

@@ -13,16 +13,25 @@ export default function MenuItem(
     modal, 
     identifier,
     receiveEmail,
-    logInterest
+    logInterest,
+    arrowCommand
   }: {
     heading: string, 
     content: string, 
     link: string, 
     modal: boolean, 
-    identifier: number,
+    identifier: number | null,
     receiveEmail: boolean | null,
-    logInterest: (examBoard: string) => Promise<void>
+    logInterest: null | ((examBoard: string) => Promise<void>),
+    arrowCommand: string | null
   }){
+
+    const handleClick = () => {      
+      if (!logInterest) {
+        return
+      }
+      return logInterest(heading);
+    }
 
     return (
         <div className={clsx("flex h-full flex-col justify-between",
@@ -42,16 +51,16 @@ export default function MenuItem(
               className='w-fit'
             >
               <ArrowCommand
-                  command={'SELECT'}
+                  command={arrowCommand}
                   borderGray={modal}
                 >                  
               </ArrowCommand>              
             </Link>
             :
             <>
-              <label htmlFor={`my_modal_${identifier}`} className="cursor-pointer" onClick={() => logInterest(heading)}>
+              <label htmlFor={`my_modal_${identifier}`} className="cursor-pointer" onClick={handleClick}>
                 <ArrowCommand
-                  command={'INQUIRE'}
+                  command={arrowCommand}
                   borderGray={modal}
                 ></ArrowCommand>
               </label>

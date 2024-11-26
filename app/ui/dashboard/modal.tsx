@@ -1,6 +1,6 @@
 import Link from "next/link"
 
-export default function Modal({identifier}: {identifier: number}){
+export default function Modal({identifier}: {identifier: number | null}){
 
     return (
         <>
