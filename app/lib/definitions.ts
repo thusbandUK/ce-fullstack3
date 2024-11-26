@@ -71,10 +71,10 @@ export type QuestionsData = {
 }
 
 
-//my hunch is that this is no longer needed
-/*export type topic = {  
+//this is referenced by FlashcardData definition above
+export type topic = {  
   OCRA: string
-}*/
+}
 
 export type TopicData = {
   id: number;
