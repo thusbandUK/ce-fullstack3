@@ -65,7 +65,8 @@ export type ExamboardData = {
 export type TopicData = {
   id: number;
   examboards_id: number;
-  topic: string;
+  topic_code: string;
+  topic_description: string;
 }
 
 export type QuestionsData = {
