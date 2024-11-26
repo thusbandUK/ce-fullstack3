@@ -2,6 +2,7 @@ import clsx from "clsx"
 
 export default function ArrowCommand({command, borderGray}: {command: string | null, borderGray: boolean}){
 
+  console.log(`borderGray is ${borderGray}`);
 
     return (
         <>

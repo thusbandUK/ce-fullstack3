@@ -1,16 +1,8 @@
 "use server"
 
-//"use client";
-//import { createContext, useContext, useState } from 'react';
-//import { Flashcard } from "@/app/lib/definitions";
 import { fetchExamboards } from '../lib/data';
-import { ExamboardData } from '../lib/definitions';
-import Link from 'next/link';
-//import { auth } from "auth";
+import { ExamboardData, ModalContent } from '../lib/definitions';
 import MenuItem from '../ui/dashboard/menuItem';
-import { auth } from "@/auth";
-import { Session } from "next-auth";
-import { fetchUser } from "@/app/lib/data";
 import { incrementExamboard } from '../lib/actions';
 
 export default async function Page() {
@@ -26,7 +18,11 @@ export default async function Page() {
       return;
     }
 
-    console.log(examboardsData)
+    const modalContent: ModalContent = {
+      heading: 'Coming soon!',
+      content: 'Sorry, flashcards for this examboard are not available yet, but do not worry, your interest has been logged.',
+      link: null
+    }    
 
     return (
       <div className='w-11/12 md:w-4/5 mx-auto mt-10'>
@@ -38,10 +34,9 @@ export default async function Page() {
               <MenuItem
                 heading={x.examboard}
                 content={x.description}
-                link={`/flashcards/${x.id}/topic`}
-                modal={!x.has_flashcards}
-                identifier={x.id}
-                receiveEmail={null}
+                link={`/flashcards/${x.id}/topic`}                
+                modalContent={!x.has_flashcards ? modalContent : null}
+                identifier={x.id}                
                 logInterest={handleLogInterest}
                 arrowCommand={x.has_flashcards ? 'SELECT' : 'INQUIRE'}
               >              

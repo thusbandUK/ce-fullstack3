@@ -4,28 +4,28 @@ import Link from "next/link"
 import Modal from "./modal"
 import ArrowCommand from "./arrowCommand"
 import clsx from 'clsx';
+import { ModalContent } from "@/app/lib/definitions";
 
 export default function MenuItem(
   {
     heading, 
     content, 
-    link, 
-    modal, 
-    identifier,
-    receiveEmail,
+    link,    
+    modalContent,
+    identifier,    
     logInterest,
     arrowCommand
   }: {
     heading: string, 
     content: string, 
-    link: string, 
-    modal: boolean, 
-    identifier: number | null,
-    receiveEmail: boolean | null,
+    link: string,
+    modalContent: null | ModalContent,
+    identifier: number | null,    
     logInterest: null | ((examBoard: string) => Promise<void>),
     arrowCommand: string | null
   }){
 
+    
     const handleClick = () => {      
       if (!logInterest) {
         return
@@ -36,8 +36,8 @@ export default function MenuItem(
     return (
         <div className={clsx("flex h-full flex-col justify-between",
           {
-            'text-black': modal === false,
-            'text-slate-400': modal === true
+            'text-black': modalContent === null,
+            'text-slate-400': modalContent !== null
           }
         )}>
           <div>
@@ -45,14 +45,14 @@ export default function MenuItem(
             <p>{content}</p>
             <div className="spacer"></div>
             </div>
-            { modal === false ? 
+            { modalContent === null ? 
             <Link
               href={link}
               className='w-fit'
             >
               <ArrowCommand
                   command={arrowCommand}
-                  borderGray={modal}
+                  borderGray={modalContent!==null}
                 >                  
               </ArrowCommand>              
             </Link>
@@ -61,11 +61,12 @@ export default function MenuItem(
               <label htmlFor={`my_modal_${identifier}`} className="cursor-pointer" onClick={handleClick}>
                 <ArrowCommand
                   command={arrowCommand}
-                  borderGray={modal}
+                  borderGray={modalContent!==null}
                 ></ArrowCommand>
               </label>
               <Modal
-                identifier={identifier}                
+                identifier={identifier}
+                modalContent={modalContent}
               ></Modal>              
             </>
             }

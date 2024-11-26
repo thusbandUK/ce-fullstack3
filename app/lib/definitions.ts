@@ -60,7 +60,10 @@ export type MCQData = {
 export type ModalContent = {
   heading: string;
   content: string;
-  link: string | null;
+  link: null | {
+    url: string;
+    text: string;
+  };
 }
 
 export type QuestionsData = {

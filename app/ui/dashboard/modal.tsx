@@ -1,6 +1,30 @@
-import Link from "next/link"
+import Link from "next/link";
+import { ModalContent } from "@/app/lib/definitions";
 
-export default function Modal({identifier}: {identifier: number | null}){
+export default function Modal(
+  {
+    identifier,
+    modalContent
+  }: {
+    identifier: number | null, 
+    modalContent: null | ModalContent,
+  }){
+
+    let renderLink = {
+      render: false,
+      text: '',
+      url: ''
+    };
+
+    if (modalContent){
+      if (modalContent.link){
+        renderLink = {
+          render: true,
+          text: modalContent.link.text,
+          url: modalContent.link.url
+        };
+      }
+    }    
 
     return (
         <>
@@ -9,10 +33,22 @@ export default function Modal({identifier}: {identifier: number | null}){
           <input type="checkbox" id={`my_modal_${identifier}`} className="modal-toggle" />
           <div className="modal text-black" role="dialog">
             <div className="modal-box">
-              <h3 className="text-lg font-bold">Coming soon!</h3>
-              <p className="py-4">Sorry, flashcards for this examboard are not available yet, but don&#39;t worry, your interest has been logged.
+              <h3 className="text-lg font-bold">{modalContent ? modalContent.heading : null}</h3>
+              <p className="py-4">{modalContent ? modalContent.content : null}
                 </p>
-                <p className="text-xs">
+                { renderLink.render ? 
+                  <Link
+                    href={renderLink.url}
+                    className="border-2 border-black rounded-md w-fit p-2 bg-black text-white hover:bg-white hover:text-black"
+                >
+                  { renderLink.text }
+                </Link>
+                
+                :
+                null
+                }
+                
+                <p className="text-xs mt-5">
                 Click anywhere outside the box to close it.
               </p>
               
@@ -22,17 +58,10 @@ export default function Modal({identifier}: {identifier: number | null}){
         </>
     )
 }
-
 /*
-{/* 
-              <Link
-                href="/login?location=/flashcards"
-              >
-                login
-              </Link>
-              <Link
-                href="/flashcards"
-              >
-                Go back
-              </Link>*//*}
-*/
+<Link
+                    href={modalContent.link ? modalContent.link.url : ''}
+                    className="border-2 border-black rounded-md w-fit p-2 bg-black text-white hover:bg-white hover:text-black"
+                >
+                  { modalContent.link ? modalContent.link.text : null}
+                </Link>*/
