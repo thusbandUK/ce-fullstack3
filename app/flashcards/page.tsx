@@ -26,8 +26,10 @@ export default async function Page() {
       return;
     }
 
+    console.log(examboardsData)
+
     return (
-      <div className='w-11/12 md:w-4/5 mx-auto mt-10'>        
+      <div className='w-11/12 md:w-4/5 mx-auto mt-10'>
         
         <h1>Select your examboard</h1>
         <div className="grid md:grid-cols-3 gap-0 mt-10">
@@ -41,6 +43,7 @@ export default async function Page() {
                 identifier={x.id}
                 receiveEmail={null}
                 logInterest={handleLogInterest}
+                arrowCommand={x.has_flashcards ? 'SELECT' : 'INQUIRE'}
               >              
               </MenuItem>
             </div>
