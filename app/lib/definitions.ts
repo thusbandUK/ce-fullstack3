@@ -84,6 +84,7 @@ export type TopicData = {
   examboards_id: number;
   topic_code: string;
   topic_description: string;
+  complementary: boolean;
 }
 
 //consider revising - this links to the session data, produced by eg: google login

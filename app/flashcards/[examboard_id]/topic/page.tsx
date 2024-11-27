@@ -40,7 +40,7 @@ export default async function Page({ params }: { params: { examboard_id: string 
             <MenuItem
               heading={x.topic_code}
               content={x.topic_description}
-              link={`/flashcards/${x.examboards_id}/topic/${x.id}/set`}
+              link={!session && x.complementary === true ? `/flashcards/${x.examboards_id}/topic/sample/set` : `/flashcards/${x.examboards_id}/topic/${x.id}/set`}
               modalContent={!session && topics.indexOf(x) >= 1 ? modalContent : null}
               identifier={x.id}              
               logInterest={null}
