@@ -60,9 +60,7 @@ export async function fetchFlashcards() {
 export async function fetchExamboards() {
   try {    
 
-    const data = await sql<ExamboardData>`SELECT * FROM examboards`;
-
-    console.log('Flashcards data fetch completed.');
+    const data = await sql<ExamboardData>`SELECT * FROM examboards`;    
 
     return data.rows;
   } catch (error) {
