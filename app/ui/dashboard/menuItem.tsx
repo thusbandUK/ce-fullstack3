@@ -12,7 +12,7 @@ export default function MenuItem(
     content, 
     link,    
     modalContent,
-    identifier,    
+    identifier,
     logInterest,
     arrowCommand
   }: {

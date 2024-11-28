@@ -12,6 +12,7 @@ import WrittenFlashcard from "./writtenFlashcard";
 //import { CardSkeleton } from './skeletons';
 //import { Suspense } from 'react';
 //import MenuItem from './menuItem';
+import MenuItemButton from './menuItemButton';
 
 export const ResponseAssessmentContext = createContext<assessedResponse[]>([]);
 
@@ -293,18 +294,29 @@ const handleSubmitChecklist = () => {
 return (
   
     <div>
-      <p>Flashcards presentation page</p>
+      <h1>Flashcards presentation page</h1>
         
          
 
-            { (flashcard !== -1) || (writtenFlashcard !== -1) ?
-            null:
+            { 
+              (flashcard !== -1) || (writtenFlashcard !== -1) ?
+              
+              null:
             
-            <div>                
-              <button onClick={handleClick}>Click to answer using multiple choice responses</button>
-              <button onClick={handleWrittenClick}>Click to answer with your own written responses</button>
-            </div>  
-                  
+              <div className='grid md:grid-cols-2 gap-0 mt-10'>
+                <MenuItemButton
+                  heading="Multiple choice"
+                  content="Select to answer flash cards using multiple choice responses"
+                  signalClick={handleClick}
+                  arrowCommand='SELECT'
+                ></MenuItemButton>
+                <MenuItemButton
+                  heading="Written response"
+                  content="Select to write our your own responses to flash card questions"
+                  signalClick={handleWrittenClick}
+                  arrowCommand='SELECT'
+                ></MenuItemButton>
+              </div>
             }
             
             
