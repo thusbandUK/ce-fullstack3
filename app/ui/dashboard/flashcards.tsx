@@ -9,6 +9,9 @@ import MultipleChoiceQuestion from "./multipleChoiceQuestion";
 import Response from "./response";
 import { assessedResponse } from "@/app/lib/definitions";
 import WrittenFlashcard from "./writtenFlashcard";
+//import { CardSkeleton } from './skeletons';
+//import { Suspense } from 'react';
+//import MenuItem from './menuItem';
 
 export const ResponseAssessmentContext = createContext<assessedResponse[]>([]);
 
@@ -291,13 +294,17 @@ return (
   
     <div>
       <p>Flashcards presentation page</p>
+        
+         
 
             { (flashcard !== -1) || (writtenFlashcard !== -1) ?
             null:
-            <div>
+            
+            <div>                
               <button onClick={handleClick}>Click to answer using multiple choice responses</button>
               <button onClick={handleWrittenClick}>Click to answer with your own written responses</button>
-            </div>        
+            </div>  
+                  
             }
             
             

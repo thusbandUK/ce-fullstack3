@@ -49,6 +49,7 @@ export default function MenuItem(
             <Link
               href={link}
               className='w-fit'
+              prefetch={false}              
             >
               <ArrowCommand
                   command={arrowCommand}
