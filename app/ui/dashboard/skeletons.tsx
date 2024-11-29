@@ -70,10 +70,11 @@ export function TopicsSkeleton() {
 }
 
 export default function DashboardSkeleton() {
+  // className=" className="w-11/12 md:w-4/5 mx-auto mt-10""
   return (
     <>    
       <div
-        className={`${shimmer} relative mb-4 h-8 w-36 overflow-hidden `}
+        className={`${shimmer} w-11/12 md:w-4/5 mx-auto mt-10 relative mb-4 h-8 w-36 overflow-hidden `}
       />
       
       <div className="grid md:grid-cols-3 gap-0 mt-10">

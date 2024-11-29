@@ -8,7 +8,7 @@ export default async function Page({ params }: { params: { examboard_id: string 
     const allFlashcardsData = await fetchRandomSetOfFlashcards(params.examboard_id) 
 
 return (
-    <div>
+    <div className="w-11/12 md:w-4/5 mx-auto mt-10">
         {allFlashcardsData.length === 0 ?
         null:
         <Suspense fallback={<CardSkeleton />}>

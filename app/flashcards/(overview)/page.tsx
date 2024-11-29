@@ -28,7 +28,7 @@ export default async function Page() {
     }    
 //className='w-11/12 md:w-4/5 mx-auto mt-10'
     return (
-      <div >
+      <div  className="w-11/12 md:w-4/5 mx-auto mt-10">
         
         <h1>Select your examboard</h1>
         <div className="grid md:grid-cols-3 gap-0 mt-10">
