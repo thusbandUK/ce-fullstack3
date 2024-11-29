@@ -294,7 +294,7 @@ const handleSubmitChecklist = () => {
 return (
   
     <div>
-      <h1>Flashcards presentation page</h1>
+      {/*<h1>Flashcards presentation page</h1>*/}
         
          
 

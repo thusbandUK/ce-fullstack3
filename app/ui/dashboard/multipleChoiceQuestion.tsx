@@ -14,18 +14,20 @@ export default function MultipleChoiceQuestion(
     const shuffledDeck = shuffle(Object.keys(multipleChoiceResponses as MCQData));
 
     return (
-        <div>           
+        <div className="w-100 h-100">           
             
-                    <h2>{question}</h2>
+                    <h4
+                    dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(question)}}
+                    ></h4>
                     <div className="grid md:grid-cols-2 gap-0">
                     
                    {shuffledDeck.map((MCQ: string) => (
                      <div onClick={handleQuestionClick} key={MCQ} id={MCQ} style={{cursor:'pointer'}} className={clsx('border-2 border-black rounded-lg p-5',
                         {
-                            'bg-red-400': shuffledDeck.indexOf(MCQ) === 0,
-                            'bg-yellow-400': shuffledDeck.indexOf(MCQ) === 1,
-                            'bg-lime-500': shuffledDeck.indexOf(MCQ) === 2,
-                            'bg-blue-600': shuffledDeck.indexOf(MCQ) === 3
+                            'bg-elephant-bright-orange': shuffledDeck.indexOf(MCQ) === 0,
+                            'bg-elephant-red': shuffledDeck.indexOf(MCQ) === 1,
+                            'bg-elephant-orange': shuffledDeck.indexOf(MCQ) === 2,
+                            'bg-elephant-pink': shuffledDeck.indexOf(MCQ) === 3
                         }
                      )}>
                         {/** <p>{shuffledDeck.indexOf(MCQ)}</p>       */}                  

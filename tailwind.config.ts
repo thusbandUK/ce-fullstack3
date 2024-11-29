@@ -15,11 +15,16 @@ const config: Config = {
       'lg': '1.5rem',
       'full': '9999px',
       'large': '12px',
-    },
+    },    
     extend: {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        'elephant-red': '#f28972',
+        'elephant-orange': '#F2C48D',
+        'elephant-pink': '#D98FBF',
+        'elephant-violet': '#8268A6',
+        'elephant-bright-orange': '#F2B441',
       },
     },
   },
