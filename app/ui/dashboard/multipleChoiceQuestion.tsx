@@ -43,6 +43,8 @@ export default function MultipleChoiceQuestion(
             charactersScaler = 1;
         } else if (30 <= characters && characters < 90){            
             charactersScaler = 0.6;
+        } else if (90 <= characters && characters < 120) {
+            charactersScaler = 0.5;
         } else {           
             charactersScaler = 0.4;
         }
@@ -62,7 +64,7 @@ export default function MultipleChoiceQuestion(
                     <div className="grid md:grid-cols-2 gap-0 w-full h-68-vh md:h-50-vh">
                     
                    {shuffledDeck.map((MCQ: string) => (
-                     <div onClick={handleQuestionClick} key={MCQ} id={MCQ} style={{cursor:'pointer'}} className={clsx('border-2 h-17-vh md:h-25-vh border-black rounded-lg p-5',
+                     <div onClick={handleQuestionClick} key={MCQ} id={MCQ} style={{cursor:'pointer'}} className={clsx('border-2 h-17-vh md:h-25-vh flex border-black rounded-lg px-5 py-1',
                         {
                             'bg-elephant-bright-orange': shuffledDeck.indexOf(MCQ) === 0,
                             'bg-elephant-red': shuffledDeck.indexOf(MCQ) === 1,
@@ -73,6 +75,7 @@ export default function MultipleChoiceQuestion(
                         <p
                         dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(multipleChoiceResponses[MCQ as keyof MCQData])}}
                         style={{fontSize: `calc(0.10rem * ${textScaler()})`}}
+                        className="my-auto"
                         ></p>
                     </div>
                     ))}
