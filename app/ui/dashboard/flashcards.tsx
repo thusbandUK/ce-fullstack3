@@ -293,7 +293,7 @@ const handleSubmitChecklist = () => {
 
 return (
   
-    <div>
+    <div className="h-full">
       {/*<h1>Flashcards presentation page</h1>*/}
         
          
