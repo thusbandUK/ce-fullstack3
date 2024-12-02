@@ -26,6 +26,11 @@ const config: Config = {
         'elephant-violet': '#8268A6',
         'elephant-bright-orange': '#F2B441',
       },
+      height: {
+        '25-vh': '25vh',
+        '68-vh': '68vh',
+        '17-vh': '17vh',
+      }
     },
   },
   plugins: [
