@@ -22,7 +22,9 @@ export default function MultipleChoiceQuestion(
         return highest;
     }
 
-    const width = screen.width;    
+    const width = screen.width;
+    const height = screen.height;
+    const heightWidthRatio = height / width;
 
     /*This is used to estimate the maximum font size that can be used safely to render *all* the multiple choice responses
     into the same size containers with the same font size. It sorts responses into three sizes, based on the number of characters,
@@ -50,15 +52,18 @@ export default function MultipleChoiceQuestion(
         }
         //defines square root of current screen width
         const widthScaler = Math.sqrt(width);
-        const textScaler = charactersScaler * widthScaler;
+        const heightScaler = heightWidthRatio > 1.3 ? 1.2 : 1;
+        const textScaler = charactersScaler * widthScaler * heightScaler;
+        //* 0.7 * heightWidthRatio;
         return textScaler;        
     }
 
     const shuffledDeck = shuffle(Object.keys(multipleChoiceResponses as MCQData));
 
+    // rounded-lg 
     return (
         <div className="w-full h-full flex flex-col justify-between">            
-                    <div className="h-16-vh md:h-28-vh bg-elephant-violet text-white flex border-2 border-black rounded-lg ">
+                    <div className="h-16-vh md:h-28-vh bg-elephant-violet text-white flex border-2 border-black">
                     <h4
                       dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(question)}}
                       className="my-auto px-5 py-1"
