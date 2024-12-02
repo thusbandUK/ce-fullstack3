@@ -22,7 +22,7 @@ export default function MultipleChoiceQuestion(
         return highest;
     }
 
-    let width = screen.width;    
+    const width = screen.width;    
 
     /*This is used to estimate the maximum font size that can be used safely to render *all* the multiple choice responses
     into the same size containers with the same font size. It sorts responses into three sizes, based on the number of characters,
@@ -36,7 +36,7 @@ export default function MultipleChoiceQuestion(
     */
     const textScaler = () => {        
 
-        let characters = returnHighestCharacters();
+        const characters = returnHighestCharacters();
         
         let charactersScaler: number = 0;
         if (characters < 30){            
@@ -49,8 +49,8 @@ export default function MultipleChoiceQuestion(
             charactersScaler = 0.4;
         }
         //defines square root of current screen width
-        let widthScaler = Math.sqrt(width);
-        let textScaler = charactersScaler * widthScaler;
+        const widthScaler = Math.sqrt(width);
+        const textScaler = charactersScaler * widthScaler;
         return textScaler;        
     }
 
