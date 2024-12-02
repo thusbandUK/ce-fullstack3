@@ -6,9 +6,10 @@ import { Suspense } from 'react';
 export default async function Page({ params }: { params: { examboard_id: string } }) {    
 
     const allFlashcardsData = await fetchRandomSetOfFlashcards(params.examboard_id) 
-
+//
+//style={{height: '84vh'}}
 return (
-    <div className="w-11/12 md:w-4/5 mx-auto mt-10">
+    <div className="h-84-vh">
         {allFlashcardsData.length === 0 ?
         null:
         <Suspense fallback={<CardSkeleton />}>
@@ -20,3 +21,5 @@ return (
     </div>
 )
 }
+
+// className="w-11/12 md:w-4/5 mx-auto mt-10"
