@@ -58,9 +58,12 @@ export default function MultipleChoiceQuestion(
 
     return (
         <div className="w-full h-full flex flex-col justify-between">            
+                    <div className="h-16-vh md:h-28-vh bg-elephant-violet text-white flex border-2 border-black rounded-lg ">
                     <h4
                       dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(question)}}
+                      className="my-auto px-5 py-1"
                     ></h4>
+                    </div>
                     <div className="grid md:grid-cols-2 gap-0 w-full h-68-vh md:h-56-vh">
                     
                    {shuffledDeck.map((MCQ: string) => (

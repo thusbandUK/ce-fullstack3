@@ -34,6 +34,7 @@ const config: Config = {
         '50-vh': '50vh',
         '56-vh': '56vh',
         '28-vh': '28vh',
+        '16-vh': '16vh',
       }
     },
   },
