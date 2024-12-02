@@ -61,10 +61,10 @@ export default function MultipleChoiceQuestion(
                     <h4
                       dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(question)}}
                     ></h4>
-                    <div className="grid md:grid-cols-2 gap-0 w-full h-68-vh md:h-50-vh">
+                    <div className="grid md:grid-cols-2 gap-0 w-full h-68-vh md:h-56-vh">
                     
                    {shuffledDeck.map((MCQ: string) => (
-                     <div onClick={handleQuestionClick} key={MCQ} id={MCQ} style={{cursor:'pointer'}} className={clsx('border-2 h-17-vh md:h-25-vh flex border-black rounded-lg px-5 py-1',
+                     <div onClick={handleQuestionClick} key={MCQ} id={MCQ} style={{cursor:'pointer'}} className={clsx('border-2 h-17-vh md:h-28-vh flex border-black rounded-lg px-5 py-1',
                         {
                             'bg-elephant-bright-orange': shuffledDeck.indexOf(MCQ) === 0,
                             'bg-elephant-red': shuffledDeck.indexOf(MCQ) === 1,

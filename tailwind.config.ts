@@ -32,6 +32,8 @@ const config: Config = {
         '17-vh': '17vh',
         '84-vh': '84vh',
         '50-vh': '50vh',
+        '56-vh': '56vh',
+        '28-vh': '28vh',
       }
     },
   },
