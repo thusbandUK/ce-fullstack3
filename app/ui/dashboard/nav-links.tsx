@@ -39,6 +39,7 @@ export default function NavLinks({session}: {session: any}) {
             key={link.name}
             href={link.href}
             className="navlink"
+            prefetch={false}
           >            
             <p className="hidden text-base md:block menu-dropdown-toggle">{link.name}</p>
           </Link>
@@ -46,6 +47,7 @@ export default function NavLinks({session}: {session: any}) {
       })}
       <Link
         href={'/account'}
+        prefetch={false}
       >
         <div className="account-icon flex justify-center">
           {session ? 
