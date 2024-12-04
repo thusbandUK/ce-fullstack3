@@ -249,12 +249,12 @@ const handleWrittenClick = () => {
       //if the selected answer is wrong, that question is placed into the queue in state for recently answered wrong questions
       
       if (suggestedAnswer === correctAnswer){
-          setResponse("You got it right. Woop!!");
+          setResponse("You got it right. &#129395;");
           const updatedArray = correctlyAnsweredQuestions;
           updatedArray.push(flashcard);
           setCorrectlyAnsweredQuestions(updatedArray);
       } else {
-          setResponse("Yikes, you got it wrong!");
+          setResponse("Yikes, you got it wrong! &#128556;");
           queueQuestion(flashcard);
       }
       //increments count of question attempts
@@ -349,7 +349,7 @@ return (
             <ResponseAssessmentContext.Provider value={responseAssessment}>
               <Response               
                 summary={response}
-                allFlashcardsData={allFlashcardsData}
+                allFlashcardsData={allFlashcardsData}                
               />
             </ResponseAssessmentContext.Provider>
             : null}
