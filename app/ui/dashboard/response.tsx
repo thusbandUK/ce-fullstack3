@@ -17,10 +17,12 @@ const Response = (
 ) => {
     
     const responseAssessment = useContext(ResponseAssessmentContext);
-
+//<p>{summary}</p>
     return (
-        <div>
-            <p>{summary}</p>
+        <div className="bg-elephant-violet text-white absolute border-2 border-black rounded-lg p-5 top-2/4 left-2/4 -translate-x-2/4 -translate-y-2/4">
+            <p
+            dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(summary)}}
+            ></p>
             {responseAssessment.map((x: assessedResponse, i) => {
 
                 return (
