@@ -60,13 +60,12 @@ export default function MultipleChoiceQuestion(
 
     const shuffledDeck = shuffle(Object.keys(multipleChoiceResponses as MCQData));
 
-    // rounded-lg 
     return (
         <div className="w-full h-full flex flex-col justify-between">            
-                    <div className="h-16-vh md:h-28-vh bg-elephant-violet text-white flex border-2 border-black">
+                    <div className="h-14-vh md:h-26-vh flex">
                     <h4
                       dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(question)}}
-                      className="my-auto px-5 py-1"
+                      className="my-auto px-5 py-1 text-center w-full"
                     ></h4>
                     </div>
                     <div className="grid md:grid-cols-2 gap-0 w-full h-68-vh md:h-56-vh">
