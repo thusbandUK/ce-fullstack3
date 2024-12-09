@@ -13,6 +13,7 @@ import WrittenFlashcard from "./writtenFlashcard";
 //import { Suspense } from 'react';
 //import MenuItem from './menuItem';
 import MenuItemButton from './menuItemButton';
+import MultipleChoiceResponse from './multipleChoiceResponse';
 
 export const ResponseAssessmentContext = createContext<assessedResponse[]>([]);
 
@@ -25,7 +26,9 @@ export default function FlashcardPresentation({allFlashcardsData}: {allFlashcard
     const [writtenFlashcard, setWrittenFlashcard] = useState<number>(-1);
     //this sets the feedback response given by the app to the user, once they have completed everything
     const [response, setResponse] = useState<string>("");
-    //this stores the question numbers of correctly answered multiple choice questions
+    //this stores the feedback response for multiple choice questions
+    const [multipleChoiceResponse, setMultipleChoiceResponse]  = useState<string>("");
+    //this stores the question numbers of correctly answered multiple choice questions    
     const [correctlyAnsweredQuestions, setCorrectlyAnsweredQuestions] = useState<number[]>([]);
     //this stores the question numbers of questions answered with a written response
     const [answeredWrittenQuestions, setAnsweredWrittenQuestions] = useState<number[]>([]);
@@ -249,12 +252,14 @@ const handleWrittenClick = () => {
       //if the selected answer is wrong, that question is placed into the queue in state for recently answered wrong questions
       
       if (suggestedAnswer === correctAnswer){
-          setResponse("You got it right. &#129395;");
+          setMultipleChoiceResponse("right");
+          //setResponse("You got it right. &#129395;");
           const updatedArray = correctlyAnsweredQuestions;
           updatedArray.push(flashcard);
           setCorrectlyAnsweredQuestions(updatedArray);
       } else {
-          setResponse("Yikes, you got it wrong! &#128556;");
+          //setResponse("Yikes, you got it wrong! &#128556;");
+          setMultipleChoiceResponse("wrong");
           queueQuestion(flashcard);
       }
       //increments count of question attempts
@@ -262,7 +267,8 @@ const handleWrittenClick = () => {
       
       //sets a timer so user has time to read success message before next question
       setTimeout(() => {
-          setResponse("");            
+          //setResponse("");
+          setMultipleChoiceResponse("");
           return askQuestion();
       }, 500);
   }
@@ -344,6 +350,16 @@ return (
             </ResponseAssessmentContext.Provider>
             }
             
+            {/*Renders response to individual multiple choice question directly after question answered */}
+            { multipleChoiceResponse ? 
+            <MultipleChoiceResponse
+              rightOrWrong={multipleChoiceResponse}
+            />
+            :
+            null
+            }
+
+
             {/*Renders the response once all flashcards completed */}
             { response ? 
             <ResponseAssessmentContext.Provider value={responseAssessment}>
