@@ -15,8 +15,12 @@ export default async function Navbar(){
             />
           </div>
           <div className="collapse duration-500 justify-end mobile-nav">
-            <input type="checkbox" id="menu-checkbox"/>
-            <button className="btn btn-square btn-ghost collapse-title flex justify-end pe-0">
+            <input type="checkbox" id="menu-checkbox" aria-labelledby="menu-button"/>
+            <button 
+              className="btn btn-square btn-ghost collapse-title flex justify-end pe-0"
+              id="menu-button"
+              aria-expanded="false" aria-haspopup="true" aria-controls="menu-links-container" aria-label="menu button"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -31,7 +35,7 @@ export default async function Navbar(){
               </svg>
             </button>
             <div className="collapse-content pe-0">
-              <ul className="menu menu-vertical lg:menu-horizontal rounded-box pe-0">
+              <ul id="menu-links-container" className="menu menu-vertical lg:menu-horizontal rounded-box pe-0">
                 <NavLinks 
                   session={session}
                 />
