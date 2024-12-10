@@ -14,7 +14,7 @@ const MultipleChoiceResponse = (
            
             <div className="flex flex-col items-center">                
                 { rightOrWrong === 'right' ? <span style={{fontSize: "100px"}}>&#129395;</span> : <span style={{fontSize: "100px"}}>&#128556;</span>}
-                <p style={{fontSize: '1rem'}}>{ rightOrWrong === 'right' ? 'You got it right. Woop!' : 'Yikes, you got it wrong!'}</p>
+                <p className="text-center" style={{fontSize: '1rem'}}>{ rightOrWrong === 'right' ? 'You got it right. Woop!' : 'Yikes, you got it wrong!'}</p>
             </div>
         </div>
     )
