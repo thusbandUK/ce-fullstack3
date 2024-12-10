@@ -309,7 +309,7 @@ return (
               
               null:
             
-              <div className="w-11/12 md:w-4/5 mx-auto mt-10">
+              <div className="w-full md:w-4/5 mx-auto mt-10 p-2">
                 <div className='grid md:grid-cols-2 gap-0'>
                   <MenuItemButton
                     heading="Multiple choice"
