@@ -27,6 +27,11 @@ const links = [
 export default function NavLinks({session}: {session: any}) {
   //see clsx part below
   //const pathname = usePathname();
+
+  const handleToggleMenu = () => {
+    const menuCheckbox = document.getElementById('menu-checkbox') as HTMLInputElement;      
+    return menuCheckbox.checked = !menuCheckbox.checked;
+  }
   
   const [dropMenu, setDropMenu] = useState(false);  
   
@@ -40,8 +45,9 @@ export default function NavLinks({session}: {session: any}) {
             href={link.href}
             className="navlink"
             prefetch={false}
+            onClick={handleToggleMenu}
           >            
-            <p className="hidden text-base md:block menu-dropdown-toggle">{link.name}</p>
+            <p className="text-base md:block menu-dropdown-toggle">{link.name}</p>
           </Link>
         );
       })}
@@ -69,20 +75,3 @@ export default function NavLinks({session}: {session: any}) {
     </>
   );
 }
-
-/*
-//this was from the svg for the account icon
-className="size-6"
-
-This was a link prop:
-
-className={clsx(
-              'flex h-[48px] grow items-center justify-center gap-2 rounded-md bg-gray-50 p-3 text-sm font-medium hover:bg-sky-100 hover:text-blue-600 md:flex-none md:justify-start md:p-2 md:px-3',
-              {
-                'bg-sky-100 text-blue-600': pathname === link.href,
-              },
-            )}
-
-
-
-<LinkIcon className="w-6" />*/

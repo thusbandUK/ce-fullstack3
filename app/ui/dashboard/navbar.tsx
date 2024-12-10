@@ -15,7 +15,7 @@ export default async function Navbar(){
             />
           </div>
           <div className="collapse duration-500 justify-end mobile-nav">
-            <input type="checkbox" />
+            <input type="checkbox" id="menu-checkbox"/>
             <button className="btn btn-square btn-ghost collapse-title">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
