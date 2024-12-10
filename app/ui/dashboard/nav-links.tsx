@@ -43,7 +43,7 @@ export default function NavLinks({session}: {session: any}) {
           <Link
             key={link.name}
             href={link.href}
-            className="navlink"
+            className="navlink pe-0"
             prefetch={false}
             onClick={handleToggleMenu}
           >            

@@ -4,7 +4,7 @@ import Image from "next/image";
 
 export default async function Navbar(){
     const session: any = await auth();
-
+//pe-6
     return(  
         <div className="navbar items-start">
           <div>
@@ -16,7 +16,7 @@ export default async function Navbar(){
           </div>
           <div className="collapse duration-500 justify-end mobile-nav">
             <input type="checkbox" id="menu-checkbox"/>
-            <button className="btn btn-square btn-ghost collapse-title">
+            <button className="btn btn-square btn-ghost collapse-title flex justify-end pe-0">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -30,8 +30,8 @@ export default async function Navbar(){
                 </path>
               </svg>
             </button>
-            <div className="collapse-content">
-              <ul className="menu menu-vertical lg:menu-horizontal rounded-box">
+            <div className="collapse-content pe-0">
+              <ul className="menu menu-vertical lg:menu-horizontal rounded-box pe-0">
                 <NavLinks 
                   session={session}
                 />
