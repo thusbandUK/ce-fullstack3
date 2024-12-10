@@ -9,7 +9,7 @@ export default async function Page({ params }: { params: { examboard_id: string 
 //
 //style={{height: '84vh'}}
 return (
-    <div className="h-84-vh">
+    <div className="h-82-vh">
         {allFlashcardsData.length === 0 ?
         null:
         <Suspense fallback={<CardSkeleton />}>

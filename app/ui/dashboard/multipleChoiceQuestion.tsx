@@ -61,8 +61,8 @@ export default function MultipleChoiceQuestion(
     const shuffledDeck = shuffle(Object.keys(multipleChoiceResponses as MCQData));
 
     return (
-        <div className="w-full h-full flex flex-col justify-between">            
-                    <div className="h-14-vh md:h-26-vh flex">
+        <div className="w-full h-full flex flex-col justify-between px-2 pb-4">            
+                    <div className="h-13-vh md:h-25-vh flex">
                     <h4
                       dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(question)}}
                       className="my-auto px-5 py-1 text-center w-full"
