@@ -92,9 +92,7 @@ body {
 
 /*Nav bar*/
 
-.navlink {
-  /*margin: 2%;
-  margin-left: 2px;*/
+.navlink {  
   padding: 10px 40px;
   border: black solid 1px;  
   border-radius: 15px;
@@ -111,10 +109,7 @@ body {
 }
 
 .navbar-links-container {
-  margin-left: auto;
-    /* padding: 5%; */
-    /* margin-right: 0%; */
-    /* right: 0; */
+    margin-left: auto;    
     flex-basis: auto;
     width: 100%;
     justify-content: flex-end;
