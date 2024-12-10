@@ -309,19 +309,21 @@ return (
               
               null:
             
-              <div className='grid md:grid-cols-2 gap-0 mt-10'>
-                <MenuItemButton
-                  heading="Multiple choice"
-                  content="Select to answer flash cards using multiple choice responses"
-                  signalClick={handleClick}
-                  arrowCommand='SELECT'
-                ></MenuItemButton>
-                <MenuItemButton
-                  heading="Written response"
-                  content="Select to write our your own responses to flash card questions"
-                  signalClick={handleWrittenClick}
-                  arrowCommand='SELECT'
-                ></MenuItemButton>
+              <div className="w-11/12 md:w-4/5 mx-auto mt-10">
+                <div className='grid md:grid-cols-2 gap-0'>
+                  <MenuItemButton
+                    heading="Multiple choice"
+                    content="Select to answer flash cards using multiple choice responses"
+                    signalClick={handleClick}
+                    arrowCommand='SELECT'
+                  />
+                  <MenuItemButton
+                    heading="Written response"
+                    content="Select to write our your own responses to flash card questions"
+                    signalClick={handleWrittenClick}
+                    arrowCommand='SELECT'
+                  />
+                </div>
               </div>
             }
             
