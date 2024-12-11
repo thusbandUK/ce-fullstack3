@@ -335,6 +335,7 @@ return (
             <MultipleChoiceQuestion 
               oneFlashcardData={allFlashcardsData[flashcard]}            
               handleQuestionClick={handleQuestionClick}
+              multipleChoiceResponse={multipleChoiceResponse}
             />             
             }
 

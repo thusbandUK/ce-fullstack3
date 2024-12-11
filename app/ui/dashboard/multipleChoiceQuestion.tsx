@@ -5,8 +5,8 @@ import { shuffle } from '@/app/lib/functions';
 import clsx from 'clsx';
 
 export default function MultipleChoiceQuestion(
-    {oneFlashcardData, handleQuestionClick,}: 
-    {oneFlashcardData: FlashcardData; handleQuestionClick: React.MouseEventHandler<HTMLDivElement>}
+    {oneFlashcardData, handleQuestionClick,multipleChoiceResponse}: 
+    {oneFlashcardData: FlashcardData; handleQuestionClick: React.MouseEventHandler<HTMLDivElement>; multipleChoiceResponse: string}
 ) {
 
     const {multiple_choice_responses: multipleChoiceResponses, question} = oneFlashcardData;
@@ -66,12 +66,13 @@ export default function MultipleChoiceQuestion(
                     <h4
                       dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(question)}}
                       className="my-auto px-5 py-1 text-center w-full"
+                      aria-live={multipleChoiceResponse ? "off" : "polite"}
                     ></h4>
                     </div>
                     <div className="grid md:grid-cols-2 gap-0 w-full h-68-vh md:h-56-vh">
                     
                    {shuffledDeck.map((MCQ: string) => (
-                     <div onClick={handleQuestionClick} key={MCQ} id={MCQ} style={{cursor:'pointer'}} className={clsx('border-2 h-17-vh md:h-28-vh flex border-black rounded-lg px-5 py-1',
+                     <div onClick={handleQuestionClick} tabIndex={0} role="button" key={MCQ} id={MCQ} style={{cursor:'pointer'}} className={clsx('border-2 h-17-vh md:h-28-vh flex border-black rounded-lg px-5 py-1',
                         {
                             'bg-elephant-bright-orange': shuffledDeck.indexOf(MCQ) === 0,
                             'bg-elephant-red': shuffledDeck.indexOf(MCQ) === 1,
@@ -82,7 +83,7 @@ export default function MultipleChoiceQuestion(
                         <p
                         dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(multipleChoiceResponses[MCQ as keyof MCQData])}}
                         style={{fontSize: `calc(0.10rem * ${textScaler()})`}}
-                        className="my-auto"
+                        className="my-auto"                        
                         ></p>
                     </div>
                     ))}
