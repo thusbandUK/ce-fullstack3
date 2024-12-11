@@ -54,6 +54,7 @@ export default function NavLinks({session}: {session: any}) {
       <Link
         href={'/account'}
         prefetch={false}
+        aria-label="account button"
       >
         <div className="account-icon flex justify-center">
           {session ? 
