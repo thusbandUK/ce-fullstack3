@@ -3,6 +3,7 @@ import { ResponseAssessmentContext } from './flashcards';
 import { useContext } from "react";
 import { assessedResponse, FlashcardData } from '@/app/lib/definitions';
 import DOMPurify from "isomorphic-dompurify";
+import ArrowCommand from './arrowCommand';
 
 //takes the index position of the checklist array and converts it into a letter, to match the corresponding keys
     //in the assessedResponse checklist (in ResponseAssessmentContext)
@@ -68,23 +69,53 @@ const WrittenFlashcard = (
       return responseAssessment[index].checkedPoints[event.target.value as keyof assessedResponse["checkedPoints"]] = checked;      
     }
 
-    
+    //flex-col justify-between 
+    /*
+    <div className="grid grid-cols-6 w-100 mx-auto mt-16">
+        <div className="col-start-1 rounded-lg col-span-6 flex" style={{border: 'black solid 1px'}}>
+    */
     return (
-        <div>
-            <p
+        <div className="w-full md:w-4/5 flex flex-col px-2 pb-4 mx-auto grid grid-cols-6">
+          <div className="border-2 w-full flex flex-col border-black rounded-lg px-5 py-1 m-auto col-start-1 col-span-6">
+            <div className="spacer"></div>
+            <h1
               dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(question)}}
-            ></p> 
+              className="text-center"
+            ></h1>
+            <div className="spacer"></div>
+          </div>
             
             { (writtenStage === "response") ?
                 
-                  <div className="d-flex flex-column">
-                    <label htmlFor="response">Write your answer:</label>
+                  <>
+                    <div className="col-start-1 col-span-6 md:col-span-4 w-full">
 
-                    <textarea id="response" onChange={handleResponseChange} name="response" rows={5} cols={33}>
+                    <textarea 
+                      id="response"
+                      onChange={handleResponseChange}
+                      name="response"
+                      rows={5} cols={33}
+                      className="border-2 border-black rounded-lg p-5 w-full h-full"
+                      placeholder="Write your answer here..."
+                    >
                 
                     </textarea>
-                    <button onClick={submitResponse}>Submit</button>
-                  </div>
+                    </div>
+                    <div className="col-start-1 md:col-start-5 col-span-6 md:col-span-2 border-2 border-black rounded-lg flex flex-col justify-end">
+                      <button  onClick={submitResponse}>
+                    <label htmlFor="response" >
+                      <div className="m-5">
+                      <ArrowCommand 
+                        borderGray={false}
+                        command="SUBMIT"
+                      />   
+                      </div>                   
+                    </label>
+                    </button>
+                    </div>
+
+                    
+                  </>
                 
             : null}
             { (writtenStage === "feedback") ?
@@ -125,3 +156,5 @@ const WrittenFlashcard = (
 }
 
 export default WrittenFlashcard;
+
+//<button onClick={submitResponse}>Submit</button>
