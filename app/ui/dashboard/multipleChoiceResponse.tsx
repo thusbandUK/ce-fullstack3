@@ -12,14 +12,9 @@ const MultipleChoiceResponse = (
 
     const ref = useRef<HTMLDivElement>(null);
 
-    useEffect(() => {
-        console.log('focused: ', document.activeElement)
-          ref.current?.focus();
-          console.log('focused: ', document.activeElement)
-      }, []);/**/
-
-    //document.getElementById("text-response")?.focus()
-    // aria-live="assertive" tabIndex={0} aria-labelledby="text-response"   
+    useEffect(() => {        
+          ref.current?.focus();         
+      }, []);
 
     return (
         <div className="bg-elephant-violet text-white absolute border-2 border-black rounded-lg p-5 top-2/4 left-2/4 -translate-x-2/4 -translate-y-2/4">
