@@ -33,7 +33,7 @@ export default function RootLayout({
         <header>
           <Navbar />
         </header>        
-        <main>
+        <main className="bg-white">
           {children}
         </main>
       </body>
