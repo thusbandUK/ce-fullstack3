@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { FlashcardData, MCQData, HTMLElementEvent, customMouseEventHandler } from '@/app/lib/definitions';
 import DOMPurify from "isomorphic-dompurify";
 import { shuffle } from '@/app/lib/functions';
@@ -10,7 +10,18 @@ export default function MultipleChoiceQuestion(
 ) {
 
     const {multiple_choice_responses: multipleChoiceResponses, question} = oneFlashcardData;
+    const [randomisedQuestionSet, setRandomisedQuestionSet] = useState<string[]>([]);
 
+    /*On *first* render for each question the below sets the randomisedQuestionSet to a shuffled sequence
+    of A, B, C, D. This is necessary because the component rerenders when answers are selected (since parent
+    component state changes) and without it, the buttons switch places while the feedback is displayed
+    */
+    useEffect(() => {
+        const shuffledDeck: string[] = shuffle(Object.keys(multipleChoiceResponses as MCQData));
+        setRandomisedQuestionSet(shuffledDeck);        
+        return
+    }, [oneFlashcardData])
+    //
     //iterates through all the multiple choice responses and returns the number of characters in the longest one
     const returnHighestCharacters = () => {
         let highest: number = 0;
@@ -58,7 +69,7 @@ export default function MultipleChoiceQuestion(
         return textScaler;        
     }
 
-    const shuffledDeck = shuffle(Object.keys(multipleChoiceResponses as MCQData));
+    //const shuffledDeck = shuffle(Object.keys(multipleChoiceResponses as MCQData));
 
     return (
         <div className="w-full h-full flex flex-col justify-between px-2 pb-4">            
@@ -71,13 +82,13 @@ export default function MultipleChoiceQuestion(
                     </div>
                     <div className="grid md:grid-cols-2 gap-0 w-full h-68-vh md:h-56-vh">
                     
-                   {shuffledDeck.map((MCQ: string) => (
+                   {randomisedQuestionSet.map((MCQ: string) => (
                      <div onClick={handleQuestionClick} tabIndex={0} role="button" key={MCQ} id={MCQ} style={{cursor:'pointer'}} className={clsx('border-2 h-17-vh md:h-28-vh flex border-black rounded-lg px-5 py-1',
                         {
-                            'bg-elephant-bright-orange': shuffledDeck.indexOf(MCQ) === 0,
-                            'bg-elephant-red': shuffledDeck.indexOf(MCQ) === 1,
-                            'bg-elephant-orange': shuffledDeck.indexOf(MCQ) === 2,
-                            'bg-elephant-pink': shuffledDeck.indexOf(MCQ) === 3
+                            'bg-elephant-bright-orange': randomisedQuestionSet.indexOf(MCQ) === 0,
+                            'bg-elephant-red': randomisedQuestionSet.indexOf(MCQ) === 1,
+                            'bg-elephant-orange': randomisedQuestionSet.indexOf(MCQ) === 2,
+                            'bg-elephant-pink': randomisedQuestionSet.indexOf(MCQ) === 3
                         }
                      )}>
                         <p
