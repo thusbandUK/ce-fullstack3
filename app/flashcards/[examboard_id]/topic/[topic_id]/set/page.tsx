@@ -15,9 +15,9 @@ export default async function Page({ params }: { params: { topic_id: string, exa
     }
 
     const allFlashcardsData = await fetchFlashcardsByTopic(params.topic_id);    
-
+//w-11/12 md:w-4/5 mx-auto mt-10
 return (
-    <div className="w-11/12 md:w-4/5 mx-auto mt-10">
+    <div className="h-82-vh">
         {allFlashcardsData.length === 0 ?
         null:
         <FlashcardPresentation
