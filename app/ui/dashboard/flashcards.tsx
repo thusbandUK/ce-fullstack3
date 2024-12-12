@@ -28,6 +28,8 @@ export default function FlashcardPresentation({allFlashcardsData}: {allFlashcard
     const [response, setResponse] = useState<string>("");
     //this stores the feedback response for multiple choice questions
     const [multipleChoiceResponse, setMultipleChoiceResponse]  = useState<string>("");
+    //this stores true / false on whether or not to render menu for multiple choice or written response
+    const [showMenu, setShowMenu] = useState<boolean>(true)
     //this stores the question numbers of correctly answered multiple choice questions    
     const [correctlyAnsweredQuestions, setCorrectlyAnsweredQuestions] = useState<number[]>([]);
     //this stores the question numbers of questions answered with a written response
@@ -65,6 +67,7 @@ export default function FlashcardPresentation({allFlashcardsData}: {allFlashcard
     //calls above function w incoming allFlashcardsData
     assignCompleteSet(allFlashcardsData);
 
+    //harvests assessment data for written responses
     function harvestAssessmentData(){
         //let questionNumbers = Object.keys(feedbackObject);
         let maximumMark = 0;
@@ -78,18 +81,8 @@ export default function FlashcardPresentation({allFlashcardsData}: {allFlashcard
             })
         })
         return {correctAnswers: correctAnswers, maximumMark: maximumMark};
-
-
-        /*questionNumbers.forEach((x)=> {
-            feedbackObject[x].checklist.forEach((y) => {
-                maximumMark ++;
-                if (y.checked === true){
-                    correctAnswers ++;
-                }                
-            })            
-        })
-        return {correctAnswers: correctAnswers, maximumMark: maximumMark};*/
     }
+
     /*
     Ask question initiates a set of questions, it will work through all of the questions in the stated array
     */
@@ -180,6 +173,7 @@ export default function FlashcardPresentation({allFlashcardsData}: {allFlashcard
 
 //this function initiates the multiple choice format of questions
   const handleClick = () => {
+    setShowMenu(false);
     const startingTime = Date.now();
     setStartTime(startingTime);    
     return askQuestion();
@@ -187,6 +181,7 @@ export default function FlashcardPresentation({allFlashcardsData}: {allFlashcard
 
 //this function initiates the written response format of question
 const handleWrittenClick = () => {
+    setShowMenu(false);
     //function creates an array of objects in which assessment data will be stored, then passes it to state to 
     //create a context which can be used in children components
     
@@ -305,10 +300,8 @@ return (
          
 
             { 
-              (flashcard !== -1) || (writtenFlashcard !== -1) ?
-              
-              null:
-            
+              showMenu ?
+                          
               <div className="w-full md:w-4/5 mx-auto mt-10 p-2">
                 <div className='grid md:grid-cols-2 gap-0'>
                   <MenuItemButton
@@ -325,6 +318,8 @@ return (
                   />
                 </div>
               </div>
+              :
+              null
             }
             
             
@@ -377,3 +372,26 @@ return (
     
 )
 }
+
+/*
+{ 
+              (flashcard !== -1) || (writtenFlashcard !== -1) ?
+              null:            
+              <div className="w-full md:w-4/5 mx-auto mt-10 p-2">
+                <div className='grid md:grid-cols-2 gap-0'>
+                  <MenuItemButton
+                    heading="Multiple choice"
+                    content="Select to answer flash cards using multiple choice responses"
+                    signalClick={handleClick}
+                    arrowCommand='SELECT'
+                  />
+                  <MenuItemButton
+                    heading="Written response"
+                    content="Select to write our your own responses to flash card questions"
+                    signalClick={handleWrittenClick}
+                    arrowCommand='SELECT'
+                  />
+                </div>
+              </div>
+            }
+*/
