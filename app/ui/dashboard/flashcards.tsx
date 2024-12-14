@@ -14,6 +14,7 @@ import WrittenFlashcard from "./writtenFlashcard";
 //import MenuItem from './menuItem';
 import MenuItemButton from './menuItemButton';
 import MultipleChoiceResponse from './multipleChoiceResponse';
+import WrittenSummary from './writtenSummary';
 
 export const ResponseAssessmentContext = createContext<assessedResponse[]>([]);
 
@@ -28,8 +29,10 @@ export default function FlashcardPresentation({allFlashcardsData}: {allFlashcard
     const [response, setResponse] = useState<string>("");
     //this stores the feedback response for multiple choice questions
     const [multipleChoiceResponse, setMultipleChoiceResponse]  = useState<string>("");
-    //this stores true / false on whether or not to render menu for multiple choice or written response
-    const [showMenu, setShowMenu] = useState<boolean>(true)
+    //this stores true / false on whether or not to render menu for multiple choice or written response    
+    const [showMenu, setShowMenu] = useState<boolean>(true);
+    //this summarises performance after all written flashcards in a set have been answered and individually marked
+    const [writtenSummary, setWrittenSummary] = useState<string>("");
     //this stores the question numbers of correctly answered multiple choice questions    
     const [correctlyAnsweredQuestions, setCorrectlyAnsweredQuestions] = useState<number[]>([]);
     //this stores the question numbers of questions answered with a written response
@@ -158,7 +161,9 @@ export default function FlashcardPresentation({allFlashcardsData}: {allFlashcard
         //iterates through the assessment data to calculate how many ticks they got out of a possible total
         const marksHarvest = harvestAssessmentData();
         //returns a response summarising performance
-        return setResponse(`Great job!  ${marksHarvest.correctAnswers} marks out of ${marksHarvest.maximumMark} in written response. See your points to work on below.`);
+        //return setResponse(`Great job!  ${marksHarvest.correctAnswers} marks out of ${marksHarvest.maximumMark} in written response. See your points to work on below.`);
+        //setResponse(`Great job!  ${marksHarvest.correctAnswers} marks out of ${marksHarvest.maximumMark} in written response. See your points to work on below.`)
+        return setWrittenSummary(`Great job!  ${marksHarvest.correctAnswers} marks out of ${marksHarvest.maximumMark} in written response. See your points to work on below.`)
     }
     
     //a random number is generated to select at random from one of the remainingNonRecent questions
@@ -363,6 +368,16 @@ return (
             <ResponseAssessmentContext.Provider value={responseAssessment}>
               <Response               
                 summary={response}
+                allFlashcardsData={allFlashcardsData}                
+              />
+            </ResponseAssessmentContext.Provider>
+            : null}
+
+            {/*Renders the feedback summary once all flashcards completed as written responses */}
+            { writtenSummary ? 
+            <ResponseAssessmentContext.Provider value={responseAssessment}>
+              <WrittenSummary               
+                summary={writtenSummary}
                 allFlashcardsData={allFlashcardsData}                
               />
             </ResponseAssessmentContext.Provider>

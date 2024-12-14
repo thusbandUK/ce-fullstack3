@@ -3,6 +3,11 @@
 # flashcard content
 /app/lib/flashcard-seed-data.json
 
+# mock data test content
+/app/flashcards/mock/page.tsx
+/app/lib/mockFeedbackData.ts
+/app/ui/dashboard/writtenSummaryMock.tsx
+
 # db init content
 /app/seed/initiation.sql
 /app/seed/route.ts

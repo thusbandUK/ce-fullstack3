@@ -131,6 +131,31 @@ body {
 
 /*Nav bar ends*/
 
+/*summary feedback
+'elephant-red': '#f28972',
+        'elephant-orange': '#F2C48D',
+        'elephant-pink': '#D98FBF',
+        'elephant-violet': '#8268A6',
+        'elephant-bright-orange': '#F2B441',*/
+
+.variable-background:nth-child(n){
+  background-color: #F2C48D;
+  }
+
+.variable-background:nth-child(2n){
+background-color: #f28972;
+}
+
+.variable-background:nth-child(3n){
+  background-color: #D98FBF;
+  }
+
+.variable-background:nth-child(4n){
+  background-color: #F2B441;
+  }
+
+/*summary feedback*/
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;
