@@ -126,7 +126,12 @@ const WrittenFlashcard = (
               </div>
               <div className="border-2 border-black rounded-lg col-start-1 col-span-6 md:col-span-3 w-full p-5 md:p-10">
                 <h2 className="text-xl md:text-4xl">Your answer:</h2>
-                <p className="pt-5">{responseAssessment ? responseAssessment[index].response : null}</p>
+                {responseAssessment ? 
+                
+                <p className="pt-5 italic">"{responseAssessment[index].response}"</p>
+              
+                : null}
+                
               </div>
               <div className="border-2 border-black rounded-lg col-start-1 md:col-start-4 col-span-6 md:col-span-3 w-full p-5 md:p-10">
               
