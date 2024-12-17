@@ -47,9 +47,15 @@ const WrittenSummary = (
                       ></h2>
                       
                       <div className="p-1 mt-4">
-                        <p
-                          className="text-lg italic"
-                        >&quot;{x.response}&quot;</p>
+                        { x.response ?
+                            <p
+                              className="text-lg italic"
+                            >
+                              &quot;{x.response}&quot;
+                            </p>
+                          : null
+                        }
+                        
                       </div>
                       <ChecklistFeedback
                         responseAssessment={x}
