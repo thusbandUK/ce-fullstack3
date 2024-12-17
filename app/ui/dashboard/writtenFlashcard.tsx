@@ -128,7 +128,7 @@ const WrittenFlashcard = (
                 <h2 className="text-xl md:text-4xl">Your answer:</h2>
                 {responseAssessment ? 
                 
-                <p className="pt-5 italic">"{responseAssessment[index].response}"</p>
+                <p className="pt-5 italic">&quot;{responseAssessment[index].response}&quot;</p>
               
                 : null}
                 
