@@ -149,7 +149,7 @@ const WrittenFlashcard = (
                         />
                         <p
                           dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(x)}}
-                          className="label-text text-md"
+                          className="label-text text-black text-md"
                         ></p>
                       </label>
                     </div>      

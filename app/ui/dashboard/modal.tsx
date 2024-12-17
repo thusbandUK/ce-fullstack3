@@ -31,7 +31,7 @@ export default function Modal(
         {/* Put this part before </body> tag */}
 
           <input type="checkbox" id={`my_modal_${identifier}`} className="modal-toggle" />
-          <div className="modal text-black" role="dialog">
+          <div className="modal text-black bg-white" role="dialog">
             <div className="modal-box">
               <h3 className="text-lg font-bold">{modalContent ? modalContent.heading : null}</h3>
               <p className="py-4">{modalContent ? modalContent.content : null}
