@@ -4,6 +4,7 @@ import { useContext } from "react";
 import { assessedResponse, FlashcardData } from '@/app/lib/definitions';
 import ChecklistFeedback from './checklistFeedback';
 import DOMPurify from "isomorphic-dompurify";
+//import { useRouter } from 'next/router'
 
 const WrittenSummary = (
     {
@@ -15,6 +16,12 @@ const WrittenSummary = (
         allFlashcardsData: FlashcardData[]
     }
 ) => {
+
+    /*const router = useRouter()
+
+    <button type="button" onClick={() => router.reload()}>
+              Click here to go again
+            </button>*/
     
     const responseAssessment = useContext(ResponseAssessmentContext);
 //<p>{summary}</p>
@@ -42,7 +49,7 @@ const WrittenSummary = (
                       <div className="p-1 mt-4">
                         <p
                           className="text-lg italic"
-                        >{x.response}</p>
+                        >"{x.response}"</p>
                       </div>
                       <ChecklistFeedback
                         responseAssessment={x}
@@ -52,6 +59,7 @@ const WrittenSummary = (
                 )
             })}
             </div>
+            
 
         </div>
     )
