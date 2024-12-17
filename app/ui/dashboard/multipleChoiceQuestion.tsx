@@ -20,7 +20,7 @@ export default function MultipleChoiceQuestion(
         const shuffledDeck: string[] = shuffle(Object.keys(multipleChoiceResponses as MCQData));
         setRandomisedQuestionSet(shuffledDeck);        
         return
-    }, [oneFlashcardData])
+    }, [oneFlashcardData, multipleChoiceResponses])
     //
     //iterates through all the multiple choice responses and returns the number of characters in the longest one
     const returnHighestCharacters = () => {
