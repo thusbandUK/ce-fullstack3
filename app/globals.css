@@ -10,6 +10,11 @@ html,body {
   overflow-x: hidden;
 }
 
+textarea {
+  background-color: white;
+  color: black;
+}
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
