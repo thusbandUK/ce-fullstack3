@@ -15,6 +15,10 @@ textarea {
   color: black;
 }
 
+.modal-box {
+  background-color: white !important;
+}/**/
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
