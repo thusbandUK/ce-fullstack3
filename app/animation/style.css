@@ -1,0 +1,15 @@
+#canvas {
+	/*background: #00b4ff;
+    clip-path: circle(50%);
+    clip-path: path("M125 0 L125 0 L125 80 L175 250 L25 250 L75 80 L75 0");
+    clip-path: path("M125 80 L175 250 L25 250 L75 80 Z");
+    clip-path: path("M 143 169 L 175 250 C 180 270 173 282 161 281 L 25 280 C 12 281 10 262 16 249 L 50 169")
+    clip-path: path("M 125 0 L 125 0 L 125 80 L 175 250 C 180 270 173 282 161 281 L 25 280 C 12 281 10 262 16 249 L 75 80 L 75 0");*/
+    clip-path: path("M 75 80 L 75 80 L 16 249 C 10 262 12 281 25 280 L 161 281 C 173 282 180 270 175 250 L 125 80")
+    
+}
+body {
+	margin: 0;
+}
+
+
