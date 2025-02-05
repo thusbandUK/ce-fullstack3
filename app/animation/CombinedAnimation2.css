@@ -3,7 +3,8 @@
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background-color: #f0f0f0;
+    /*For some bizarre reason, having the below causes a weird white line to overlay the bubbling conical flask*/
+    /*background-color: #f0f0f0;*/
     position: relative;
   }
   

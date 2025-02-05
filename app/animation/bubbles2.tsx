@@ -33,8 +33,8 @@ const ParticleCanvas: React.FC<HomeProps> = ({colour}) => {
         if (canvas) {
             const context = canvas.getContext('2d');
             if (context) {
-                canvas.width = window.innerWidth;
-                canvas.height = window.innerHeight;
+                //canvas.width = window.innerWidth;
+                //canvas.height = window.innerHeight;
 
                 class ParticleClass implements Particle {
                     x: number;
@@ -108,10 +108,10 @@ const ParticleCanvas: React.FC<HomeProps> = ({colour}) => {
                 animate();
 
                 canvas.addEventListener("click", handleDrawCircle);
-                window.addEventListener("resize", () => {
-                    canvas.width = window.innerWidth;
-                    canvas.height = window.innerHeight;
-                });
+                //window.addEventListener("resize", () => {
+                    //canvas.width = window.innerWidth;
+                    //canvas.height = window.innerHeight;
+                //});
 
                 const defineXY = (event: MouseEvent) => {
                     const a = event.pageX;
@@ -124,10 +124,10 @@ const ParticleCanvas: React.FC<HomeProps> = ({colour}) => {
                 return () => {
                     clearInterval(intervalId);
                     canvas.removeEventListener("click", handleDrawCircle);
-                    window.removeEventListener("resize", () => {
-                        canvas.width = window.innerWidth;
-                        canvas.height = window.innerHeight;
-                    });
+                    //window.removeEventListener("resize", () => {
+                        //canvas.width = window.innerWidth;
+                        //canvas.height = window.innerHeight;
+                    //});
                 };
             }
         }

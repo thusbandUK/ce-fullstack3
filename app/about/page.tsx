@@ -1,26 +1,15 @@
 import SignOut from "../ui/dashboard/signOut"
 import { SignIn } from '../ui/login-form2';
 import { auth } from '@/auth';
-import BubblingFlask from "../animation/bubbles";
-import ParticleCanvas from "../animation/bubbles2";
+
 import CombinedAnimation2 from "../animation/explosion";
 
 export default async function About(){    
 
     return (
         <div  className="container">
-            {/*<BubblingFlask></BubblingFlask>*/}
-            <div className="animation-container relative">
-              <CombinedAnimation2></CombinedAnimation2>
-            <ParticleCanvas
-              colour="red"
-            ></ParticleCanvas>
-            <svg style={{position: 'absolute'}}  width="300" height="300" xmlns="http://www.w3.org/2000/svg">
-             <path d="M 125 0 L 125 0 L 125 80 L 175 250 C 180 270 173 282 161 281 L 25 280 C 12 281 10 262 16 249 L 75 80 L 75 0" stroke="black" fill="transparent" />
-             {/*<path d="M 125 0 C 122 -5 125 -17 135 -13 L 125 0 L 125 80 L 175 250 C 180 270 173 282 161 281 L 25 280 C 12 281 10 262 16 249 L 75 80 L 75 0 C 78 -5 76 -14 66 -11" stroke="black" fill="transparent" />*/}
-             
-            </svg>
-            </div>
+          <CombinedAnimation2></CombinedAnimation2>
+            
       
     </div>
     )
