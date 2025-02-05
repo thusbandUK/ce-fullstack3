@@ -12,6 +12,7 @@ export default async function Navbar(){
               src="/site-logo.png" alt="chemistry elephant logo"
               width={100}
               height={76}
+              priority={true}
             />
           </div>
           <div className="collapse duration-500 justify-end mobile-nav">

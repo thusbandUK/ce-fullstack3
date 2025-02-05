@@ -1,6 +1,7 @@
 import SignOut from "../ui/dashboard/signOut"
 import { SignIn } from '../ui/login-form2';
 import { auth } from '@/auth';
+import CELogoAnimation from "../ui/dashboard/cELogoAnimation";
 
 import CombinedAnimation2 from "../animation/explosion";
 
@@ -8,7 +9,11 @@ export default async function About(){
 
     return (
         <div  className="container">
-          <CombinedAnimation2></CombinedAnimation2>
+           
+            <CELogoAnimation
+              sizing={{height: 200, width: 200}}
+            ></CELogoAnimation>
+           
             
       
     </div>
@@ -16,6 +21,8 @@ export default async function About(){
 }
 
 /*
+<CombinedAnimation2></CombinedAnimation2>
+
 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras posuere, tortor et molestie consectetur, mi turpis maximus urna, vel ullamcorper purus metus et massa. In lacinia tellus eget metus egestas elementum vitae eget ante. Mauris vitae purus enim. Aenean suscipit sit amet ante nec feugiat. Morbi at nulla vel sem finibus vestibulum. Maecenas vitae aliquet felis, eu feugiat orci. Aliquam erat volutpat. Aenean convallis consequat risus a pretium. Donec pellentesque pharetra magna, eu blandit tellus. Quisque at lacinia purus.
 
 Quisque ornare, ex id dictum tempus, dui mauris consequat enim, ut molestie augue nisi eget orci. Cras rhoncus quam sed felis euismod hendrerit. Sed rhoncus pellentesque velit ac bibendum. Cras laoreet varius sollicitudin. Morbi sagittis lorem at congue semper. Cras sagittis pulvinar posuere. Duis non nibh nulla. Suspendisse ut sem eros. Ut lorem ligula, mattis sed lectus non, pulvinar porttitor velit. Proin fringilla nec erat vitae consequat. Nullam elementum, felis a dignissim egestas, lectus ex sodales nibh, non consectetur leo sem eu sem. Proin quis lacus at tortor maximus tincidunt ut sit amet quam. Suspendisse cursus tortor nec enim mollis fermentum eget sit amet tortor.

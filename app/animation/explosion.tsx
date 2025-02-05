@@ -16,7 +16,7 @@ const CombinedAnimation2 = () => {
 
   //returns random number 0 to 3
   const generateRandomNumber = () => {
-    let number = Math.floor(Math.random()*4)
+    const number = Math.floor(Math.random()*4)
     return number;
 }
 

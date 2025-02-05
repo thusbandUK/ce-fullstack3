@@ -1,5 +1,6 @@
+/*"use client"
 // components/BubblingFlask.tsx
-"use client"
+
 import React, { useState, useEffect } from 'react';
 import { useSpring, animated } from 'react-spring';
 
@@ -48,3 +49,4 @@ const BubblingFlask: React.FC = () => {
 };
 
 export default BubblingFlask;
+*/

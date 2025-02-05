@@ -10,7 +10,7 @@ export default function Home() {
         </div>
         <div className="col-start-1 rounded-lg col-end-3 ..." >
           <Image
-            src={elephantPic} 
+            src={'/site-logo.png'} 
             alt="chemistry elephant logo"
             className="rounded-lg"
             style={{border: 'black solid 1px'}}

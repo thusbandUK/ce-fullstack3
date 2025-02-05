@@ -104,7 +104,7 @@ const ParticleCanvas: React.FC<HomeProps> = ({colour}) => {
                     requestAnimationFrame(animate);
                 };
 
-                let intervalId = setInterval(handleDrawCircle, 300);
+                const intervalId = setInterval(handleDrawCircle, 300);
                 animate();
 
                 canvas.addEventListener("click", handleDrawCircle);
