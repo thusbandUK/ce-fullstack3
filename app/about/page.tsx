@@ -8,7 +8,7 @@ import CombinedAnimation2 from "../animation/explosion";
 export default async function About(){    
 
     return (
-        <div  className="container">
+        <div  className="container m-auto">
            
             <CELogoAnimation
               sizing={{height: 200, width: 200}}

@@ -34,8 +34,27 @@ const CELogoAnimation: React.FC<HomeProps> = ({sizing}) => {
      let numberArray = [1,2,3,4,5,6,7];
      let echoedNumberArray: number[] = [];
 
+     const sequenceRandomiser = (array: number[]) => {
+      const randomNumber = Math.floor(Math.random() * 2);
+      if (randomNumber === 0){
+        return array;
+      }
+      let reversedArray = [];
+      for (let x = array.length - 1; x >= 0; x--){
+        reversedArray.push(array[x]);
+      }
+      return reversedArray;
+     }
+
+     //let dominoArray = sequenceRandomiser(echoedNumberArray);
+     //console.log(dominoArray);
+     const dominoArray = [7,6,5,4,3,2,1];
+     let randomisedDominoArray = sequenceRandomiser(dominoArray)
+
 let timeout = 150;
-let timeout2 = 1200;
+let timeout2 = 4400;
+let timeoutIndex = 0;
+let timeoutArray = [0,500,700,600,800, 2000, 2300, 2000, 2300, 3500, 3700, 3600, 3800, 3700, 3900]
 
 const updateState = (section: number, color: string) => {
   setSectionColours(prevState => ({
@@ -47,54 +66,109 @@ const updateState = (section: number, color: string) => {
 
 let finalColor = "";
 
+//so you give printColorChoiceAndSection two parameters, array and string - "blinks", "dominoes"
+//blinks you pass with numberArray
+//dominoes you pass with numberArray2 (which is also [1,2,3,4,5,6,7])
+//you don't pass either of them an array
+//dominoes on the first pass if the array is [] it randomly generates the array either 1 up or 7 down
+//then you get the ripple down domino effect
+//as blinks consumes the top array, it creates the second array but adds the numbers in numerical order
+
 const printColorChoiceAndSection = () => {
-    let workingArray = []
-    if (numberArray.length === 0){
-      if (echoedNumberArray.length === 0){
-        return
-      } else {
-        workingArray = echoedNumberArray;
-      }        
-    } else {
-      workingArray = numberArray;
-    }
+  console.log('printColor pass')
+  if (numberArray.length === 0){
+    return}
+  //console.log(timeoutArray[timeoutIndex]);
+ // if (timeoutArray[timeoutIndex] === undefined){
+    //return
+  //}
+    //let workingArray = numberArray;
+    //if (numberArray.length === 0){
+      //if (echoedNumberArray.length === 0){
+        //return
+      //} else {
+        //workingArray = echoedNumberArray;
+      //}        
+    //} else {
+      //workingArray = numberArray;
+    //}
     let selections = {
         section: 0,
         color: ""
     }
     
-    let randomPosition = Math.floor(Math.random() * workingArray.length);
-    selections.section = workingArray.splice(randomPosition,1)[0];
+    let randomPosition = Math.floor(Math.random() * numberArray.length);
+    selections.section = numberArray.splice(randomPosition,1)[0];
     
-    const colors = ["red", "yellow", "pink", "blue"];
+    //const colors = ["red", "yellow", "pink", "blue"];
+
+    const colors = ['#f28972', '#F2C48D', '#D98FBF', '#8268A6'];    
+
+    ////const colors = ['elephant-red', 'elephant-orange', 'elephant-pink', 'elephant-violet']
     let randomColorNumber = Math.floor(Math.random() * 4);
     selections.color = colors[randomColorNumber];
     finalColor === "" ? finalColor = selections.color : null;
     
     setTimeout(() => {
-        return updateState(selections.section, selections.color);
-    }, timeout = timeout + 150)
+      return updateState(selections.section, selections.color);
+    }, timeoutArray[timeoutIndex = timeoutIndex + 1])
+    //console.log(timeoutIndex);
+    //setTimeout(() => {
+      //  return updateState(selections.section, selections.color);
+    //}, timeout = timeout + 150)
+    //make an array of different times, eg: [2,100,250,260]
+    //above term reads arrayName[timeout = timeout + 1]
+
 
     setTimeout(() => {
-      return updateState(selections.section, backgroundColour)
-    }, timeout + 300)
+      return updateState(selections.section, backgroundColour);
+    }, timeoutArray[timeoutIndex = timeoutIndex + 1])
 
-    setTimeout(() => {
-      return updateState(selections.section, finalColor)
-    }, timeout2 = timeout2 + 150)
+    //console.log(timeoutIndex);
+    //setTimeout(() => {
+      //return updateState(selections.section, backgroundColour)
+    //}, timeout + 300)
+
+    //setTimeout(() => {
+      //return updateState(selections.section, finalColor)
+    //}, timeout2 = timeout2 + 150)
 
     printColorChoiceAndSection()
 }
 
+const dominoFinish = () => {
+  console.log('dominoFinish pass')
+  console.log(randomisedDominoArray);
+  if (randomisedDominoArray.length === 0){
+    return
+  }
+  finalColor === "pink";
+
+  let selections: any = {
+    section: 0,
+    color: ""  
+}
+
+selections.section = randomisedDominoArray.pop();
+
+setTimeout(() => {
+  return updateState(selections.section, finalColor)
+}, timeout2 = timeout2 + 70)
+
+dominoFinish()
+
+
+}
 
 
      useEffect(() => {
       printColorChoiceAndSection();
+      dominoFinish();
       
      }, [])
 
 
-  return (<svg width={sizing.width} height={sizing.height} viewBox="0 0 900 900" fill="none" xmlns="http://www.w3.org/2000/svg">
+  return (<svg className="m-auto" width={sizing.width} height={sizing.height} viewBox="0 0 900 900" fill="none" xmlns="http://www.w3.org/2000/svg">
     <rect
       width={sizing.width}
       height={sizing.height}

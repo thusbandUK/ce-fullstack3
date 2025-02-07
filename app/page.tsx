@@ -14,6 +14,8 @@ export default function Home() {
             alt="chemistry elephant logo"
             className="rounded-lg"
             style={{border: 'black solid 1px'}}
+            width={100}
+            height={100}
           >
           </Image>
         </div>
