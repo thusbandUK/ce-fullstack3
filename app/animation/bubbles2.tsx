@@ -131,7 +131,7 @@ const ParticleCanvas: React.FC<HomeProps> = ({colour}) => {
                 };
             }
         }
-    }, []);
+    }, [colour, particleArray]);
 
     return <canvas style={backgroundStyling} className="absolute" ref={canvasRef} id="canvas" width="300" height="300"></canvas>;
 };

@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { number } from 'zod';
 
 interface HomeProps {    
@@ -31,15 +31,15 @@ const CELogoAnimation: React.FC<HomeProps> = ({sizing}) => {
       section7: backgroundColour
      }) 
 
-     let numberArray = [1,2,3,4,5,6,7];
-     let echoedNumberArray: number[] = [];
+     const numberArray = [1,2,3,4,5,6,7];
+     //const echoedNumberArray: number[] = [];
 
      const sequenceRandomiser = (array: number[]) => {
       const randomNumber = Math.floor(Math.random() * 2);
       if (randomNumber === 0){
         return array;
       }
-      let reversedArray = [];
+      const reversedArray = [];
       for (let x = array.length - 1; x >= 0; x--){
         reversedArray.push(array[x]);
       }
@@ -49,12 +49,12 @@ const CELogoAnimation: React.FC<HomeProps> = ({sizing}) => {
      //let dominoArray = sequenceRandomiser(echoedNumberArray);
      //console.log(dominoArray);
      const dominoArray = [7,6,5,4,3,2,1];
-     let randomisedDominoArray = sequenceRandomiser(dominoArray)
+     const randomisedDominoArray = sequenceRandomiser(dominoArray)
 
-let timeout = 150;
+const timeout = 150;
 let timeout2 = 4400;
 let timeoutIndex = 0;
-let timeoutArray = [0,500,700,600,800, 2000, 2300, 2000, 2300, 3500, 3700, 3600, 3800, 3700, 3900]
+const timeoutArray = [0,500,700,600,800, 2000, 2300, 2000, 2300, 3500, 3700, 3600, 3800, 3700, 3900]
 
 const updateState = (section: number, color: string) => {
   setSectionColours(prevState => ({
@@ -74,7 +74,7 @@ let finalColor = "";
 //then you get the ripple down domino effect
 //as blinks consumes the top array, it creates the second array but adds the numbers in numerical order
 
-const printColorChoiceAndSection = () => {
+const printColorChoiceAndSection = useCallback(() => {
   console.log('printColor pass')
   if (numberArray.length === 0){
     return}
@@ -92,12 +92,12 @@ const printColorChoiceAndSection = () => {
     //} else {
       //workingArray = numberArray;
     //}
-    let selections = {
+    const selections = {
         section: 0,
         color: ""
     }
     
-    let randomPosition = Math.floor(Math.random() * numberArray.length);
+    const randomPosition = Math.floor(Math.random() * numberArray.length);
     selections.section = numberArray.splice(randomPosition,1)[0];
     
     //const colors = ["red", "yellow", "pink", "blue"];
@@ -105,7 +105,7 @@ const printColorChoiceAndSection = () => {
     const colors = ['#f28972', '#F2C48D', '#D98FBF', '#8268A6'];    
 
     ////const colors = ['elephant-red', 'elephant-orange', 'elephant-pink', 'elephant-violet']
-    let randomColorNumber = Math.floor(Math.random() * 4);
+    const randomColorNumber = Math.floor(Math.random() * 4);
     selections.color = colors[randomColorNumber];
     finalColor === "" ? finalColor = selections.color : null;
     
@@ -134,9 +134,9 @@ const printColorChoiceAndSection = () => {
     //}, timeout2 = timeout2 + 150)
 
     printColorChoiceAndSection()
-}
+}, [])
 
-const dominoFinish = () => {
+const dominoFinish = useCallback(() => {
   console.log('dominoFinish pass')
   console.log(randomisedDominoArray);
   if (randomisedDominoArray.length === 0){
@@ -144,7 +144,7 @@ const dominoFinish = () => {
   }
   finalColor === "pink";
 
-  let selections: any = {
+  const selections: any = {
     section: 0,
     color: ""  
 }
@@ -158,14 +158,16 @@ setTimeout(() => {
 dominoFinish()
 
 
-}
+}, [])
 
+//printColorChoiceAndSection();
+  //    dominoFinish();
 
      useEffect(() => {
       printColorChoiceAndSection();
       dominoFinish();
       
-     }, [])
+     }, [dominoFinish, printColorChoiceAndSection])
 
 
   return (<svg className="m-auto" width={sizing.width} height={sizing.height} viewBox="0 0 900 900" fill="none" xmlns="http://www.w3.org/2000/svg">
