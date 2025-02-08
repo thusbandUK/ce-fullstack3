@@ -156,7 +156,7 @@ selections.section = randomisedDominoArray.pop();
 
 setTimeout(() => {
   return updateState(selections.section, finalColor)
-}, timeout2 = timeout2 + 15)
+}, timeout2 = timeout2 + 25)
 
 dominoFinish()
 
