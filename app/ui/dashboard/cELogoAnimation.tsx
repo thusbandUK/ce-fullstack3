@@ -52,10 +52,10 @@ const CELogoAnimation: React.FC<HomeProps> = ({sizing}) => {
      const randomisedDominoArray = sequenceRandomiser(dominoArray)
 
 const timeout = 150;
-let timeout2 = 4400;
+let timeout2 = 1800;
 let timeoutIndex = 0;
-const timeoutArray = [0,500,700,600,800, 2000, 2300, 2000, 2300, 3500, 3700, 3600, 3800, 3700, 3900]
-
+const timeoutArray = [0,500,700,600,800, 1200, 1350, 1200, 1350, 2500, 2700, 2600, 2800, 2700, 2900]
+7
 const updateState = (section: number, color: string) => {
   setSectionColours(prevState => ({
     ...prevState,
@@ -75,6 +75,9 @@ let finalColor = "";
 //as blinks consumes the top array, it creates the second array but adds the numbers in numerical order
 
 const printColorChoiceAndSection = useCallback(() => {
+  if (timeoutIndex >=8){
+    return
+  }
   console.log('printColor pass')
   if (numberArray.length === 0){
     return}
@@ -153,7 +156,7 @@ selections.section = randomisedDominoArray.pop();
 
 setTimeout(() => {
   return updateState(selections.section, finalColor)
-}, timeout2 = timeout2 + 70)
+}, timeout2 = timeout2 + 15)
 
 dominoFinish()
 
