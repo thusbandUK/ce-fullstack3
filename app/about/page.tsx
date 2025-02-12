@@ -2,13 +2,16 @@ import SignOut from "../ui/dashboard/signOut"
 import { SignIn } from '../ui/login-form2';
 import { auth } from '@/auth';
 import CELogoAnimation from "../ui/dashboard/cELogoAnimation";
+//import MailTest from "./mailTest";
 
 import CombinedAnimation2 from "../animation/explosion";
 
 export default async function About(){    
-
+//<MailTest></MailTest>
     return (
         <div  className="container m-auto">
+
+           
            
             <CELogoAnimation
               sizing={{height: 200, width: 200}}
