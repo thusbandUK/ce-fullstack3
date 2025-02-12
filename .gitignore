@@ -1,5 +1,8 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
+# mail test
+/app/about/mailTest.tsx
+
 # flashcard content
 /app/lib/flashcard-seed-data.json
 
@@ -11,6 +14,9 @@
 # db init content
 /app/seed/initiation.sql
 /app/seed/route.ts
+
+#miscellaneous code
+/app/miscellaneous-code
 
 # dependencies
 /node_modules
