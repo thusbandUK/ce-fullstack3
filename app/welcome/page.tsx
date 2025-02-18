@@ -17,6 +17,11 @@ import { redirect } from 'next/navigation';
 export default async function Page({ searchParams }: { searchParams: { location: string } }) {
   
     const session: any = await auth();
+
+    if (session){
+      console.log('session triggered')
+      redirect('/');
+    }
     console.log(session);
     console.log(session.user)
 
