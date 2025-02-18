@@ -20,7 +20,7 @@ export default async function Page({ searchParams }: { searchParams: { location:
 
     if (session){
       console.log('session triggered')
-      redirect('/');
+      return(<p>Hello!</p>)
     }
     console.log(session);
     console.log(session.user)
