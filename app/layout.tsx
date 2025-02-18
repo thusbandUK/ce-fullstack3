@@ -25,11 +25,10 @@ export default function RootLayout({
       
       <body
         className={`${akkurat.className} antialiased bg-white`}
-      > 
-      {/*
+      >       
         <header>
           <Navbar />
-        </header>        */ }              
+        </header>                     
         <main className="bg-white">
           {children}
         </main>

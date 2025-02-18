@@ -4,6 +4,11 @@ import Image from "next/image";
 
 export default async function Navbar(){
     const session: any = await auth();
+
+    if (session){
+      console.log('session logged from Navbar')
+      console.log(session)
+    }
 //pe-6
     return(  
         <div className="navbar items-start">
@@ -35,19 +40,22 @@ export default async function Navbar(){
                 </path>
               </svg>
             </button>
+            {/** 
             <div className="collapse-content pe-0">
               <ul id="menu-links-container" className="menu menu-vertical lg:menu-horizontal rounded-box pe-0">
                 <NavLinks 
                   session={session}
                 />
               </ul>
-            </div>
+            </div>*/}
           </div>
+          {/** 
           <div className="flex navbar-links-container my-auto desktop-nav">
             <NavLinks 
               session={session}
             />
           </div>
+          */}
         </div>
     )
 }
