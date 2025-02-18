@@ -27,7 +27,7 @@ export default async function Page({ searchParams }: { searchParams: { location:
       redirect('/login');
     }
 
-    if (session.user.name === null){
+    if (!session.user.name){
       redirect(`/welcome/signup?location=${searchParams.location}`);
     }
 
