@@ -21,22 +21,23 @@ export default async function Page({ searchParams }: { searchParams: { location:
 
     /**/
     if (!session) {
-      //notFound();
+      console.log('no session called');
       redirect('/login');
     }
 
     //let userEmail: string | null | undefined = '';
     const userEmail: string = '';    
+    console.log('got to line 30')
 
     return (
       <div>        
         <p>Welcome!</p>        
             <p>Looks like this is your first time signing in, welcome, please enter your details below...</p>
-            <SignUpForm 
+            {/*<SignUpForm 
               username={''}
               email={session.user?.email}
               location={searchParams.location}
-            />        
+    /> */}       
       </div>
     )
 }
