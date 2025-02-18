@@ -16,7 +16,7 @@ export default function LoginPage({ searchParams }: { searchParams: { location: 
           </div>
         </div>
         <SignIn 
-          location={searchParams.location ? searchParams.location : null}
+          location={searchParams.location ? searchParams.location : ''}
         />
           
           
