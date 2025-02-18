@@ -27,7 +27,66 @@ export type State = {
   };
 };
 
-export async function signUpUser(email: string, location: string | null, prevState: State, formData: FormData) {  
+export async function signUpUser(email: string, location: string | null, prevState: State, formData: FormData) {
+console.log('signUpUser called');
+//validates email
+const emailValidation = UserEmailSchema.safeParse({
+  validatedEmail: email,
+});
+
+//validates username to ensure string between 5 and 20 characters long
+const validatedFields = NewUser.safeParse({    
+  username: formData.get('username'),
+  mailTick: formData.get('mailTick'),
+});
+  
+// If form validation fails, return errors early. Otherwise, continue.
+
+if (!validatedFields.success) {
+  console.log('validated fields not successful');
+  console.log(validatedFields.error.flatten());
+  return {
+    message: 'Username rejected. Try again.',      
+    errors: {        
+      username: validatedFields.error.flatten().fieldErrors.username,
+      email: []
+    },
+    
+  };
+}
+
+const validatedMailTick = validatedFields.data?.mailTick;
+
+console.log(validatedMailTick);
+
+const validatedUsername = validatedFields.data?.username;
+
+const validatedEmail = emailValidation.data?.validatedEmail;
+
+//const query = 'INSERT INTO users (name, email, receive_email) VALUES ($1, $2, $3) ON CONFLICT (id) DO NOTHING;'
+const query = 'UPDATE users SET name = $1 WHERE email = $2'
+//const argumentData = [validatedUsername, validatedEmail, validatedMailTick];
+const argumentData = [validatedUsername, validatedEmail];
+
+try {
+  console.log('got to try')
+  const userDetails = await sql.query<UserDetails>(query, argumentData);
+      
+} catch (error){
+  console.log('error route triggered')
+  return {
+    message: 'Database Error: Failed to sign up new user.'
+  };
+}
+
+console.log('got past try catch section')
+revalidatePath('/welcome');
+console.log('got past revalidate path')
+redirect(`/welcome?location=${location}`);
+console.log('got past redirect');
+}
+
+export async function signUpUser2(email: string, location: string | null, prevState: State, formData: FormData) {  
   
   //validates email
   const emailValidation = UserEmailSchema.safeParse({
