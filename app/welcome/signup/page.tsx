@@ -33,7 +33,7 @@ export default async function Page({ searchParams }: { searchParams: { location:
         <p>Welcome!</p>        
             <p>Looks like this is your first time signing in, welcome, please enter your details below...</p>
             <SignUpForm 
-              username={session.user?.name}
+              username={''}
               email={session.user?.email}
               location={searchParams.location}
             />        
