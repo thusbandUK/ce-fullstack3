@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import Navbar from "./ui/dashboard/navbar";
+
  
 const akkurat = localFont({
   src: '../public/fonts/Akkurat-Light.woff2',
@@ -21,16 +22,19 @@ export default function RootLayout({
 
   return (
     <html lang="en">
+      
       <body
         className={`${akkurat.className} antialiased bg-white`}
-      >               
+      > 
+      {/*
         <header>
           <Navbar />
-        </header>        
+        </header>        */ }              
         <main className="bg-white">
           {children}
         </main>
       </body>
+      
     </html>
   );
 }
