@@ -21,16 +21,19 @@ export default async function Page({ searchParams }: { searchParams: { location:
     console.log(session.user)
 
     
-    /**/
+    console.log('got to line 24')
     if (!session) {
+      console.log('no session triggered')
       //notFound();
       redirect('/login');
     }
-
+    console.log('got to line 30')
     if (!session.user.name){
+      console.log('!session.user.name triggered')
       redirect(`/welcome/signup?location=${searchParams.location}`);
     }
 
+    console.log('got to line 36')
     //let userEmail: string | null | undefined = '';
     //let userEmail: string = '';
 
@@ -55,10 +58,11 @@ export default async function Page({ searchParams }: { searchParams: { location:
 
     // Wait 3 seconds.
     await new Promise((resolve) => setTimeout(resolve, 3000));
-    
+    console.log('got to line 61')
     // Redirect to another route.
     
     if (searchParams.location){
+      console.log('searchParams.location triggered')
       redirect(`${searchParams.location}`);
     }
     
@@ -74,7 +78,7 @@ export default async function Page({ searchParams }: { searchParams: { location:
       <div>
         <p>WELCOME PAGE</p>
         
-        <p>Welcome {session.user ? session.user.name : null}!</p>
+        
 
         { searchParams.location ? 
           <p>Please wait to be redirected</p>  
