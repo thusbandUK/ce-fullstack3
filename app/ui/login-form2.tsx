@@ -9,11 +9,14 @@ export function SignIn({
   provider,
   ...props
 }: { location: string | null, provider?: string } & React.ComponentPropsWithRef<typeof Button>) {
+  console.log(location);
+  console.log(provider);
   return (
     <form
       action={async () => {
         "use server"
-        await signIn(provider, { redirectTo: `/welcome?location=${location}` })
+        //await signIn(provider, { redirectTo: `/welcome?location=${location}` })
+        await signIn(provider, { redirectTo: `/` })
       }}
     >
       <Button {...props}>Sign In</Button>
