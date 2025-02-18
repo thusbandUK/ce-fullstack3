@@ -58,7 +58,7 @@ export default function NavLinks({session}: {session: any}) {
         aria-label="account button"
       >
         <div className="account-icon flex justify-center">
-          {/**<p>H</p>*/}  
+            
            {session ? 
           <p>H&#9888;</p>
           

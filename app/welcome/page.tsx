@@ -17,36 +17,22 @@ import { redirect } from 'next/navigation';
 export default async function Page({ searchParams }: { searchParams: { location: string } }) {
   
     const session: any = await auth();
-
-    if (session){
-      console.log('session triggered')
-      return(<p>Hello!</p>)
-    }
-    console.log(session);
-    console.log(session.user)
-
     
-    console.log('got to line 24')
-    if (!session) {
-      console.log('no session triggered')
-      //notFound();
+
+    if (!session) {      
       redirect('/login');
     }
-    console.log('got to line 30')
-    if (!session.user.name){
-      console.log('!session.user.name triggered')
-      if (!searchParams.location){
-        console.log('went into !searchParams')
+    
+    if (!session.user.name){      
+      if (!searchParams.location){        
         redirect('/welcome/signup');        
-      } else {
-        console.log('went into else')
-        redirect(`/welcome/signup?location=${searchParams.location}`);
-        
+      } else {        
+        redirect(`/welcome/signup?location=${searchParams.location}`);        
       }
       
     }
 
-    console.log('got to line 36')
+    
     //let userEmail: string | null | undefined = '';
     //let userEmail: string = '';
 
@@ -71,11 +57,10 @@ export default async function Page({ searchParams }: { searchParams: { location:
 
     // Wait 3 seconds.
     await new Promise((resolve) => setTimeout(resolve, 3000));
-    console.log('got to line 61')
+    
     // Redirect to another route.
     
-    if (searchParams.location){
-      console.log('searchParams.location triggered')
+    if (searchParams.location){      
       redirect(`${searchParams.location}`);
     }
     

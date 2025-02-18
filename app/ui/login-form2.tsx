@@ -15,8 +15,8 @@ export function SignIn({
     <form
       action={async () => {
         "use server"
-        //await signIn(provider, { redirectTo: `/welcome?location=${location}` })
-        await signIn(provider, { redirectTo: `/` })
+        await signIn(provider, { redirectTo: `/welcome?location=${location}` })
+        ////await signIn(provider, { redirectTo: `/` })
       }}
     >
       <Button {...props}>Sign In</Button>
