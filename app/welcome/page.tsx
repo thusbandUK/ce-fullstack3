@@ -18,25 +18,34 @@ export default async function Page({ searchParams }: { searchParams: { location:
   
     const session: any = await auth();
     console.log(session);
+    console.log(session.user)
 
+    
     /**/
     if (!session) {
       //notFound();
       redirect('/login');
     }
 
-    //let userEmail: string | null | undefined = '';
-    let userEmail: string = '';
-
-    if (session.user){
-      userEmail = session.user.email;
-    }
-        
-    const userDetails: UserData[] = await fetchUser(userEmail);
-
-    if (!userDetails || userDetails.length === 0){
+    if (session.user.name === null){
       redirect(`/welcome/signup?location=${searchParams.location}`);
     }
+
+    //let userEmail: string | null | undefined = '';
+    //let userEmail: string = '';
+
+    //if (session.user){
+      //userEmail = session.user.email;
+    //}
+        
+    //const userDetails: UserData[] = await fetchUser(userEmail);
+
+    //if (!userDetails.user.name){
+      //redirect(`/welcome/signup?location=${searchParams.location}`);
+    //}
+    //if (!userDetails || userDetails.length === 0){
+      //redirect(`/welcome/signup?location=${searchParams.location}`);      
+    //}
 
     //if (searchParams.location){
      // setTimeout(() => {
@@ -48,7 +57,11 @@ export default async function Page({ searchParams }: { searchParams: { location:
     await new Promise((resolve) => setTimeout(resolve, 3000));
     
     // Redirect to another route.
-    redirect(`${searchParams.location}`);
+    
+    if (searchParams.location){
+      redirect(`${searchParams.location}`);
+    }
+    
 
     //setTimeout(() => {
       //redirect(`${searchParams.location}`);
@@ -59,6 +72,7 @@ export default async function Page({ searchParams }: { searchParams: { location:
 
     return (
       <div>
+        <p>WELCOME PAGE</p>
         
         <p>Welcome {session.user ? session.user.name : null}!</p>
 
