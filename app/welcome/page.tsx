@@ -30,7 +30,12 @@ export default async function Page({ searchParams }: { searchParams: { location:
     console.log('got to line 30')
     if (!session.user.name){
       console.log('!session.user.name triggered')
-      redirect(`/welcome/signup?location=${searchParams.location}`);
+      if (searchParams.location){
+        redirect(`/welcome/signup?location=${searchParams.location}`);
+      } else {
+        redirect('/welcome/signup');
+      }
+      
     }
 
     console.log('got to line 36')
