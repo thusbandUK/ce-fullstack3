@@ -51,15 +51,16 @@ export default function NavLinks({session}: {session: any}) {
           </Link>
         );
       })}
-      {/** 
+      
       <Link
         href={'/account'}
         prefetch={false}
         aria-label="account button"
       >
         <div className="account-icon flex justify-center">
-          {session ? 
-          <p>H!</p>
+          {/**<p>H</p>*/}  
+           {session ? 
+          <p>H&#9888;</p>
           
           :
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" width="50" height="50">
@@ -68,7 +69,7 @@ export default function NavLinks({session}: {session: any}) {
         }
 
         </div>
-      </Link>     */}    
+      </Link>       
     </>
   );
 }
