@@ -24,6 +24,26 @@ textarea {
   --foreground: #171717;
 }
 
+/*Animation loader*/
+
+.loader {
+
+  position: fixed;
+
+  /*top: 50%;
+
+  left: 50%;*/
+
+  width: 100vw;
+
+  height: 100vh;
+
+  background-color: white;    
+
+}
+
+/*Animation loader ends*/
+
 @media (prefers-color-scheme: light) {
   html {
     color-scheme: light;

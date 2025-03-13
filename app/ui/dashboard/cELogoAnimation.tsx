@@ -1,7 +1,6 @@
 "use client"
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { number } from 'zod';
 
 interface HomeProps {    
     sizing: any;
@@ -18,7 +17,7 @@ interface ColorScheme {
 }
 
 const CELogoAnimation: React.FC<HomeProps> = ({sizing}) => {
-     //const elephantColour = "blue";
+     
      const backgroundColour = "white";
 
      const [sectionColours, setSectionColours] = useState<ColorScheme>({
@@ -32,8 +31,7 @@ const CELogoAnimation: React.FC<HomeProps> = ({sizing}) => {
      }) 
 
      const numberArray = [1,2,3,4,5,6,7];
-     //const echoedNumberArray: number[] = [];
-
+     
      const sequenceRandomiser = (array: number[]) => {
       const randomNumber = Math.floor(Math.random() * 2);
       if (randomNumber === 0){
@@ -46,8 +44,6 @@ const CELogoAnimation: React.FC<HomeProps> = ({sizing}) => {
       return reversedArray;
      }
 
-     //let dominoArray = sequenceRandomiser(echoedNumberArray);
-     //console.log(dominoArray);
      const dominoArray = [7,6,5,4,3,2,1];
      const randomisedDominoArray = sequenceRandomiser(dominoArray)
 
@@ -55,7 +51,7 @@ const timeout = 150;
 let timeout2 = 1800;
 let timeoutIndex = 0;
 const timeoutArray = [0,500,700,600,800, 1200, 1350, 1200, 1350, 2500, 2700, 2600, 2800, 2700, 2900]
-7
+
 const updateState = (section: number, color: string) => {
   setSectionColours(prevState => ({
     ...prevState,
@@ -78,23 +74,10 @@ const printColorChoiceAndSection = useCallback(() => {
   if (timeoutIndex >=8){
     return
   }
-  console.log('printColor pass')
+  
   if (numberArray.length === 0){
     return}
-  //console.log(timeoutArray[timeoutIndex]);
- // if (timeoutArray[timeoutIndex] === undefined){
-    //return
-  //}
-    //let workingArray = numberArray;
-    //if (numberArray.length === 0){
-      //if (echoedNumberArray.length === 0){
-        //return
-      //} else {
-        //workingArray = echoedNumberArray;
-      //}        
-    //} else {
-      //workingArray = numberArray;
-    //}
+  
     const selections = {
         section: 0,
         color: ""
@@ -103,11 +86,8 @@ const printColorChoiceAndSection = useCallback(() => {
     const randomPosition = Math.floor(Math.random() * numberArray.length);
     selections.section = numberArray.splice(randomPosition,1)[0];
     
-    //const colors = ["red", "yellow", "pink", "blue"];
-
-    const colors = ['#f28972', '#F2C48D', '#D98FBF', '#8268A6'];    
-
-    ////const colors = ['elephant-red', 'elephant-orange', 'elephant-pink', 'elephant-violet']
+    const colors = ['#f28972', '#F2C48D', '#D98FBF', '#8268A6'];
+    
     const randomColorNumber = Math.floor(Math.random() * 4);
     selections.color = colors[randomColorNumber];
     finalColor === "" ? finalColor = selections.color : null;
@@ -115,33 +95,16 @@ const printColorChoiceAndSection = useCallback(() => {
     setTimeout(() => {
       return updateState(selections.section, selections.color);
     }, timeoutArray[timeoutIndex = timeoutIndex + 1])
-    //console.log(timeoutIndex);
-    //setTimeout(() => {
-      //  return updateState(selections.section, selections.color);
-    //}, timeout = timeout + 150)
-    //make an array of different times, eg: [2,100,250,260]
-    //above term reads arrayName[timeout = timeout + 1]
-
 
     setTimeout(() => {
       return updateState(selections.section, backgroundColour);
     }, timeoutArray[timeoutIndex = timeoutIndex + 1])
 
-    //console.log(timeoutIndex);
-    //setTimeout(() => {
-      //return updateState(selections.section, backgroundColour)
-    //}, timeout + 300)
-
-    //setTimeout(() => {
-      //return updateState(selections.section, finalColor)
-    //}, timeout2 = timeout2 + 150)
-
     printColorChoiceAndSection()
 }, [])
 
 const dominoFinish = useCallback(() => {
-  console.log('dominoFinish pass')
-  console.log(randomisedDominoArray);
+  
   if (randomisedDominoArray.length === 0){
     return
   }
@@ -150,37 +113,35 @@ const dominoFinish = useCallback(() => {
   const selections: any = {
     section: 0,
     color: ""  
-}
+  }
 
-selections.section = randomisedDominoArray.pop();
+  selections.section = randomisedDominoArray.pop();
 
-setTimeout(() => {
-  return updateState(selections.section, finalColor)
-}, timeout2 = timeout2 + 25)
+  setTimeout(() => {
+    return updateState(selections.section, finalColor)
+  }, timeout2 = timeout2 + 25)
 
-dominoFinish()
+  dominoFinish()
 
 
-}, [])
+  }, [])
 
-//printColorChoiceAndSection();
-  //    dominoFinish();
-
+  let screenWidth = 900;
      useEffect(() => {
+      screenWidth = window.innerWidth;
       printColorChoiceAndSection();
       dominoFinish();
       
      }, [dominoFinish, printColorChoiceAndSection])
 
-
-  return (<svg className="m-auto" width={sizing.width} height={sizing.height} viewBox="0 0 900 900" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <rect
+  return (<svg className="m-auto" width={0.3 * screenWidth} height={0.3 * screenWidth} viewBox="0 0 900 900" fill="none" xmlns="http://www.w3.org/2000/svg">
+    {/*<rect
       width={sizing.width}
       height={sizing.height}
       rx="39.1642"
       fill={backgroundColour}
       style={{ fillOpacity: 1 }}
-    />
+    />*/}
     <g filter="url(#filter0_d_7400_5)">
       <path
         d="M100 551.167C100 540.122 108.954 531.167 120 531.167H345.707C356.753 531.167 365.707 540.122 365.707 551.167V697.162C365.707 708.208 356.752 717.162 345.707 717.162H120C108.954 717.162 100 708.208 100 697.162V551.167Z"

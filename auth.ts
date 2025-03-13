@@ -1,15 +1,14 @@
-//new set up
-
 import NextAuth from "next-auth";
 import authConfig from "./authConfig";  
 import Nodemailer from "next-auth/providers/nodemailer";
-//import PostgresAdapter from "@auth/pg-adapter"
-//import { Pool } from "@neondatabase/serverless"
-//import pool from "./databaseConfig";
+import PostgresAdapter from "@auth/pg-adapter"
+import { Pool } from "@neondatabase/serverless"
+
+//Nextauth docs say *don't* declare pool variable here
   
 export const {handlers, signIn, signOut, auth} = NextAuth(() => {  
-    //...authConfig,
-    /*const pool = new Pool({ 
+    //declare pool variable here inside function
+    const pool = new Pool({ 
       host: process.env.POSTGRES_HOST,
       user: process.env.POSTGRES_USER,
       password: process.env.POSTGRES_PASSWORD,
@@ -19,19 +18,15 @@ export const {handlers, signIn, signOut, auth} = NextAuth(() => {
       connectionString: process.env.POSTGRES_URL, 
       connectionTimeoutMillis: 2000,
       
-    })*/
+    })
     return {...authConfig,
-      //adapter: PostgresAdapter(pool),
-      //session: { strategy: "database" },
+      adapter: PostgresAdapter(pool),      
       callbacks: {
-        session({ session, user }) {
-            //if (user && user.role) {
-               // session.user.role = user.role    
-            //}
+        session({ session, user }) {            
             
             return session
         }
-      },/**/
+      },
       providers: [  
         Nodemailer({  
             server: {  
