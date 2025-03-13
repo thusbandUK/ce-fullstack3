@@ -12,7 +12,7 @@ const CELogoContainer = () => {
     
     useEffect(() => {
         
-        let timeBeforeHide = 3000;
+        const timeBeforeHide = 3000;
         if (runAlready){
             return setDisplay(false);
         }
