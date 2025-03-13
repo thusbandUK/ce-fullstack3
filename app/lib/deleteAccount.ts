@@ -8,6 +8,6 @@ account deletion
 all data associated with your account? Yes / No On click yes there's a function which deletes everything
 so you need to have the email, check what happens with the login auth
 
-http://localhost:3000/api/auth/callback/nodemailer?callbackUrl=[CALLBACKURL]&token=[TOKEN]&email=thusbanduk%40gmail.com
+see exemplar link in toDoHidden.txt
 
 */
