@@ -1,9 +1,9 @@
 'use server';
 import nodemailer from 'nodemailer';
 //const SMTP_SERVER_HOST = process.env.SMTP_SERVER_HOST;
-const SMTP_SERVER_USERNAME = process.env.EMAIL_USER;
-const SMTP_SERVER_PASSWORD = process.env.EMAIL_PASSWORD;
-const SITE_MAIL_RECEIVER = process.env.SITE_MAIL_RECEIVER;
+const SMTP_SERVER_USERNAME = process.env.EMAIL_SERVER_USER;
+const SMTP_SERVER_PASSWORD = process.env.EMAIL_SERVER_PASSWORD;
+//const SITE_MAIL_RECEIVER = process.env.SITE_MAIL_RECEIVER;
 const transporter = nodemailer.createTransport({
   host: 'smtp.zoho.eu',
   service: 'smtp.zoho.eu',  
@@ -40,12 +40,12 @@ export async function sendMail({
   }
   const info = await transporter.sendMail({
     from: `"Thomas Husband" <${SMTP_SERVER_USERNAME}>`,
-    to: sendTo || SITE_MAIL_RECEIVER,
+    to: sendTo || email,
     subject: subject,
     text: text,
     html: html ? html : '',
   });
   console.log('Message Sent', info.messageId);
-  console.log('Mail sent to', SITE_MAIL_RECEIVER);
+  console.log('Mail sent to', email);
   return info;
 }
