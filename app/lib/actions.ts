@@ -87,7 +87,7 @@ try {
 console.log('got past try catch section')
 revalidatePath('/welcome');
 console.log('got past revalidate path')
-redirect(`/welcome?location=${location}`);
+redirect(location !== undefined ? `/welcome?location=${location}` : '/welcome');
 console.log('got past redirect');
 }
 
