@@ -4,7 +4,7 @@ import { auth } from '@/auth';
 import CELogoAnimation from "../ui/dashboard/cELogoAnimation";
 //import MailTest from "./mailTest";
 
-import CombinedAnimation2 from "../animation/explosion";
+//import CombinedAnimation2 from "../animation/explosion";
 
 export default async function About(){    
 //<MailTest></MailTest>
