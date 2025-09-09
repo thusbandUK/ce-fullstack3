@@ -239,7 +239,7 @@ export async function initiateDelete(email: string, prevState: State2){
           sendTo: validatedEmail,
           subject: 'Link to delete account',
           text: 'Click the link to delete your account',
-          html: `<p>Click <a href="http://localhost:3000/account/delete/confirm?token=${stringToken}&email=${validatedEmail}">Link</a> to delete account</p>`
+          html: `<p>Click <a href="https://ce-fullstack3-hzaf.vercel.app/account/delete/confirm?token=${stringToken}&email=${validatedEmail}">Link</a> to delete account</p>`
         }
       )      
           
