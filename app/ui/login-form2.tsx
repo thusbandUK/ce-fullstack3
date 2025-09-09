@@ -15,7 +15,7 @@ export function SignIn({
     <form
       action={async () => {
         "use server"
-        await signIn(provider, { redirectTo: `/welcome?location=${location}` })
+        await signIn(provider, { redirectTo: location ? `/welcome?location=${location}` : '/welcome' })
         ////await signIn(provider, { redirectTo: `/` })
       }}
     >
