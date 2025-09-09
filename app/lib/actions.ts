@@ -10,13 +10,18 @@ import { UserEmailSchema } from './data';
 import { UserDetails } from './definitions';
 
 const FormSchema = z.object({
-  username: z.coerce.string({invalid_type_error: "Name must be a string",}).max(20).min(5),
-  //email: z.string().email(),  
+  username: z.coerce.string({invalid_type_error: "Name must be a string",}).max(20).min(5),  
   mailTick: z.coerce.boolean(),
 });
  
 const NewUser = FormSchema;
 
+const UpdateUsernameSchema = z.object({
+  username: z.coerce.string({invalid_type_error: "Name must be a string",}).max(20).min(5),  
+  email: z.coerce.string({invalid_type_error: "Invalid email"}).email()
+});
+
+const UpdatedUser = UpdateUsernameSchema;
 
 export type State = {
   
@@ -84,6 +89,46 @@ revalidatePath('/welcome');
 console.log('got past revalidate path')
 redirect(`/welcome?location=${location}`);
 console.log('got past redirect');
+}
+
+export async function updateUser(email: string, prevState: State, formData: FormData) {  
+  
+  //validates username to ensure string between 5 and 20 characters long,
+  //validates email (even though passed directly from session object)
+  const validatedFields = UpdatedUser.safeParse({    
+    username: formData.get('username'),
+    email: email
+  });
+    
+  // If form validation fails, return errors early. Otherwise, continue.  
+  if (!validatedFields.success) {    
+    return {
+      message: 'Username rejected. Must be between 5 and 20 letters long.',      
+      errors: {        
+        username: validatedFields.error.flatten().fieldErrors.username,
+        email: []
+      },      
+    };
+  }
+    
+  const validatedUsername = validatedFields.data?.username;
+  const validatedEmail = validatedFields.data?.email;
+    
+  const query = 'UPDATE users SET name = $1 WHERE email = $2'
+  const argumentData = [validatedUsername, validatedEmail];
+  
+  try {    
+    const userDetails = await sql.query<UserDetails>(query, argumentData);
+        
+  } catch (error){    
+    return {
+      message: 'Database Error: Failed to sign up new user.'
+    };
+  }
+  
+  revalidatePath('/account/username');
+  redirect(`/account`);
+  
 }
 
 export async function signUpUser2(email: string, location: string | null, prevState: State, formData: FormData) {  

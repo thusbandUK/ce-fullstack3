@@ -12,6 +12,7 @@
 # mock data test content
 /app/flashcards/mock/page.tsx
 /app/lib/mockFeedbackData.ts
+/app/lib/old-flashcard-seed-data.json
 /app/ui/dashboard/writtenSummaryMock.tsx
 
 # db init content
