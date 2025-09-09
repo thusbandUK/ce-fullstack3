@@ -231,8 +231,7 @@ export async function initiateDelete(email: string, prevState: State2){
     try {
 
       const returnedData = await sql.query(query, argumentData);
-      console.log('Below should read the returned data');
-      console.log(returnedData);
+      
       
       await sendMail(
         {
@@ -244,7 +243,8 @@ export async function initiateDelete(email: string, prevState: State2){
         }
       )      
           
-    } catch (error){      
+    } catch (error){
+      console.log(error);
       return {        
         message: 'Database Error: Failed to initiate account deletion.'
       };      
