@@ -12,7 +12,7 @@ const Confirm = async () => {
         
     return (
         <>
-          <p>Hello, I'm the confirm page</p>
+          <p>Hello, I&#39;m the confirm page</p>
           <DeleteConfirm
             sessionEmail={session.user?.email}
           >

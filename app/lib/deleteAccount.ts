@@ -17,7 +17,7 @@ import { z } from 'zod';
 import { sql } from '@vercel/postgres';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
-var crypto = require('crypto');
+const crypto = require('crypto');
 import { sendMail } from './send-mail';
 import { dateCompare } from './dateCompare';
 
