@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { FlashcardData, MCQData, HTMLElementEvent, customMouseEventHandler } from '@/app/lib/definitions';
 import DOMPurify from "isomorphic-dompurify";
 import { shuffle } from '@/app/lib/functions';
@@ -12,6 +12,27 @@ export default function MultipleChoiceQuestion(
     const {multiple_choice_responses: multipleChoiceResponses, question} = oneFlashcardData;
     const [randomisedQuestionSet, setRandomisedQuestionSet] = useState<string[]>([]);
 
+    const divRef = useRef<HTMLDivElement>(null);
+
+    /*New resizing logic */
+
+    useEffect(() => {
+        const resizeText = () => {            
+          if (!divRef.current) return;
+          //reset starting font size
+          divRef.current.style.fontSize = `48px`;
+          let size = 48;
+          //reduce font size by increments of 1 until there is no overflow
+          while (divRef.current.scrollHeight > divRef.current.clientHeight && size > 10) {            
+            size -= 1;
+            divRef.current.style.fontSize = `${size}px`;
+          }
+        };
+    
+        resizeText();
+        
+      }, [question]);
+
     /*On *first* render for each question the below sets the randomisedQuestionSet to a shuffled sequence
     of A, B, C, D. This is necessary because the component rerenders when answers are selected (since parent
     component state changes) and without it, the buttons switch places while the feedback is displayed
@@ -24,13 +45,20 @@ export default function MultipleChoiceQuestion(
     //
     //iterates through all the multiple choice responses and returns the number of characters in the longest one
     const returnHighestCharacters = () => {
-        let highest: number = 0;
-        Object.values(multipleChoiceResponses).forEach((x) => {
-            if (x.length > highest){
-                return highest = x.length
+        
+        let highest = {
+            number: 0,
+            response: ''
+        }
+        
+        Object.entries(multipleChoiceResponses).forEach(([key, value]) => {            
+            
+            if (value.length > highest.number){
+                return highest = {number: value.length, response: key}
             }
-        })
-        return highest;
+          });
+                
+        return highest.number;
     }
 
     const width = screen.width;
@@ -74,11 +102,12 @@ export default function MultipleChoiceQuestion(
     return (
         <div className="w-full h-full flex flex-col justify-between px-2 pb-4">
                     <div className="h-13-vh md:h-25-vh flex">
-                    <h4
+                    <div
+                      ref={divRef}
                       dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(question)}}
-                      className="my-auto px-5 py-1 text-center w-full"
+                      className="my-auto px-5 py-1 text-center w-full overflow-hidden text-4xl h-full"
                       aria-live={multipleChoiceResponse ? "off" : "polite"}
-                    ></h4>
+                    ></div>
                     </div>
                     <div className="grid md:grid-cols-2 gap-0 w-full h-68-vh md:h-56-vh">
                     

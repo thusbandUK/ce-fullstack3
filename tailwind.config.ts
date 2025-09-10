@@ -27,6 +27,7 @@ const config: Config = {
         'elephant-bright-orange': '#F2B441',
       },
       height: {
+        '13-vh': '13vh',
         '25-vh': '25vh',
         '68-vh': '68vh',
         '17-vh': '17vh',
