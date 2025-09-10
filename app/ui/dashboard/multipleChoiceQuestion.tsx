@@ -3,6 +3,18 @@ import { FlashcardData, MCQData, HTMLElementEvent, customMouseEventHandler } fro
 import DOMPurify from "isomorphic-dompurify";
 import { shuffle } from '@/app/lib/functions';
 import clsx from 'clsx';
+import {Space_Mono, Inconsolata} from "next/font/google";
+
+const spaceMono = Space_Mono({
+  subsets: ['latin'],
+  weight: "400",
+  variable: "--font-space-mono"
+})
+
+const inconsolata = Inconsolata({
+    subsets: ['latin'],
+    weight: "300",    
+  })
 
 export default function MultipleChoiceQuestion(
     {oneFlashcardData, handleQuestionClick,multipleChoiceResponse}: 
@@ -11,10 +23,18 @@ export default function MultipleChoiceQuestion(
 
     const {multiple_choice_responses: multipleChoiceResponses, question} = oneFlashcardData;
     const [randomisedQuestionSet, setRandomisedQuestionSet] = useState<string[]>([]);
+    const [longestResponse, setLongestResponse] = useState<string>("");
 
     const divRef = useRef<HTMLDivElement>(null);
 
-    /*New resizing logic */
+    const pRefs = {
+        A: useRef<HTMLParagraphElement>(null),
+        B: useRef<HTMLParagraphElement>(null),
+        C: useRef<HTMLParagraphElement>(null),
+        D: useRef<HTMLParagraphElement>(null)
+    }
+
+    /*New resizing logic for question*/
 
     useEffect(() => {
         const resizeText = () => {            
@@ -32,6 +52,10 @@ export default function MultipleChoiceQuestion(
         resizeText();
         
       }, [question]);
+
+    function stripHtmlTags(input: string): string {
+      return input.replace(/<\/?[^>]+(>|$)/g, '');
+    }
 
     /*On *first* render for each question the below sets the randomisedQuestionSet to a shuffled sequence
     of A, B, C, D. This is necessary because the component rerenders when answers are selected (since parent
@@ -52,52 +76,61 @@ export default function MultipleChoiceQuestion(
         }
         
         Object.entries(multipleChoiceResponses).forEach(([key, value]) => {            
-            
-            if (value.length > highest.number){
-                return highest = {number: value.length, response: key}
+            const lengthNoTags = stripHtmlTags(value).length;
+            if (lengthNoTags > highest.number){
+                return highest = {number: lengthNoTags, response: key}
             }
           });
                 
-        return highest.number;
+          //setLongestResponse(highest.response);
+        //return highest.number;
+        return highest.response;
     }
 
-    const width = screen.width;
-    const height = screen.height;
-    const heightWidthRatio = height / width;
-
-    /*This is used to estimate the maximum font size that can be used safely to render *all* the multiple choice responses
-    into the same size containers with the same font size. It sorts responses into three sizes, based on the number of characters,
-    then combines this number with a scaling factor that measures the width of the screen. It is used in the styling of the
-    <p> element of the mapped responses. Note that it simply produces a factor by which to multiply the font size, that is 
-    provided separately in the above-reffed <p> element
     
-    In the future it would be wise to develop a function that renders the boxes to fit text at any size, just not all on the same
-    screen, for anyone who requires large text at all times and or in case the textScaler function fails to size text so that it
-    all fits
-    */
-    const textScaler = () => {        
-
-        const characters = returnHighestCharacters();
-        
-        let charactersScaler: number = 0;
-        if (characters < 30){            
-            charactersScaler = 1;
-        } else if (30 <= characters && characters < 90){            
-            charactersScaler = 0.6;
-        } else if (90 <= characters && characters < 120) {
-            charactersScaler = 0.5;
-        } else {           
-            charactersScaler = 0.4;
+    //console.log('longestResponse', longestResponse)
+    /*Same function as the above useEffect, but it resizes the response text */
+    /**/
+    useEffect(() => {
+        console.log('resizing useEffect called')
+                
+        let finalFontSize: number = 0;
+        const resizeText = () => {            
+          
+          const pRef = pRefs[returnHighestCharacters() as keyof MCQData];
+          if (!pRef.current) return;
+          console.log('useEffect function got past the early return for null current')
+          //reset starting font size
+          pRef.current.style.fontSize = '48px';
+          
+          let size = 48;
+          //reduce font size by increments of 1 until there is no overflow
+          console.log('scrollHeight', pRef.current.scrollHeight)
+          console.log('clientHeight', pRef.current.clientHeight)
+          while (pRef.current.scrollHeight > pRef.current.clientHeight && size > 6) {
+            console.log('current size', size);
+            size -= 1;
+            pRef.current.style.fontSize = `${size}px`;
+          }
+          finalFontSize = size;
+        };
+    
+        resizeText();
+        if (pRefs.A.current){            
+            pRefs.A.current.style.fontSize = `${finalFontSize}px`;
         }
-        //defines square root of current screen width
-        const widthScaler = Math.sqrt(width);
-        const heightScaler = heightWidthRatio > 1.3 ? 1.2 : 1;
-        const textScaler = charactersScaler * widthScaler * heightScaler;
-        //* 0.7 * heightWidthRatio;
-        return textScaler;        
-    }
-
-    //const shuffledDeck = shuffle(Object.keys(multipleChoiceResponses as MCQData));
+        if (pRefs.B.current){
+            pRefs.B.current.style.fontSize = `${finalFontSize}px`;
+        }
+        if (pRefs.C.current){
+            pRefs.C.current.style.fontSize = `${finalFontSize}px`;
+        }
+        if (pRefs.D.current){
+            pRefs.D.current.style.fontSize = `${finalFontSize}px`;
+        }
+        
+        
+      }, [question]);    
 
     return (
         <div className="w-full h-full flex flex-col justify-between px-2 pb-4">
@@ -105,7 +138,7 @@ export default function MultipleChoiceQuestion(
                     <div
                       ref={divRef}
                       dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(question)}}
-                      className="my-auto px-5 py-1 text-center w-full overflow-hidden text-4xl h-full"
+                      className={`${inconsolata.className} my-auto px-5 py-1 text-center w-full overflow-hidden text-4xl h-full`}
                       aria-live={multipleChoiceResponse ? "off" : "polite"}
                     ></div>
                     </div>
@@ -121,9 +154,9 @@ export default function MultipleChoiceQuestion(
                         }
                      )}>
                         <p
-                        dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(multipleChoiceResponses[MCQ as keyof MCQData])}}
-                        style={{fontSize: `calc(0.10rem * ${textScaler()})`}}
-                        className="my-auto"                        
+                          ref={pRefs[MCQ as keyof MCQData]}
+                          dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(multipleChoiceResponses[MCQ as keyof MCQData])}}
+                          className={`${inconsolata.className} my-auto h-full overflow-hidden`}
                         ></p>
                     </div>
                     ))}
@@ -131,3 +164,8 @@ export default function MultipleChoiceQuestion(
         </div>
     )
 }
+
+/*
+removed from response p element
+style={{fontSize: `calc(0.10rem * ${textScaler()})`}}
+*/
