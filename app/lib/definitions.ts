@@ -18,6 +18,14 @@ export type assessedResponse = {
   }
 }
 
+
+export type pRefsType = {
+  A: React.RefObject<HTMLParagraphElement>;
+  B: React.RefObject<HTMLParagraphElement>;
+  C: React.RefObject<HTMLParagraphElement>;
+  D: React.RefObject<HTMLParagraphElement>;
+};
+
 //MouseEventHandler - not sure if this is needed now, delete?
 export type customMouseEventHandler<T extends React.MouseEventHandler> = Event & {
   target: T;

@@ -1,9 +1,11 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { FlashcardData, MCQData, HTMLElementEvent, customMouseEventHandler } from '@/app/lib/definitions';
+import { FlashcardData, MCQData, pRefsType, HTMLElementEvent, customMouseEventHandler } from '@/app/lib/definitions';
 import DOMPurify from "isomorphic-dompurify";
 import { shuffle } from '@/app/lib/functions';
 import clsx from 'clsx';
 import {Space_Mono, Inconsolata} from "next/font/google";
+import Question from './question';
+import Response2 from './response2';
 
 const spaceMono = Space_Mono({
   subsets: ['latin'],
@@ -27,7 +29,7 @@ export default function MultipleChoiceQuestion(
 
     const divRef = useRef<HTMLDivElement>(null);
 
-    const pRefs = {
+    const pRefs: pRefsType = {
         A: useRef<HTMLParagraphElement>(null),
         B: useRef<HTMLParagraphElement>(null),
         C: useRef<HTMLParagraphElement>(null),
@@ -35,7 +37,7 @@ export default function MultipleChoiceQuestion(
     }
 
     /*New resizing logic for question*/
-
+/*
     useEffect(() => {
         const resizeText = () => {            
           if (!divRef.current) return;
@@ -52,6 +54,7 @@ export default function MultipleChoiceQuestion(
         resizeText();
         
       }, [question]);
+      */
 
     function stripHtmlTags(input: string): string {
       return input.replace(/<\/?[^>]+(>|$)/g, '');
@@ -90,23 +93,23 @@ export default function MultipleChoiceQuestion(
     
     //console.log('longestResponse', longestResponse)
     /*Same function as the above useEffect, but it resizes the response text */
-    /**/
+    /*
     useEffect(() => {
-        console.log('resizing useEffect called')
+        //console.log('resizing useEffect called')
                 
         let finalFontSize: number = 0;
         const resizeText = () => {            
           
           const pRef = pRefs[returnHighestCharacters() as keyof MCQData];
           if (!pRef.current) return;
-          console.log('useEffect function got past the early return for null current')
+          //console.log('useEffect function got past the early return for null current')
           //reset starting font size
           pRef.current.style.fontSize = '48px';
           
           let size = 48;
           //reduce font size by increments of 1 until there is no overflow
-          console.log('scrollHeight', pRef.current.scrollHeight)
-          console.log('clientHeight', pRef.current.clientHeight)
+         // console.log('scrollHeight', pRef.current.scrollHeight)
+          //console.log('clientHeight', pRef.current.clientHeight)
           while (pRef.current.scrollHeight > pRef.current.clientHeight && size > 6) {
             console.log('current size', size);
             size -= 1;
@@ -131,21 +134,26 @@ export default function MultipleChoiceQuestion(
         
         
       }, [question]);    
-
+*/
     return (
         <div className="w-full h-full flex flex-col justify-between px-2 pb-4">
                     <div className="h-13-vh md:h-25-vh flex">
                     <div
-                      ref={divRef}
-                      dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(question)}}
-                      className={`${inconsolata.className} my-auto px-5 py-1 text-center w-full overflow-hidden text-4xl h-full`}
-                      aria-live={multipleChoiceResponse ? "off" : "polite"}
-                    ></div>
+                      ref={divRef}                      
+                      
+                    >
+                        <Question
+                          question={question}
+                          divRef={divRef}
+                          multipleChoiceResponse={multipleChoiceResponse}
+                        ></Question>
+
+                    </div>
                     </div>
                     <div className="grid md:grid-cols-2 gap-0 w-full h-68-vh md:h-56-vh">
                     
                    {randomisedQuestionSet.map((MCQ: string) => (
-                     <div onClick={handleQuestionClick} tabIndex={0} role="button" key={MCQ} id={MCQ} style={{cursor:'pointer'}} className={clsx('border-2 h-17-vh md:h-28-vh flex border-black rounded-lg px-5 py-1',
+                     <div ref={pRefs[MCQ as keyof MCQData]} onClick={handleQuestionClick} tabIndex={0} role="button" key={MCQ} id={MCQ} style={{cursor:'pointer'}} className={clsx('border-2 h-17-vh md:h-28-vh flex border-black rounded-lg px-5 py-1',
                         {
                             'bg-elephant-bright-orange': randomisedQuestionSet.indexOf(MCQ) === 0,
                             'bg-elephant-red': randomisedQuestionSet.indexOf(MCQ) === 1,
@@ -153,11 +161,18 @@ export default function MultipleChoiceQuestion(
                             'bg-elephant-pink': randomisedQuestionSet.indexOf(MCQ) === 3
                         }
                      )}>
-                        <p
-                          ref={pRefs[MCQ as keyof MCQData]}
-                          dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(multipleChoiceResponses[MCQ as keyof MCQData])}}
-                          className={`${inconsolata.className} my-auto h-full overflow-hidden`}
-                        ></p>
+                      <Response2
+                        response={multipleChoiceResponses[MCQ as keyof MCQData]}
+                        highest={returnHighestCharacters() === MCQ ? true : false }
+                        question={question}
+                        multipleChoiceResponse={multipleChoiceResponse}
+                        pRef={pRefs[MCQ as keyof MCQData]}
+                        pRefs={pRefs}
+                        responseLetter={MCQ}                        
+                      >
+
+                      </Response2>
+                        
                     </div>
                     ))}
             </div>
