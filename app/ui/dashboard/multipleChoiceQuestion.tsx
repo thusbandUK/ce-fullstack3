@@ -1,21 +1,14 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { FlashcardData, MCQData, pRefsType, HTMLElementEvent, customMouseEventHandler } from '@/app/lib/definitions';
-import DOMPurify from "isomorphic-dompurify";
+import { FlashcardData, MCQData, pRefsType } from '@/app/lib/definitions';
 import { shuffle } from '@/app/lib/functions';
 import clsx from 'clsx';
-import {Space_Mono, Inconsolata} from "next/font/google";
+import {Inconsolata} from "next/font/google";
 import Question from './question';
-import Response2 from './response2';
-
-const spaceMono = Space_Mono({
-  subsets: ['latin'],
-  weight: "400",
-  variable: "--font-space-mono"
-})
+import Answers from './answers';
 
 const inconsolata = Inconsolata({
     subsets: ['latin'],
-    weight: "300",    
+    weight: "300",
   })
 
 export default function MultipleChoiceQuestion(
@@ -24,38 +17,31 @@ export default function MultipleChoiceQuestion(
 ) {
 
     const {multiple_choice_responses: multipleChoiceResponses, question} = oneFlashcardData;
-    const [randomisedQuestionSet, setRandomisedQuestionSet] = useState<string[]>([]);
-    const [longestResponse, setLongestResponse] = useState<string>("");
+    const [randomisedQuestionSet, setRandomisedQuestionSet] = useState<string[]>([]);    
+    const [responseTextSize, setResponseTextSize] = useState<number>(48);
 
+    //this is the ref used to compare scroll height and client height for the question
     const divRef = useRef<HTMLDivElement>(null);
 
+    //these are the refs, the one for whichever response happens to be longest is used to compare the 
+    //scroll height and the client height so that the text can be resized to fit
+    
     const pRefs: pRefsType = {
-        A: useRef<HTMLParagraphElement>(null),
-        B: useRef<HTMLParagraphElement>(null),
-        C: useRef<HTMLParagraphElement>(null),
-        D: useRef<HTMLParagraphElement>(null)
+        A: useRef<HTMLDivElement>(null),
+        B: useRef<HTMLDivElement>(null),
+        C: useRef<HTMLDivElement>(null),
+        D: useRef<HTMLDivElement>(null)
     }
 
-    /*New resizing logic for question*/
-/*
+    //this resets the text size back to a maximum value from which to downsize whenever a new question
+    //is rendered
     useEffect(() => {
-        const resizeText = () => {            
-          if (!divRef.current) return;
-          //reset starting font size
-          divRef.current.style.fontSize = `48px`;
-          let size = 48;
-          //reduce font size by increments of 1 until there is no overflow
-          while (divRef.current.scrollHeight > divRef.current.clientHeight && size > 10) {            
-            size -= 1;
-            divRef.current.style.fontSize = `${size}px`;
-          }
-        };
-    
-        resizeText();
-        
-      }, [question]);
-      */
+      setResponseTextSize(48);
+    }, [question]);    
 
+    //function for stripping html tags from the incoming responses. Otherwise the tags affect the
+    //character length and the logic resizes the font for the response that doesn't appear the longest
+    //on screen
     function stripHtmlTags(input: string): string {
       return input.replace(/<\/?[^>]+(>|$)/g, '');
     }
@@ -69,8 +55,9 @@ export default function MultipleChoiceQuestion(
         setRandomisedQuestionSet(shuffledDeck);        
         return
     }, [oneFlashcardData, multipleChoiceResponses])
-    //
-    //iterates through all the multiple choice responses and returns the number of characters in the longest one
+    
+    //iterates through all the multiple choice responses and returns the 
+    //letter (ie which response) of the one that features the longest on screen text (not including tags)
     const returnHighestCharacters = () => {
         
         let highest = {
@@ -83,72 +70,23 @@ export default function MultipleChoiceQuestion(
             if (lengthNoTags > highest.number){
                 return highest = {number: lengthNoTags, response: key}
             }
-          });
-                
-          //setLongestResponse(highest.response);
-        //return highest.number;
+          });                
+          
         return highest.response;
-    }
-
+    }    
     
-    //console.log('longestResponse', longestResponse)
-    /*Same function as the above useEffect, but it resizes the response text */
-    /*
-    useEffect(() => {
-        //console.log('resizing useEffect called')
-                
-        let finalFontSize: number = 0;
-        const resizeText = () => {            
-          
-          const pRef = pRefs[returnHighestCharacters() as keyof MCQData];
-          if (!pRef.current) return;
-          //console.log('useEffect function got past the early return for null current')
-          //reset starting font size
-          pRef.current.style.fontSize = '48px';
-          
-          let size = 48;
-          //reduce font size by increments of 1 until there is no overflow
-         // console.log('scrollHeight', pRef.current.scrollHeight)
-          //console.log('clientHeight', pRef.current.clientHeight)
-          while (pRef.current.scrollHeight > pRef.current.clientHeight && size > 6) {
-            console.log('current size', size);
-            size -= 1;
-            pRef.current.style.fontSize = `${size}px`;
-          }
-          finalFontSize = size;
-        };
-    
-        resizeText();
-        if (pRefs.A.current){            
-            pRefs.A.current.style.fontSize = `${finalFontSize}px`;
-        }
-        if (pRefs.B.current){
-            pRefs.B.current.style.fontSize = `${finalFontSize}px`;
-        }
-        if (pRefs.C.current){
-            pRefs.C.current.style.fontSize = `${finalFontSize}px`;
-        }
-        if (pRefs.D.current){
-            pRefs.D.current.style.fontSize = `${finalFontSize}px`;
-        }
-        
-        
-      }, [question]);    
-*/
     return (
         <div className="w-full h-full flex flex-col justify-between px-2 pb-4">
                     <div className="h-13-vh md:h-25-vh flex">
-                    <div
-                      ref={divRef}                      
-                      
-                    >
+                      <div
+                        ref={divRef}                      
+                      >
                         <Question
                           question={question}
                           divRef={divRef}
                           multipleChoiceResponse={multipleChoiceResponse}
                         ></Question>
-
-                    </div>
+                      </div>
                     </div>
                     <div className="grid md:grid-cols-2 gap-0 w-full h-68-vh md:h-56-vh">
                     
@@ -160,19 +98,16 @@ export default function MultipleChoiceQuestion(
                             'bg-elephant-orange': randomisedQuestionSet.indexOf(MCQ) === 2,
                             'bg-elephant-pink': randomisedQuestionSet.indexOf(MCQ) === 3
                         }
-                     )}>
-                      <Response2
+                     )}>                      
+                      <Answers
                         response={multipleChoiceResponses[MCQ as keyof MCQData]}
                         highest={returnHighestCharacters() === MCQ ? true : false }
-                        question={question}
                         multipleChoiceResponse={multipleChoiceResponse}
                         pRef={pRefs[MCQ as keyof MCQData]}
-                        pRefs={pRefs}
-                        responseLetter={MCQ}                        
+                        responseTextSize={responseTextSize}
+                        editResponseTextSize={setResponseTextSize}
                       >
-
-                      </Response2>
-                        
+                      </Answers>
                     </div>
                     ))}
             </div>

@@ -18,13 +18,20 @@ export type assessedResponse = {
   }
 }
 
-
+//used in multipleChoiceQuestion component
 export type pRefsType = {
-  A: React.RefObject<HTMLParagraphElement>;
-  B: React.RefObject<HTMLParagraphElement>;
-  C: React.RefObject<HTMLParagraphElement>;
-  D: React.RefObject<HTMLParagraphElement>;
+  A: React.RefObject<HTMLDivElement>;
+  B: React.RefObject<HTMLDivElement>;
+  C: React.RefObject<HTMLDivElement>;
+  D: React.RefObject<HTMLDivElement>;
 };
+
+export type responsesTextSize = {
+  A: number;
+  B: number;
+  C: number;
+  D: number;
+}
 
 //MouseEventHandler - not sure if this is needed now, delete?
 export type customMouseEventHandler<T extends React.MouseEventHandler> = Event & {
