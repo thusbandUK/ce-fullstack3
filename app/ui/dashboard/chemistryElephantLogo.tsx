@@ -1,16 +1,49 @@
+"use client";
+
 import React from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 interface HomeProps {
     elephantColour: string;
     sizing: any;
   }
 
+  /*
+  'elephant-red': '#f28972',
+        'elephant-orange': '#F2C48D',
+        'elephant-pink': '#D98FBF',
+        'elephant-violet': '#8268A6',
+        'elephant-bright-orange': '#F2B441',
+  */
 const ChemistryElephantLogo: React.FC<HomeProps> = ({elephantColour, sizing}) => {
-     //const elephantColour = "blue";
-     const backgroundColour = "white";
 
+  const backgroundColour = 'black';
+  //const elephantColour = '#D98FBF';
+     
+  /*
+     const [backgroundColour, setBackgroundColour] = useState("#f28972")
+     const [currentIndex, setCurrentIndex] = useState(0);    
 
-  return (<svg width={sizing.width} height={sizing.height} viewBox="0 0 900 900" fill="none" xmlns="http://www.w3.org/2000/svg">
+     useEffect(() => {
+      const colours = ['#f28972', '#F2C48D', '#D98FBF', '#8268A6', '#F2B441',];      
+
+      let newIndex = 0;
+      if (currentIndex <= 3){
+        newIndex = currentIndex + 1;
+      } else {
+        newIndex = 0;
+      }
+      
+      setCurrentIndex(newIndex);
+      
+      setTimeout(() => {
+        setBackgroundColour(colours[newIndex])
+      }, 2000)
+       
+     }, [backgroundColour])
+     */
+
+  return (<svg style={{backgroundColor: backgroundColour, borderRadius: "10%"}} width={sizing.width} height={sizing.height} viewBox="0 0 900 900" fill="none" xmlns="http://www.w3.org/2000/svg">
     <rect
       width={sizing.width}
       height={sizing.height}

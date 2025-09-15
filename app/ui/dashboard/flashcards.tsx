@@ -15,6 +15,8 @@ import WrittenFlashcard from "./writtenFlashcard";
 import MenuItemButton from './menuItemButton';
 import MultipleChoiceResponse from './multipleChoiceResponse';
 import WrittenSummary from './writtenSummary';
+import TextEnlarge from './textEnlarge';
+
 
 export const ResponseAssessmentContext = createContext<assessedResponse[]>([]);
 
@@ -50,6 +52,8 @@ export default function FlashcardPresentation({allFlashcardsData}: {allFlashcard
     const [writtenStage, setWrittenStage] = useState("response");    
     //state management for written responses and checklist of points made (assessment data)
     const [responseAssessment, setResponseAssessment] = useState<assessedResponse[]>([]);
+    //toggles fit on screen version and zoom-enabled version
+    const [canZoom, setCanZoom] = useState<boolean>(false);
     
 
     //this creates an array of sequential integers, one for each flashcard, and sets completeSet in state
@@ -300,6 +304,7 @@ const handleSubmitChecklist = () => {
 return (
   
     <div className="h-full">
+      <TextEnlarge></TextEnlarge>
       {/*<h1>Flashcards presentation page</h1>*/}
         
          

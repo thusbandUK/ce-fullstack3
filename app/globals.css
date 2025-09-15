@@ -132,6 +132,26 @@ body {
 
 /*Nav bar*/
 
+
+/* https://developer.mozilla.org/en-US/docs/Web/CSS/position-anchor */
+.anchor {
+  anchor-name: --text-anchor;
+}
+
+.enlarge-text {
+  position-anchor: --text-anchor;
+  left: anchor(right);
+  bottom: anchor(top);
+  top: 0;
+}
+
+#enlarge-text-svg {
+    margin-top: 0.5rem;
+    margin-left: 0.5rem;
+    border: solid black 1px;
+    border-radius: 10%;
+}
+
 .navlink {  
   padding: 10px 40px;
   border: black solid 1px;  

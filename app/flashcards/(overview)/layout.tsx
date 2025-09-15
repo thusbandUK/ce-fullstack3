@@ -2,6 +2,7 @@
 import { signOut } from '@/auth';
 import styles from '../ui/button.module.css';
 //import NavLinks from '../ui/dashboard/nav-links';
+import TextEnlarge from '@/app/ui/dashboard/textEnlarge';
 
 //export const experimental_ppr = true;
  
@@ -10,7 +11,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     <div >
       <div >
        
-      
+      <TextEnlarge></TextEnlarge>
         
       </div>
       <div >{children}</div>
