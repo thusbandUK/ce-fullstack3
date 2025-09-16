@@ -278,8 +278,8 @@ const handleWrittenClick = () => {
   }
 
   //event listener passes div id for clicked question to the answerQuestion function
-  const handleQuestionClick = (event: React.MouseEvent<HTMLDivElement>) => {
-    console.log(event.currentTarget.id);
+  const handleQuestionClick = (event: React.MouseEvent<HTMLButtonElement> | React.MouseEvent<HTMLDivElement>) => {
+        
     return answerQuestion(event.currentTarget.id);    
   }  
 

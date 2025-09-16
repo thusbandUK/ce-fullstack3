@@ -1,19 +1,21 @@
 "use client";
 
-import Image from "next/image";
+/*
+This component renders a button with two differently sized capital A's, ie a text resizing button
+*/
 
 export default function TextEnlarge(
     {handleParentClick}
     :
-    {handleParentClick: any}
+    {handleParentClick: () => void}
 ){
-//xmlns="http://www.w3.org/2000/svg"    xmlns:xlink="http://www.w3.org/1999/xlink"
+
+//this assigns the colours of the letters (the two A's)
 const svgFillColour = '#D98FBF';
+//background colour
 const backgroundColour = 'black';
-//"#212121"
 
 const handleClick = () => {
-    console.log('child click handler activated');
     return handleParentClick();
 }
 
@@ -35,7 +37,4 @@ return (
         </button>
       </div>
 )
-
-
-
 }

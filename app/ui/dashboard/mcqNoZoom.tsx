@@ -18,9 +18,7 @@ export default function MCQNoZoom(
 
     const {multiple_choice_responses: multipleChoiceResponses, question} = oneFlashcardData;
     const [randomisedQuestionSet, setRandomisedQuestionSet] = useState<string[]>([]);    
-    const [responseTextSize, setResponseTextSize] = useState<number>(48);
-
-    console.log('no zoom called');
+    const [responseTextSize, setResponseTextSize] = useState<number>(48);    
 
     //this is the ref used to compare scroll height and client height for the question
     const divRef = useRef<HTMLDivElement>(null);
@@ -116,8 +114,3 @@ export default function MCQNoZoom(
         </div>
     )
 }
-
-/*
-removed from response p element
-style={{fontSize: `calc(0.10rem * ${textScaler()})`}}
-*/
