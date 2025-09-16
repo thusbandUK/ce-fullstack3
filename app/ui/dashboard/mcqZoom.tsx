@@ -45,7 +45,12 @@ export default function MCQZoom(
                       >
                         <div
                           dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(question)}}
-                          className={`${inconsolata.className} my-5 px-5 py-1 text-center w-full overflow-hidden h-full`}
+                          className={clsx(`${inconsolata.className} my-5 px-5 py-1 text-center w-full overflow-hidden h-full`,
+                            {
+                              'break-normal': fontSize <= 60,
+                              'break-all': fontSize > 60
+                            }
+                          )}
                           aria-live={multipleChoiceResponse ? "off" : "polite"}
                           style={{fontSize: `${fontSize}px`}}
                         >                          
@@ -65,7 +70,12 @@ export default function MCQZoom(
                      )}>
                       <p
                         dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(multipleChoiceResponses[MCQ as keyof MCQData])}}
-                        className={`${inconsolata.className} my-auto box-border px-1 py-1 w-full`}
+                        className={clsx(`${inconsolata.className} my-auto box-border px-1 py-1 w-full`,
+                          {
+                            'break-normal': fontSize <= 60,
+                            'break-all': fontSize > 60
+                          }
+                        )}
                         aria-live={multipleChoiceResponse ? "off" : "polite"}
                         style={{fontSize: `${fontSize}px`}}
                       >
