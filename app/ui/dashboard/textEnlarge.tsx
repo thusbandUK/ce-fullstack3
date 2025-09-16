@@ -2,14 +2,19 @@
 
 import Image from "next/image";
 
-export default function TextEnlarge(){
+export default function TextEnlarge(
+    {handleParentClick}
+    :
+    {handleParentClick: any}
+){
 //xmlns="http://www.w3.org/2000/svg"    xmlns:xlink="http://www.w3.org/1999/xlink"
 const svgFillColour = '#D98FBF';
 const backgroundColour = 'black';
 //"#212121"
 
 const handleClick = () => {
-    console.log('button clicked');
+    console.log('child click handler activated');
+    return handleParentClick();
 }
 
 return (

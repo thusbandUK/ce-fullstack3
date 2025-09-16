@@ -11,7 +11,7 @@ const inconsolata = Inconsolata({
     weight: "300",
   })
 
-export default function MultipleChoiceQuestion(
+export default function MCQNoZoom(
     {oneFlashcardData, handleQuestionClick,multipleChoiceResponse}: 
     {oneFlashcardData: FlashcardData; handleQuestionClick: React.MouseEventHandler<HTMLDivElement>; multipleChoiceResponse: string}
 ) {
@@ -19,6 +19,8 @@ export default function MultipleChoiceQuestion(
     const {multiple_choice_responses: multipleChoiceResponses, question} = oneFlashcardData;
     const [randomisedQuestionSet, setRandomisedQuestionSet] = useState<string[]>([]);    
     const [responseTextSize, setResponseTextSize] = useState<number>(48);
+
+    console.log('no zoom called');
 
     //this is the ref used to compare scroll height and client height for the question
     const divRef = useRef<HTMLDivElement>(null);

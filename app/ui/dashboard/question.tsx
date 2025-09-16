@@ -29,12 +29,14 @@ export default function Question(
   }, [question]);
 
   useEffect(() => {
+   
     if (!divRef.current){
       return;
     }
     if (divRef.current.children[0].scrollHeight > divRef.current.children[0].clientHeight && resizeableFontValue > 10) {
       setResizeableFontValue(resizeableFontValue - 1);
-    }    
+    }
+  
   })
 
     return (

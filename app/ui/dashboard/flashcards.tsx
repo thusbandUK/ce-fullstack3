@@ -5,7 +5,7 @@
 //import IndividualFlashcard from "./individual-flashcard/IndividualFlashcard";
 import { createContext, useState } from 'react';
 import { FlashcardData } from "@/app/lib/definitions";
-import MultipleChoiceQuestion from "./multipleChoiceQuestion";
+import MCQNoZoom from "./mcqNoZoom";
 import Response from "./response";
 import { assessedResponse } from "@/app/lib/definitions";
 import WrittenFlashcard from "./writtenFlashcard";
@@ -16,6 +16,7 @@ import MenuItemButton from './menuItemButton';
 import MultipleChoiceResponse from './multipleChoiceResponse';
 import WrittenSummary from './writtenSummary';
 import TextEnlarge from './textEnlarge';
+import MCQZoom from './mcqZoom';
 
 
 export const ResponseAssessmentContext = createContext<assessedResponse[]>([]);
@@ -54,7 +55,6 @@ export default function FlashcardPresentation({allFlashcardsData}: {allFlashcard
     const [responseAssessment, setResponseAssessment] = useState<assessedResponse[]>([]);
     //toggles fit on screen version and zoom-enabled version
     const [canZoom, setCanZoom] = useState<boolean>(false);
-    
 
     //this creates an array of sequential integers, one for each flashcard, and sets completeSet in state
     //(rather than using the native id values in allFlashcardsData, which are unlikely to be sequential)
@@ -278,7 +278,8 @@ const handleWrittenClick = () => {
   }
 
   //event listener passes div id for clicked question to the answerQuestion function
-  const handleQuestionClick = (event: React.MouseEvent<HTMLDivElement>) => {     
+  const handleQuestionClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    console.log(event.currentTarget.id);
     return answerQuestion(event.currentTarget.id);    
   }  
 
@@ -301,10 +302,16 @@ const handleSubmitChecklist = () => {
     return askWrittenResponseQuestion();
 }
 
+const toggleCanZoom = () => {
+  return setCanZoom(!canZoom);
+}
+
 return (
   
     <div className="h-full">
-      <TextEnlarge></TextEnlarge>
+      <TextEnlarge
+        handleParentClick={toggleCanZoom}
+      ></TextEnlarge>
       {/*<h1>Flashcards presentation page</h1>*/}
         
          
@@ -337,12 +344,25 @@ return (
             { flashcard === -1 ? 
             null
             :
-            <MultipleChoiceQuestion 
-              oneFlashcardData={allFlashcardsData[flashcard]}            
-              handleQuestionClick={handleQuestionClick}
-              multipleChoiceResponse={multipleChoiceResponse}
-            />             
-            }
+            (canZoom  === true) ?
+             
+             (<MCQZoom
+                oneFlashcardData={allFlashcardsData[flashcard]}            
+                handleQuestionClick={handleQuestionClick}
+                multipleChoiceResponse={multipleChoiceResponse}
+              />)
+
+              :
+              
+              (<MCQNoZoom 
+                oneFlashcardData={allFlashcardsData[flashcard]}            
+                handleQuestionClick={handleQuestionClick}
+                multipleChoiceResponse={multipleChoiceResponse}
+              />   )  
+            
+             
+
+            }            
 
             {/*Renders a written response question */}
             { writtenFlashcard === -1 ? 
@@ -392,26 +412,36 @@ return (
     
 )
 }
-
 /*
-{ 
-              (flashcard !== -1) || (writtenFlashcard !== -1) ?
-              null:            
-              <div className="w-full md:w-4/5 mx-auto mt-10 p-2">
-                <div className='grid md:grid-cols-2 gap-0'>
-                  <MenuItemButton
-                    heading="Multiple choice"
-                    content="Select to answer flash cards using multiple choice responses"
-                    signalClick={handleClick}
-                    arrowCommand='SELECT'
-                  />
-                  <MenuItemButton
-                    heading="Written response"
-                    content="Select to write our your own responses to flash card questions"
-                    signalClick={handleWrittenClick}
-                    arrowCommand='SELECT'
-                  />
-                </div>
-              </div>
-            }
+
+(canZoom  === true) ?
+             
+             (<MCQZoom
+                oneFlashcardData={allFlashcardsData[flashcard]}            
+                handleQuestionClick={handleQuestionClick}
+                multipleChoiceResponse={multipleChoiceResponse}
+              />)
+
+              :
+              
+              (<MCQNoZoom 
+                oneFlashcardData={allFlashcardsData[flashcard]}            
+                handleQuestionClick={handleQuestionClick}
+                multipleChoiceResponse={multipleChoiceResponse}
+              />   )          
+
+{ canZoom ?
+  <MCQZoom
+    oneFlashcardData={allFlashcardsData[flashcard]}            
+    handleQuestionClick={handleQuestionClick}
+    multipleChoiceResponse={multipleChoiceResponse}
+  />
+  :
+  <MCQNoZoom 
+  oneFlashcardData={allFlashcardsData[flashcard]}            
+  handleQuestionClick={handleQuestionClick}
+  multipleChoiceResponse={multipleChoiceResponse}
+/>  
+
+}
 */
