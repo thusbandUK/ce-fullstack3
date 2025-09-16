@@ -3,12 +3,7 @@ import { auth } from '@/auth';
 import ChemistryElephantLogo from "./chemistryElephantLogo";
 
 export default async function Navbar(){
-    const session: any = await auth();
-
-    if (session){
-      console.log('session logged from Navbar')
-      console.log(session)
-    }
+    const session: any = await auth();    
     
     return(  
         <div className="navbar items-start">
