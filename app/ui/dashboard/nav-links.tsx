@@ -1,17 +1,7 @@
 'use client';
 
-//all the commented out have potential value
-
-/*import {
-  UserGroupIcon,
-  HomeIcon,
-  DocumentDuplicateIcon,
-} from '@heroicons/react/24/outline';*/
-//import { usePathname } from 'next/navigation';
-//import clsx from 'clsx';
 import Link from 'next/link';
 import { useState } from 'react';
-import Image from 'next/image';
 
 // Map of links to display in the side navigation.
 // Depending on the size of the application, this would be stored in a database.
@@ -25,20 +15,19 @@ const links = [
 ];
 
 export default function NavLinks({session}: {session: any}) {
-  //see clsx part below
-  //const pathname = usePathname();
 
   const handleToggleMenu = () => {
     const menuCheckbox = document.getElementById('menu-checkbox') as HTMLInputElement;      
     return menuCheckbox.checked = !menuCheckbox.checked;
   }
   
-  const [dropMenu, setDropMenu] = useState(false);  
+  const firstInitial = session.user.name.slice(0, 1).toUpperCase();
+  
+  //const [dropMenu, setDropMenu] = useState(false);  
   
   return (
     <>    
-      {links.map((link) => {
-        //const LinkIcon = link.icon;
+      {links.map((link) => {        
         return (
           <Link
             key={link.name}
@@ -56,11 +45,13 @@ export default function NavLinks({session}: {session: any}) {
         href={'/account'}
         prefetch={false}
         aria-label="account button"
+        onClick={handleToggleMenu}
       >
         <div className="account-icon flex justify-center">
             
            {session ? 
-          <p>H&#9888;</p>
+           
+           <p className="navlink-account-button">{firstInitial}</p>
           
           :
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" width="50" height="50">
@@ -74,10 +65,13 @@ export default function NavLinks({session}: {session: any}) {
   );
 }
 
-/*{/*<Image
-src={session.user.image}
-alt=""
-width={50}
-height={50}
-style={{border: 'black solid 1px', borderRadius: '50%'}}
-></Image>*//*}*/
+/*
+<div style={{height: "0", width: "30%", paddingBottom: "90%", marginBottom: "12%"}}>
+           <div 
+             className="flex items-center justify-center"
+             style={{aspectRatio: "1/1", border: "solid black 1px", borderRadius: "50%"}}
+           >
+              <p className="text-4xl">{firstInitial}</p>
+            </div>
+            </div>
+*/

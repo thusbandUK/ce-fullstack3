@@ -1,7 +1,5 @@
 import NavLinks from "./nav-links";
 import { auth } from '@/auth';
-import Image from "next/image";
-//import { useParams } from 'next/navigation';
 import ChemistryElephantLogo from "./chemistryElephantLogo";
 
 export default async function Navbar(){
@@ -11,24 +9,14 @@ export default async function Navbar(){
       console.log('session logged from Navbar')
       console.log(session)
     }
-
-    //const params = useParams()
-    //console.log('nav params')
-    //console.log(params);
-//pe-6
+    
     return(  
         <div className="navbar items-start">
           <div>
             <ChemistryElephantLogo
-            sizing={{height: "76", width: "76"}}
-            elephantColour="#D98FBF"
+              sizing={{height: "76", width: "76"}}
+              elephantColour="#D98FBF"
             ></ChemistryElephantLogo>
-            {/*<Image 
-              src="/site-logo.png" alt="chemistry elephant logo"
-              width={100}
-              height={76}
-              priority={true}
-    />*/}
           </div>
           <div id="enlarge-text-anchor" className="anchor relative"></div>
           <div className="collapse duration-500 justify-end mobile-nav">
