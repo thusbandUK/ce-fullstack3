@@ -21,7 +21,11 @@ export default function NavLinks({session}: {session: any}) {
     return menuCheckbox.checked = !menuCheckbox.checked;
   }
   
-  const firstInitial = session.user.name.slice(0, 1).toUpperCase();
+  let firstInitial = "";
+
+  if (session){
+    firstInitial = session.user.name.slice(0, 1).toUpperCase();
+  }
   
   //const [dropMenu, setDropMenu] = useState(false);  
   
