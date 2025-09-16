@@ -25,7 +25,8 @@ export default function Slider (
     return (
         <>
           <input 
-            onChange={handleSliderChange} 
+            onChange={handleSliderChange}
+            aria-label="resize-text" 
             id="text-size-slider"
             type="range"
             min={16}
