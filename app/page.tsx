@@ -1,4 +1,5 @@
 import Image from "next/image";
+import ChemistryElephantLogo from "./ui/dashboard/chemistryElephantLogo";
 
 export default function Home() { 
 
@@ -9,15 +10,11 @@ export default function Home() {
           <h1 className="m-auto md:ml-10 p-5">Welcome to Chemistry Elephant</h1>
         </div>
         <div className="col-start-1 rounded-lg col-end-3 ..." >
-          <Image
-            src={'/site-logo.png'} 
-            alt="chemistry elephant logo"
-            className="rounded-lg"
-            style={{border: 'black solid 1px'}}
-            width={100}
-            height={100}
-          >
-          </Image>
+        <ChemistryElephantLogo
+              sizing={{height: "76", width: "76"}}
+              elephantColour="#D98FBF"
+            ></ChemistryElephantLogo>
+          
         </div>
         
         <div className="col-start-3 flex rounded-lg col-end-7 ..." style={{border: 'black solid 1px'}}>
@@ -29,3 +26,15 @@ export default function Home() {
     </div>
   );
 }
+
+/*
+<Image
+            src={'/site-logo.png'} 
+            alt="chemistry elephant logo"
+            className="rounded-lg"
+            style={{border: 'black solid 1px'}}
+            width={100}
+            height={100}
+          >
+          </Image>
+*/
