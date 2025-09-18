@@ -74,7 +74,7 @@ export default async function Page({ searchParams }: { searchParams: { location:
 
     return (
       <div>
-        <p>WELCOME PAGE</p>
+        <h1>Welcome!</h1>
         
         
 
