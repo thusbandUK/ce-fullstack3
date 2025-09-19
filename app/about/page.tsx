@@ -2,6 +2,7 @@ import SignOut from "../ui/dashboard/signOut"
 import { SignIn } from '../ui/login-form2';
 import { auth } from '@/auth';
 import CELogoAnimation from "../ui/dashboard/cELogoAnimation";
+import MovingElephantAnimation from "../ui/dashboard/movingElephantAnimation";
 //import MailTest from "./mailTest";
 
 //import CombinedAnimation2 from "../animation/explosion";
@@ -12,10 +13,13 @@ export default async function About(){
         <div  className="container m-auto">
 
            
-           
+           {/**
             <CELogoAnimation
-              sizing={{height: 200, width: 200}}
-            ></CELogoAnimation>
+              sizing={{height: 200, width: 200}}  
+            ></CELogoAnimation> */}
+            <MovingElephantAnimation 
+            sizing={{height: 200, width: 200}}
+            />
            
             
       
