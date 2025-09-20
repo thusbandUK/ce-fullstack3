@@ -1,8 +1,8 @@
 "use client";
 
-import { render } from "react-dom";
+//import { render } from "react-dom";
 import { ColorScheme } from "./movingElephantAnimation";
-import { useEffect, useState } from "react";
+//import { useEffect, useState } from "react";
 /*
 One receives props sectionColours.elephantA, the other sectionColours.elephantB
 */

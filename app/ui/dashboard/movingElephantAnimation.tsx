@@ -93,9 +93,9 @@ const MovingElephantAnimation: React.FC<HomeProps> = ({
      //sequentially empty the A var, transferring the values to the B var. Once the A var is emptied
      //the corresponding recursive function emptyElephantA stops and the function EmptyElephantB
      //starts emptying the B var
-     let elephantARemaining: number[] = [1,2,3,4,5,6,7]
+     const elephantARemaining: number[] = [1,2,3,4,5,6,7]
 
-     let elephantBRemaining: number[] = []
+     const elephantBRemaining: number[] = []
     
      //similar principle as above, remainingColours is emptied as usedColours is filled, once the
      //former is emptied, it is filled with the usedColours values and usedColours is emptied
