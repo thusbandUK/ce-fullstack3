@@ -17,8 +17,7 @@ export default async function About(){
             <CELogoAnimation
               sizing={{height: 200, width: 200}}  
             ></CELogoAnimation> */}
-            <MovingElephantAnimation 
-            sizing={{height: 200, width: 200}}
+            <MovingElephantAnimation            
             />
            
             

@@ -1,23 +1,36 @@
+"use client";
+
+import { render } from "react-dom";
 import { ColorScheme } from "./movingElephantAnimation";
 import { useEffect, useState } from "react";
 /*
 One receives props sectionColours.elephantA, the other sectionColours.elephantB
 */
 
-const screenWidth = 600;
+const screenWidth = 400;
+
+
 
 
 export default function MovingElephantSVG(
   {
-    sectionColours    
+    sectionColours,
+    cssRef,
+    screenHeight
   }: 
   {
-    sectionColours: ColorScheme
+    sectionColours: ColorScheme,
+    cssRef: string,
+    screenHeight: number
   }
 ){
 
+  console.log(screenHeight);
+  const renderedHeight = screenHeight * 0.2;
+  console.log(renderedHeight)
+
     return (
-        <svg className="m-auto" width={0.3 * screenWidth} height={0.3 * screenWidth} viewBox="0 0 900 900" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg className={`m-auto ${cssRef}`} width={renderedHeight} height={renderedHeight} viewBox="0 0 900 900" fill="none" xmlns="http://www.w3.org/2000/svg">
     
     <g filter="url(#filter0_d_7400_5)">
       <path
