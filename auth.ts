@@ -1,8 +1,10 @@
 import NextAuth from "next-auth";
 import authConfig from "./authConfig";  
 import Nodemailer from "next-auth/providers/nodemailer";
+import nodemailer from 'nodemailer';
 import PostgresAdapter from "@auth/pg-adapter"
 import { Pool } from "@neondatabase/serverless"
+import { customMailHtml, customEmailText } from "./authCustomEmail";
 
 //Nextauth docs say *don't* declare pool variable here
   
@@ -37,7 +39,22 @@ export const {handlers, signIn, signOut, auth} = NextAuth(() => {
                     pass: process.env.EMAIL_SERVER_PASSWORD,  
                 },  
             },  
-            from: process.env.EMAIL_FROM,  
+            from: process.env.EMAIL_FROM,
+            async sendVerificationRequest({
+              identifier: email,
+              url,
+              provider: { server, from },
+            }) {
+              const { host } = new URL(url);
+              const transport = nodemailer.createTransport(server);
+              await transport.sendMail({
+                to: email,
+                from,
+                subject: `Sign in to ${host}`,
+                text: customEmailText({ url, host }),
+                html: customMailHtml({ url, host }),
+      });
+            },
         }),  
     ]}
 	// other options...
