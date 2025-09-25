@@ -3,18 +3,24 @@ import { createTransport } from "nodemailer"
 /*
 
 This contains functions which can be used to customise the emails received via the nextauth signin
-logic
+logic. They currently still have the default nextauth styling
 
 nextauth docs: https://next-auth.js.org/providers/email
 
 good example: https://github.com/nextauthjs/next-auth/discussions/1293 
 
+Note the function "cleanUpUrl" in lib/authFunctions.ts, so the url passed to this is the one the user
+clicks to authenticate their session and token and such and when you customise the code, it makes
+problems here. So the url passed by the nextauth code has this problem with a kind of infinite regression
+of the callbackUrl, so "cleanUpUrl" extracts the actual callbackUrl, escapes it and reassembles a url
+which is then passed to this function
+
 */
 
-export function customMailHtml(params: { url: string, host: string }) {
+export function customMailHtml(params: { encodedUpdatedCompleteUrl: string, host: string }) {
   //const { url, host, theme } = params
   
-  const { url, host } = params
+  const { encodedUpdatedCompleteUrl, host } = params
   const escapedHost = host.replace(/\./g, "&#8203;.")
 
   //const brandColor = theme.brandColor || "#346df1"
@@ -43,7 +49,7 @@ export function customMailHtml(params: { url: string, host: string }) {
       <td align="center" style="padding: 20px 0;">
         <table border="0" cellspacing="0" cellpadding="0">
           <tr>
-            <td align="center" style="border-radius: 5px;" bgcolor="${color.buttonBackground}"><a href="${url}"
+            <td align="center" style="border-radius: 5px;" bgcolor="${color.buttonBackground}"><a href="${encodedUpdatedCompleteUrl}"
                 target="_blank"
                 style="font-size: 18px; font-family: Helvetica, Arial, sans-serif; color: ${color.buttonText}; text-decoration: none; border-radius: 5px; padding: 10px 20px; border: 1px solid ${color.buttonBorder}; display: inline-block; font-weight: bold;">Sign
                 in</a></td>
@@ -63,6 +69,6 @@ export function customMailHtml(params: { url: string, host: string }) {
 }
 
 /** Email Text body (fallback for email clients that don't render HTML, e.g. feature phones) */
-export function customEmailText({ url, host }: { url: string, host: string }) {
-  return `Sign in to ${host}\n${url}\n\n`
+export function customEmailText({ encodedUpdatedCompleteUrl, host }: { encodedUpdatedCompleteUrl: string, host: string }) {
+  return `Sign in to ${host}\n${encodedUpdatedCompleteUrl}\n\n`
 }

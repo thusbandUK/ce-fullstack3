@@ -1,11 +1,12 @@
-//import LoginForm2 from '../ui/login-form2';
 import React from 'react';
 import { SignIn } from '../ui/login-form2';
  
+/*
+This is the login page, it's probably not really necessary as (implicitly) clicking any signin
+button could direct straight to the page where user inputs email. Consider removing.
+*/
 
 export default function LoginPage({ searchParams }: { searchParams: { location: string } }) {
-
-  //return <SignIn />
 
   return (
     <main className="flex items-center justify-center md:h-screen">
@@ -15,14 +16,10 @@ export default function LoginPage({ searchParams }: { searchParams: { location: 
             <p>Chemistry Elephant</p>
           </div>
         </div>
-        <SignIn 
+        <SignIn
           location={searchParams.location ? searchParams.location : ''}
         />
-          
-          
-          
       </div>
     </main>
   );
-}
-  //location={searchParams.location ? searchParams.location : null}    
+}  
