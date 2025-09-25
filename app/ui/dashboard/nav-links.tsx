@@ -19,14 +19,24 @@ export default function NavLinks({session}: {session: any}) {
     const menuCheckbox = document.getElementById('menu-checkbox') as HTMLInputElement;      
     return menuCheckbox.checked = !menuCheckbox.checked;
   }
+
+  /*
+  The below extracts the first letter / number / symbol either from the username (if there is one) 
+  or the user email address. The else term shouldn't really be necessary but it just avoids any 
+  crashing in the event that some how a user is logged in but there are no session details
+  */
   
   let firstInitial = "";
 
   if (session){
-    firstInitial = session.user.name.slice(0, 1).toUpperCase();
+    if (session.user){
+      let identifier = "";
+        identifier = session.user.name ? session.user.name : session.user.email;
+        firstInitial = identifier.slice(0, 1).toUpperCase();
+    }
+  } else {
+    firstInitial = "N";
   }
-  
-  //const [dropMenu, setDropMenu] = useState(false);  
   
   return (
     <>    
@@ -67,14 +77,3 @@ export default function NavLinks({session}: {session: any}) {
     </>
   );
 }
-
-/*
-<div style={{height: "0", width: "30%", paddingBottom: "90%", marginBottom: "12%"}}>
-           <div 
-             className="flex items-center justify-center"
-             style={{aspectRatio: "1/1", border: "solid black 1px", borderRadius: "50%"}}
-           >
-              <p className="text-4xl">{firstInitial}</p>
-            </div>
-            </div>
-*/
