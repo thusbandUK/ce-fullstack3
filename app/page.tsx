@@ -19,7 +19,7 @@ export default function Home() {
   }
 
   return (
-    <div  className="w-11/12 md:w-4/5 mx-auto mt-10">
+    <div className="w-full md:w-4/5 mx-auto md:mt-10 p-2">
       <MovingElephantAnimation 
         anchors={anchors}
       />
@@ -38,21 +38,21 @@ export default function Home() {
             ></ChemistryElephantLogo>
            */}
         </div>
-        
+        {/*<!--<div className="w-full md:w-4/5 mx-auto mt-10 p-2">-->*/}
         <div className="md:col-start-3 flex rounded-lg md:col-end-7 ..." style={{border: 'black solid 1px'}}>
-          <p className="p-5 m-auto md:p-10">
+          <p className="p-5 m-auto md:p-10 text-lg">
             Stride through chemistry with the majesty of an elephant
           </p>
           </div>
 
 {/** start of next section*/}
 <div className="md:col-start-1 rounded-lg md:col-span-6 flex mt-5" style={{border: 'black solid 1px'}}>
-          <h2 className="m-auto md:ml-10 p-5">First subtitle</h2>
+          <h2 className="m-auto md:ml-10 p-5">Learn chemistry</h2>
         </div>
 
         <div className="md:col-start-1 flex rounded-lg md:col-end-5 ..." style={{border: 'black solid 1px'}}>
-          <p className="p-5 m-auto md:p-10">
-            Stride through chemistry with the majesty of an elephant
+          <p className="p-5 m-auto md:p-10 text-lg">
+            So how difficult is A-level chemistry? Easier now you've found Chemistry Elephant. Check out the flashcards section, where you can practice multiple choice questions while memorising core content. Coming soon: a blog with hints and tips for chemistry success and online courses. Sign up for our newsletter to be the first to hear about new content.            
           </p>
           </div>
 
@@ -69,22 +69,6 @@ export default function Home() {
 
       </div>
     </div>
+    
   );
 }
-
-/*
-<Image
-            src={'/site-logo.png'} 
-            alt="chemistry elephant logo"
-            className="rounded-lg"
-            style={{border: 'black solid 1px'}}
-            width={100}
-            height={100}
-          >
-          </Image>
-          {/**
-        <ChemistryElephantLogo
-              sizing={{height: "76", width: "76"}}
-              elephantColour="#D98FBF"
-            ></ChemistryElephantLogo>
-           */
