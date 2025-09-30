@@ -1,14 +1,9 @@
-import authConfig from "./authConfig";  
+import authConfig from "./authConfig";
 import NextAuth from "next-auth";
 import { Pool } from "@neondatabase/serverless";
-//import Nodemailer from "next-auth/providers/nodemailer";
-import PostgresAdapter from "@auth/pg-adapter"
-  
+import PostgresAdapter from "@auth/pg-adapter";
 
-
-
-export const {auth: middleware} = NextAuth(() => {  
-    //...authConfig,
+export const {auth: middleware} = NextAuth(() => {    
     const pool = new Pool({ 
       host: process.env.POSTGRES_HOST,
       user: process.env.POSTGRES_USER,
@@ -17,26 +12,31 @@ export const {auth: middleware} = NextAuth(() => {
       max: 20,
       idleTimeoutMillis: 30000,
       connectionString: process.env.POSTGRES_URL, 
-      connectionTimeoutMillis: 2000,
-      
+      connectionTimeoutMillis: 2000,      
     })
     return {...authConfig,
         adapter: PostgresAdapter(pool),
         callbacks: {
-            session({ session, user }) {                
-                
-                return session
-            }
+          /*
+          Another nextauth dev in a forum thread mentioned the below callback is necessary specifically
+          in the middleware because otherwise nextauth defaults to jwt strategy (rather than database)
+          */
+          async session({ session, user }) {
+          //modified call back
+          const client = await pool.connect();
+          
+          try {
+            
+            return session
+
+          } catch (e){
+            await client.query('ROLLBACK');
+            throw e;
+
+          } finally {
+            client.release();
+            await pool.end();
+          }          
           },
     }
-})
-
-/**/
-//second previous set up
-
-//export const { auth: middleware } = NextAuth(authConfig)
-
-
-//first previous set up:
-
-//export { auth as middleware } from "@/auth";
+}})

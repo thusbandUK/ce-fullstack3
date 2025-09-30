@@ -47,7 +47,7 @@ const providers: Provider[] = [
           subject: `Sign in to ${host}`,
           text: customEmailText({ encodedUpdatedCompleteUrl, host }),
           html: customMailHtml({ encodedUpdatedCompleteUrl, host }),
-});
+        });
       },      
   }),
   
@@ -64,11 +64,11 @@ export const providerMap = providers
     } else {
       return { id: provider.id, name: provider.name }
     }
-  })
-  .filter((provider) => provider.id !== "credentials")
+  })  
 
 //Nextauth docs say *don't* declare pool variable here (outside handlers expression)
 //https://authjs.dev/getting-started/adapters/neon
+//Also important (see note in session callback below) is manually to disconnect the session where necessary
 
 /*
 Notice the pages option in the below expression, which is where you set the paths to custom auth pages,
@@ -98,29 +98,37 @@ export const {handlers, signIn, signOut, auth} = NextAuth(() => {
       max: 20,
       idleTimeoutMillis: 30000,
       connectionString: process.env.POSTGRES_URL, 
-      connectionTimeoutMillis: 2000,
-      
+      connectionTimeoutMillis: 2000,      
     })
     return {...authConfig,
-      adapter: PostgresAdapter(pool),      
+      adapter: PostgresAdapter(pool),
       callbacks: {
-        session({ session, user }) {
-            
-            return session
-        },
-        async redirect({ url, baseUrl }) {
-          /*
-          This may or may not be necessary. This is the standard callback which would be accessed
-          in the node_modules nextauth code, but having it here enables logs to be printed for 
-          debugging. 
-          */
+        //callback to fetch the session info for the user
 
-          // Allows relative callback URLs
-          if (url.startsWith("/")) return `${baseUrl}${url}`
-          // Allows callback URLs on the same origin
-          else if (new URL(url).origin === baseUrl) return url
-          return baseUrl
+        //see: https://next-auth.js.org/configuration/callbacks
+        //also see: https://www.npmjs.com/package/@neondatabase/serverless
+        //explaining how pool needs to be manually disconnected
+        async session({ session }) {
+          
+          const client = await pool.connect();
+
+          try {
+
+            return session
+
+          } catch (e){
+            await client.query('ROLLBACK');
+            throw e;
+
+          } finally {
+            client.release();
+            //this is where the pool connection is manually disconnect. It only seems to be necessary
+            //in the session callback here and in the middleware
+            await pool.end();
+
+          }          
         },
+        
       },      
     providers,
     pages: {      
