@@ -3,17 +3,11 @@ import NextAuth from "next-auth";
 import { Pool } from "@neondatabase/serverless";
 import PostgresAdapter from "@auth/pg-adapter";
 
-export const {auth: middleware} = NextAuth(() => {    
-    const pool = new Pool({ 
-      host: process.env.POSTGRES_HOST,
-      user: process.env.POSTGRES_USER,
-      password: process.env.POSTGRES_PASSWORD,
-      database: process.env.POSTGRES_DATABASE,
-      max: 20,
-      idleTimeoutMillis: 30000,
-      connectionString: process.env.POSTGRES_URL, 
-      connectionTimeoutMillis: 2000,      
-    })
+export const {auth: middleware} = NextAuth(() => {
+  //declare pool variable here inside function
+  //this is the currently (25-9-25) recommended method in neon / next docs https://neon.com/docs/guides/nextjs
+  const pool = new Pool({ connectionString: process.env.DATABASE_URL })
+  
     return {...authConfig,
         adapter: PostgresAdapter(pool),
         callbacks: {
@@ -22,11 +16,11 @@ export const {auth: middleware} = NextAuth(() => {
           in the middleware because otherwise nextauth defaults to jwt strategy (rather than database)
           */
           async session({ session, user }) {
-          //modified call back
+
           const client = await pool.connect();
-          
+
           try {
-            
+
             return session
 
           } catch (e){
@@ -36,7 +30,7 @@ export const {auth: middleware} = NextAuth(() => {
           } finally {
             client.release();
             await pool.end();
-          }          
+          }
           },
     }
 }})
