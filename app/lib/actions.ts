@@ -12,6 +12,7 @@ import { UserDetails } from './definitions';
 const FormSchema = z.object({
   username: z.coerce.string({invalid_type_error: "Name must be a string",}).max(20).min(5),  
   mailTick: z.coerce.boolean(),
+  location: z.coerce.string(),
 });
  
 const NewUser = FormSchema;
@@ -23,6 +24,13 @@ const UpdateUsernameSchema = z.object({
 
 const UpdatedUser = UpdateUsernameSchema;
 
+const SignUpNewsLetterSchema = z.object({
+  mailTick: z.coerce.boolean(),
+  location: z.coerce.string(),
+})
+
+const UpdatedMailTick = SignUpNewsLetterSchema;
+
 export type State = {
   
   message?: string | null;
@@ -32,8 +40,17 @@ export type State = {
   };
 };
 
+export type StateSignUpNewsletter = {
+  
+  message?: string | null;
+  errors?: {    
+    email?: string[];
+    mailTick?: string[];
+  };
+};
+
 export async function signUpUser(email: string, location: string | null, prevState: State, formData: FormData) {
-console.log('signUpUser called');
+
 //validates email
 const emailValidation = UserEmailSchema.safeParse({
   validatedEmail: email,
@@ -43,53 +60,100 @@ const emailValidation = UserEmailSchema.safeParse({
 const validatedFields = NewUser.safeParse({    
   username: formData.get('username'),
   mailTick: formData.get('mailTick'),
+  location: location,
 });
   
 // If form validation fails, return errors early. Otherwise, continue.
 
-if (!validatedFields.success) {
-  console.log('validated fields not successful');
-  console.log(validatedFields.error.flatten());
+if (!validatedFields.success) {  
   return {
     message: 'Username rejected. Try again.',      
     errors: {        
       username: validatedFields.error.flatten().fieldErrors.username,
       email: []
-    },
-    
+    },    
   };
 }
 
+//harvests validated values
 const validatedMailTick = validatedFields.data?.mailTick;
-
-console.log(validatedMailTick);
-
 const validatedUsername = validatedFields.data?.username;
-
 const validatedEmail = emailValidation.data?.validatedEmail;
+const stringLocation = validatedFields.data?.location;
 
-//const query = 'INSERT INTO users (name, email, receive_email) VALUES ($1, $2, $3) ON CONFLICT (id) DO NOTHING;'
-const query = 'UPDATE users SET name = $1 WHERE email = $2'
-//const argumentData = [validatedUsername, validatedEmail, validatedMailTick];
-const argumentData = [validatedUsername, validatedEmail];
+//query and values to pass
+const query = 'UPDATE users SET name = $1, receive_email = $2 WHERE email = $3'
+const argumentData = [validatedUsername, validatedMailTick, validatedEmail];
 
-try {
-  console.log('got to try')
+try {  
   const userDetails = await sql.query<UserDetails>(query, argumentData);
       
-} catch (error){
-  console.log('error route triggered')
+} catch (error){  
   return {
     message: 'Database Error: Failed to sign up new user.'
   };
 }
 
-console.log('got past try catch section')
 revalidatePath('/welcome');
-console.log('got past revalidate path')
-redirect(location !== undefined ? `/welcome?location=${location}` : '/welcome');
-console.log('got past redirect');
+redirect(stringLocation.length !== 0 ? `/?location=${location}` : '/welcome');
+//redirect(location !== undefined ? `/welcome?location=${location}` : '/welcome');
+
 }
+
+//signupnewsletter STARTS
+
+export async function signUpNewsletter(email: string, location: string | null, prevState: State, formData: FormData) {
+  
+  //validates email
+  const emailValidation = UserEmailSchema.safeParse({
+    validatedEmail: email,
+  });
+  
+  //validates username to ensure string between 5 and 20 characters long and location
+  //to ensure string not null
+  const validatedFields = UpdatedMailTick.safeParse({
+    mailTick: formData.get('mailTick'),
+    location: location,
+  }) 
+    
+  // If form validation fails, return errors early. Otherwise, continue.
+  
+  if (!validatedFields.success) {    
+    return {
+      message: 'Tick or no tick, no other options. Try again.',      
+      errors: {        
+        mailTick: validatedFields.error.flatten().fieldErrors.mailTick,
+        email: []
+      },      
+    };
+  }
+  
+  //harvests validation logic for validated values
+
+  const validatedMailTick = validatedFields.data?.mailTick;
+  const stringLocation = validatedFields.data?.location;
+  const validatedEmail = emailValidation.data?.validatedEmail;  
+  
+  const query = 'UPDATE users SET receive_email = $1 WHERE email = $2'  
+  const argumentData = [validatedMailTick, validatedEmail];
+  
+  try {
+    
+    const userDetails = await sql.query<UserDetails>(query, argumentData);
+        
+  } catch (error){    
+    return {
+      message: 'Database Error: Failed to change newsletter setting.'
+    };
+  }
+  
+  revalidatePath('/receiveEmails');  
+  redirect(stringLocation.length !== 0 ? `/?location=${location}` : '/account');
+  
+}
+
+//signUpNewsletter ENDS
+
 
 export async function updateUser(email: string, prevState: State, formData: FormData) {  
   
