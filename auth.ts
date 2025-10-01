@@ -7,6 +7,7 @@ import { Pool } from "@neondatabase/serverless";
 import { customMailHtml, customEmailText } from "./authCustomEmail";
 import type { Provider } from "next-auth/providers";
 import { cleanUpUrl } from "./app/lib/authFunctions";
+const domain = process.env.SITE_URL;
 
 /*
 custom sign in page docs
@@ -120,8 +121,9 @@ export const {handlers, signIn, signOut, auth} = NextAuth(() => {
       },
     providers,
     pages: {
-      signIn: "/auth/signin",
-      verifyRequest: '/auth/verify-request',
+      //signIn: "/account/auth/signin",
+      signIn: `${domain}/account/auth/signin`,
+      verifyRequest: '/account/auth/verify-request',
     },
   }
 	// other options...
