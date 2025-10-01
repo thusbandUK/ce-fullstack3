@@ -1,5 +1,5 @@
 import SignOut from "../ui/dashboard/signOut"
-import { SignIn } from '../ui/login-form2';
+import { SignIn } from '../ui/login-form';
 import { auth } from '@/auth';
 import Link from "next/link";
 import { redirect } from 'next/navigation';
@@ -8,8 +8,8 @@ export default async function Account(){
 
     const session: any = await auth();
 
-    if (!session){
-      redirect(`/login`);
+    if (!session){      
+      redirect(`/account/login`);
     }
 
     return (

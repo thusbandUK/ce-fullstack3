@@ -1,5 +1,5 @@
 import React from 'react';
-import { SignIn } from '../ui/login-form2';
+import { SignIn } from '@/app/ui/login-form';
  
 /*
 This is the login page, it's probably not really necessary as (implicitly) clicking any signin

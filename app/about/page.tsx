@@ -1,5 +1,5 @@
 import SignOut from "../ui/dashboard/signOut"
-import { SignIn } from '../ui/login-form2';
+import { SignIn } from '../ui/login-form';
 import { auth } from '@/auth';
 import CELogoAnimation from "../ui/dashboard/cELogoAnimation";
 import MovingElephantAnimation from "../ui/dashboard/movingElephantAnimation";

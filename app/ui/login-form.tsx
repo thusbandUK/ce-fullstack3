@@ -1,92 +1,53 @@
-'use client';
-
-//import { lusitana } from '@/app/ui/fonts';
-//import {
-  //AtSymbolIcon,
-  //KeyIcon,
-  //ExclamationCircleIcon,
-//} from '@heroicons/react/24/outline';
-//import { ArrowRightIcon } from '@heroicons/react/20/solid';
 import { Button } from './button';
-import { useActionState } from 'react';
-import { authenticate } from '@/app/lib/actions';
-import { useFormState } from 'react-dom';
-import { handlers } from "@/auth"
-export const { GET, POST } = handlers
+import { signIn } from "@/auth";
 
+export function SignIn({
+  location,
+  provider,
+  ...props
+}: { location: string | null, provider?: string } & React.ComponentPropsWithRef<typeof Button>) {
+  
+  /*This function effectively renders a button (on the login page), which directs the user to the 
+  signin page (?)
 
-export default function LoginForm() {
-  //useFormState *was* useActionState
-  const [errorMessage, formAction, isPending] = useFormState(
-    authenticate,
-    undefined,
-  );
+  function here:
+  await signIn(provider, { redirectTo: whereToRedirect});
+
+  function on signIn page
+  await signIn(provider.id, formData, {                
+                redirectTo: props.searchParams?.callbackUrl ?? "",
+              })  
+  
+  The fucntion is passed the location via imperfect nextauth code with the following drawback:
+  if there is no location, ie: user clicks the account to sign in rather than being redirected from,
+  eg: the flashcards menu, an empty string will be passed. The code immediately below passes the
+  relative link /welcome if the location string is empty, but if an actual location has been passed,
+  it passes that on to the redirectTo option in the signin function below
+
+  Notice as well: there is a redirectTo option here and then another one in the signin page, this
+  redirect (identified from params in parent login component as "location") then becomes the 
+  callbackUrl params in the next function (signin page)
+
+  */  
+
+  let whereToRedirect = "";
+  if (location !== null){
+    if (location.length === 0){
+      whereToRedirect = '/welcome'
+    } else {
+      whereToRedirect = location;
+    }
+
+  }
 
   return (
-    <form action={formAction} className="space-y-3">
-      <div className="flex-1 rounded-lg bg-gray-50 px-6 pb-4 pt-8">
-        <h1>
-          Please log in to continue.
-        </h1>
-        <div className="w-full">
-          <div>
-            <label
-              className="mb-3 mt-5 block text-xs font-medium text-gray-900"
-              htmlFor="email"
-            >
-              Email
-            </label>
-            <div className="relative">
-              <input
-                className="peer block w-full rounded-md border border-gray-200 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500"
-                id="email"
-                type="email"
-                name="email"
-                placeholder="Enter your email address"
-                required
-              />
-              <p>@</p>
-            </div>
-          </div>
-          <div className="mt-4">
-            <label
-              className="mb-3 mt-5 block text-xs font-medium text-gray-900"
-              htmlFor="password"
-            >
-              Password
-            </label>
-            <div className="relative">
-              <input
-                className="peer block w-full rounded-md border border-gray-200 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500"
-                id="password"
-                type="password"
-                name="password"
-                placeholder="Enter password"
-                required
-                minLength={6}
-              />
-              <p>Key icon</p>
-            </div>
-          </div>
-        </div>
-        <Button className="mt-4 w-full" aria-disabled={isPending}>          
-          Log in <p>Arrow right icon</p>
-        </Button>
-        <div 
-          className="flex h-8 items-end space-x-1"
-          aria-live="polite"
-          aria-atomic="true"
-        >
-          {/* Add form errors here */}
-          {errorMessage && (
-            <>
-              <p>Exclamation point</p>
-              <p className="text-sm text-red-500">{errorMessage}</p>
-            </>
-          )}
-        </div>
-      </div>
+    <form
+      action={async () => {
+        "use server"        
+        await signIn(provider, { redirectTo: whereToRedirect});
+      }}
+    >
+      <Button {...props}>Sign In</Button>
     </form>
-  );
+  )
 }
-
