@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import Navbar from "./ui/dashboard/navbar";
 import CELogoContainer from "./ui/dashboard/cELogoContainer";
+import Providers from "./providers";
  
 const akkurat = localFont({
   src: '../public/fonts/Akkurat-Light.woff2',
@@ -16,9 +17,12 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
+//}: Readonly<{
+  //children: React.ReactNode;
+//}>) {
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   
   return (
     <html lang="en">
@@ -31,7 +35,9 @@ export default function RootLayout({
           <Navbar />
         </header>                     
         <main className="bg-white">
-          {children}
+          <Providers>
+            {children}
+          </Providers>
         </main>
         
       </body>
