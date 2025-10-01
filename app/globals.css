@@ -133,6 +133,22 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+/* Buttons */
+
+.button-can-disabled:disabled {
+  background-color: grey !important;
+  color: white !important;
+  cursor: not-allowed;
+}
+
+#button-disabled-id:disabled {
+  background-color: grey !important;
+  color: white !important;
+  cursor: not-allowed;
+}
+
+/* Buttons ENDS */
+
 /*Nav bar*/
 
 
