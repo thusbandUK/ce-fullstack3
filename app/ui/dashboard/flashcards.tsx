@@ -3,7 +3,7 @@
 //import { fetchFlashcards } from "@/app/lib/data"
 //import DOMPurify from "isomorphic-dompurify";
 //import IndividualFlashcard from "./individual-flashcard/IndividualFlashcard";
-import { createContext, useState } from 'react';
+import { createContext, useState, useContext, useEffect } from 'react';
 import { FlashcardData } from "@/app/lib/definitions";
 import MCQNoZoom from "./mcqNoZoom";
 import Response from "./response";
@@ -17,6 +17,8 @@ import MultipleChoiceResponse from './multipleChoiceResponse';
 import WrittenSummary from './writtenSummary';
 import TextEnlarge from './textEnlarge';
 import MCQZoom from './mcqZoom';
+//import { TextSizeButtonContext } from './textEnlargeContainer';
+import { TextSizeButtonContext } from '@/app/providers';
 
 
 export const ResponseAssessmentContext = createContext<assessedResponse[]>([]);
@@ -55,6 +57,18 @@ export default function FlashcardPresentation({allFlashcardsData}: {allFlashcard
     const [responseAssessment, setResponseAssessment] = useState<assessedResponse[]>([]);
     //toggles fit on screen version and zoom-enabled version
     const [canZoom, setCanZoom] = useState<boolean>(false);
+    //const [canZoom, setCanZoom] = useContext(TextSizeButtonContext);
+
+    /*TO UNCOMMENT WHEN TEXTRESIZE LOGIC RECONNECTED VIA USECONTEXT */
+    //const showSliderObject = useContext(TextSizeButtonContext);
+
+    //console.log('showSlider', showSlider)
+
+    /*TO UNCOMMENT WHEN TEXTRESIZE LOGIC RECONNECTED VIA USECONTEXT */
+    //useEffect(() => {
+      
+      //setCanZoom(showSliderObject.showSlider);
+    //}, [showSliderObject.showSlider])
 
     //this creates an array of sequential integers, one for each flashcard, and sets completeSet in state
     //(rather than using the native id values in allFlashcardsData, which are unlikely to be sequential)
@@ -301,20 +315,24 @@ const handleSubmitChecklist = () => {
     
     return askWrittenResponseQuestion();
 }
-
+/*
 const toggleCanZoom = () => {
   return setCanZoom(!canZoom);
-}
+}*/
 
 return (
   
     <div className="h-full">
+      {/*}
       <TextEnlarge
         handleParentClick={toggleCanZoom}
-      ></TextEnlarge>
+        ></TextEnlarge>*/}
       {/*<h1>Flashcards presentation page</h1>*/}
         
-         
+        {/* TO UNCOMMENT WHEN USECONTEXT RECONNECTED
+         <TextEnlarge 
+         handleParentClick={() => {console.log('handleParentClick decoy')}}
+         />*/}
 
             { 
               showMenu ?
