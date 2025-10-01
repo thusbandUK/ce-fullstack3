@@ -1,6 +1,8 @@
 import NavLinks from "./nav-links";
 import { auth } from '@/auth';
 import ChemistryElephantLogo from "./chemistryElephantLogo";
+import TextEnlarge from "./textEnlarge";
+import TextEnlargeContainer from "./textEnlargeContainer";
 
 export default async function Navbar(){
     const session: any = await auth();    
@@ -12,6 +14,7 @@ export default async function Navbar(){
               sizing={{height: "76", width: "76"}}
               elephantColour="#D98FBF"
             ></ChemistryElephantLogo>
+            <TextEnlargeContainer />
           </div>
           <div id="enlarge-text-anchor" className="anchor relative"></div>
           <div className="collapse duration-500 justify-end mobile-nav">

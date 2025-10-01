@@ -1,5 +1,8 @@
 "use client";
 
+import { TextSizeButtonContext } from "@/app/providers";
+import { useContext } from "react";
+
 /*
 This component renders a button with two differently sized capital A's, ie a text resizing button
 */
@@ -15,9 +18,24 @@ const svgFillColour = '#D98FBF';
 //background colour
 const backgroundColour = 'black';
 
+const showSliderObject = useContext(TextSizeButtonContext);
+
+const { toggleSlider, showSlider } = useContext(TextSizeButtonContext)
+
+console.log('first render showSlider', showSlider)
+
 const handleClick = () => {
-    return handleParentClick();
-}
+  console.log('child handle click triggered')
+  toggleSlider()
+  console.log(toggleSlider)
+  console.log('showSlider', showSlider)
+  console.log('got passed toggle slider')
+  showSliderObject.toggleSlider
+  console.log('showSlider', showSlider)
+  return //handleParentClick();
+
+}/**/
+//
 
 return (
       <div className="absolute enlarge-text">
