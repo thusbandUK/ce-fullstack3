@@ -25,9 +25,9 @@ export default function MovingElephantSVG(
   }
 ){
 
-  console.log(screenHeight);
+  
   const renderedHeight = screenHeight * 0.2;
-  console.log(renderedHeight)
+  
 
     return (
         <svg className={`m-auto ${cssRef}`} width={renderedHeight} height={renderedHeight} viewBox="0 0 900 900" fill="none" xmlns="http://www.w3.org/2000/svg">
