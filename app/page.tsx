@@ -52,7 +52,7 @@ export default function Home() {
 
         <div className="md:col-start-1 flex rounded-lg md:col-end-5 ..." style={{border: 'black solid 1px'}}>
           <p className="p-5 m-auto md:p-10 text-lg">
-            So how difficult is A-level chemistry? Easier now you've found Chemistry Elephant. Check out the flashcards section, where you can practice multiple choice questions while memorising core content. Coming soon: a blog with hints and tips for chemistry success and online courses. Sign up for our 
+            So how difficult is A-level chemistry? Easier now you&#39;ve found Chemistry Elephant. Check out the flashcards section, where you can practice multiple choice questions while memorising core content. Coming soon: a blog with hints and tips for chemistry success and online courses. Sign up for our 
             <Link
               href='/account/receive-email?location=/'
             > newsletter </Link> 
