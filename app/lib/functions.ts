@@ -6,13 +6,7 @@ export const shuffle = (array: string[]) => {
       [array[i], array[j]] = [array[j], array[i]]; 
     } 
     return array; 
-  }; 
-  
-  // Usage 
-  //const myArray = ["apple", "banana", "cherry", "date", "elderberry"]; 
- //const shuffledArray = shuffle(myArray); 
-  
-  //console.log(shuffledArray);
+  };
 
 //returns string, receives an array of numbers in string format, returns a string of sql.query parameters
 //eg input ["5","8","9"] returns '$1, $2, $3'
@@ -56,4 +50,19 @@ export const randomSelectionOfFifteen = (inputArray: string[]) => {
         modifiedInputArray.splice(index, 1);
     }
     return outputArray;
+}
+
+/*
+Since there might not be a location in any given url, the param often comes back as undefined,
+but TypeScript expects it often also to be null, so this effectively stringifies location, returning
+an empty string "" if the param is passed as either null or undefined. This then enables .length === 0
+logic to be used effectively to ignore the location param when no location has been specified
+*/
+
+export const locationParser = (location: string | null | undefined) => {
+    if ((location === undefined) || (location === null)){
+        return "";
+    } else {
+        return location;
+    }
 }
