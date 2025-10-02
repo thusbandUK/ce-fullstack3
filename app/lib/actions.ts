@@ -8,11 +8,11 @@ import { signIn } from '@/auth';
 import { AuthError } from 'next-auth';
 import { UserEmailSchema } from './data';
 import { UserDetails } from './definitions';
+import { locationParser } from './functions';
 
 const FormSchema = z.object({
   username: z.coerce.string({invalid_type_error: "Name must be a string",}).max(20).min(5),  
   mailTick: z.coerce.boolean(),
-  location: z.coerce.string(),
 });
  
 const NewUser = FormSchema;
@@ -26,7 +26,6 @@ const UpdatedUser = UpdateUsernameSchema;
 
 const SignUpNewsLetterSchema = z.object({
   mailTick: z.coerce.boolean(),
-  location: z.coerce.string(),
 })
 
 const UpdatedMailTick = SignUpNewsLetterSchema;
@@ -59,8 +58,7 @@ const emailValidation = UserEmailSchema.safeParse({
 //validates username to ensure string between 5 and 20 characters long
 const validatedFields = NewUser.safeParse({    
   username: formData.get('username'),
-  mailTick: formData.get('mailTick'),
-  location: location,
+  mailTick: formData.get('mailTick'),  
 });
   
 // If form validation fails, return errors early. Otherwise, continue.
@@ -79,7 +77,8 @@ if (!validatedFields.success) {
 const validatedMailTick = validatedFields.data?.mailTick;
 const validatedUsername = validatedFields.data?.username;
 const validatedEmail = emailValidation.data?.validatedEmail;
-const stringLocation = validatedFields.data?.location;
+
+const parsedLocation = locationParser(location)
 
 //query and values to pass
 const query = 'UPDATE users SET name = $1, receive_email = $2 WHERE email = $3'
@@ -94,9 +93,8 @@ try {
   };
 }
 
-revalidatePath('/welcome');
-redirect(stringLocation.length !== 0 ? `/?location=${location}` : '/welcome');
-//redirect(location !== undefined ? `/welcome?location=${location}` : '/welcome');
+revalidatePath('/account/welcome');
+redirect(parsedLocation.length !== 0 ? parsedLocation : '/account');
 
 }
 
@@ -112,8 +110,7 @@ export async function signUpNewsletter(email: string, location: string | null, p
   //validates username to ensure string between 5 and 20 characters long and location
   //to ensure string not null
   const validatedFields = UpdatedMailTick.safeParse({
-    mailTick: formData.get('mailTick'),
-    location: location,
+    mailTick: formData.get('mailTick'),    
   }) 
     
   // If form validation fails, return errors early. Otherwise, continue.
@@ -130,8 +127,7 @@ export async function signUpNewsletter(email: string, location: string | null, p
   
   //harvests validation logic for validated values
 
-  const validatedMailTick = validatedFields.data?.mailTick;
-  const stringLocation = validatedFields.data?.location;
+  const validatedMailTick = validatedFields.data?.mailTick;  
   const validatedEmail = emailValidation.data?.validatedEmail;  
   
   const query = 'UPDATE users SET receive_email = $1 WHERE email = $2'  
@@ -147,8 +143,10 @@ export async function signUpNewsletter(email: string, location: string | null, p
     };
   }
   
+  const parsedLocation = locationParser(location)
+
   revalidatePath('/receiveEmails');  
-  redirect(stringLocation.length !== 0 ? `/?location=${location}` : '/account');
+  redirect(parsedLocation.length !== 0 ? parsedLocation : '/account');
   
 }
 
