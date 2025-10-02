@@ -7,6 +7,7 @@ export const {auth: middleware} = NextAuth(() => {
   //declare pool variable here inside function
   //this is the currently (25-9-25) recommended method in neon / next docs https://neon.com/docs/guides/nextjs
   const pool = new Pool({ connectionString: process.env.DATABASE_URL })
+  pool.on('error', (err) => console.error(err));// deal with e.g. re-connect (from docs)
   
     return {...authConfig,
         adapter: PostgresAdapter(pool),
