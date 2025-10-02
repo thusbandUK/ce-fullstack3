@@ -28,7 +28,7 @@ export default async function Account({ searchParams }: { searchParams: { locati
 
     return (
         <div>
-            { session ? `Welcome back, ${session.user.name}!` : null}
+            { session ? `Welcome, ${session.user.name}!` : null}
             { session ?
               <SignOut />
             :
