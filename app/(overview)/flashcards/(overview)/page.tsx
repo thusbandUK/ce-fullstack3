@@ -1,9 +1,9 @@
 "use server"
 
-import { fetchExamboards } from '../../lib/data';
-import { ExamboardData, ModalContent } from '../../lib/definitions';
-import MenuItem from '../../ui/dashboard/menuItem';
-import { incrementExamboard } from '../../lib/actions';
+import { fetchExamboards } from '@/app/lib/data';
+import { ExamboardData, ModalContent } from '@/app/lib/definitions';
+import MenuItem from '@/app/ui/dashboard/menuItem';
+import { incrementExamboard } from '@/app/lib/actions';
 import { Suspense } from "react";
 import { CardSkeleton, ExamSkeleton } from "@/app/ui/dashboard/skeletons";
 import DashboardSkeleton from '@/app/ui/dashboard/skeletons';
@@ -27,8 +27,9 @@ export default async function Page() {
       link: null
     }    
 //className='w-11/12 md:w-4/5 mx-auto mt-10'
+//  className="w-full md:w-4/5 mx-auto mt-10 p-2"
     return (
-      <div  className="w-full md:w-4/5 mx-auto mt-10 p-2">
+      <div>
         
         <h1>Select your examboard</h1>
         <div className="grid md:grid-cols-3 gap-0 mt-10">

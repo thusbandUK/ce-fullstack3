@@ -333,11 +333,11 @@ return (
          <TextEnlarge 
          handleParentClick={() => {console.log('handleParentClick decoy')}}
          />*/}
-
+{/** className="w-full md:w-4/5 mx-auto mt-10 p-2" */}
             { 
               showMenu ?
-                          
-              <div className="w-full md:w-4/5 mx-auto mt-10 p-2">
+              
+              <div>
                 <div className='grid md:grid-cols-2 gap-0'>
                   <MenuItemButton
                     heading="Multiple choice"
