@@ -20,7 +20,7 @@ export default async function Page({ params }: { params: { examboard_id: string 
       heading: 'Sign in!',
       content: 'You must be signed in to access this content',
       link: {
-        url: `/login?location=/flashcards/${params.examboard_id}/topic`,
+        url: `/account/login?location=/flashcards/${params.examboard_id}/topic`,
         text: 'Sign in or sign up'
       }
     }

@@ -10,7 +10,7 @@ export default async function Page({ params }: { params: { topic_id: string, exa
     if (!session) {
       //if user is not signed in they are redirected to login, with a query of the current url
       //to which they are returned upon completion of sign in
-      redirect(`/login?location=/flashcards/${params.examboard_id}/topic/${params.topic_id}/set`);
+      redirect(`/account/login?location=/flashcards/${params.examboard_id}/topic/${params.topic_id}/set`);
       //`/login?location=/flashcards/${params.examboard_id}/topic/${params.topic_id}/set`
     }
 
