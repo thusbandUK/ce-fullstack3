@@ -1,5 +1,5 @@
-import SignOut from "../ui/dashboard/signOut";
-import { SignIn } from '../ui/login-form';
+import SignOut from "@/app/ui/dashboard/signOut";
+import { SignIn } from "@/app/ui/login-form";
 import { auth } from '@/auth';
 import Link from "next/link";
 import { redirect } from 'next/navigation';
