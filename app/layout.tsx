@@ -31,14 +31,11 @@ export default function RootLayout({
         className={`${akkurat.className} antialiased bg-white`}
       >
         <CELogoContainer />          
-        <header>
-          <Navbar />
-        </header>                     
-        <main className="bg-white">
+        
           <Providers>
             {children}
           </Providers>
-        </main>
+          
         
       </body>
       
