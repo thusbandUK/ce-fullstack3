@@ -7,7 +7,6 @@ import { Pool } from "@neondatabase/serverless";
 import { customMailHtml, customEmailText } from "./authCustomEmail";
 import type { Provider } from "next-auth/providers";
 import { cleanUpUrl } from "./app/lib/authFunctions";
-const domain = process.env.SITE_URL;
 
 /*
 custom sign in page docs
@@ -32,9 +31,8 @@ const providers: Provider[] = [
       async sendVerificationRequest({
         identifier: email,
         url,
-        provider: { server, from },
-      }) {
-
+        provider: { server, from },        
+      }) {        
         const { host } = new URL(url);
 
         //vital! this addresses the nextauth callbackUrl bug, which passes what should be the entire
@@ -81,7 +79,7 @@ The non-custom set up is still present in the app, so could probably be deleted
 
 Moreover, although it wasn't specified in the docs, if you use the custom pages option, you still 
 need to import / define the handlers that used to be in [app]/api/auth/[...nextauth].route.ts
-but now are (also) in [app]/auth/[...nextauth].route.ts
+but now are (also) in [app]/account/auth/[...nextauth].route.ts
 */
 
 export const {handlers, signIn, signOut, auth} = NextAuth(() => {
@@ -93,8 +91,6 @@ export const {handlers, signIn, signOut, auth} = NextAuth(() => {
     return {...authConfig,
       adapter: PostgresAdapter(pool),
       callbacks: {
-        //callback to fetch the session info for the user
-
         //see: https://next-auth.js.org/configuration/callbacks
         //also see: https://www.npmjs.com/package/@neondatabase/serverless
         //explaining how pool needs to be manually disconnected
@@ -121,8 +117,7 @@ export const {handlers, signIn, signOut, auth} = NextAuth(() => {
       },
     providers,
     pages: {
-      //signIn: "/account/auth/signin",
-      signIn: `${domain}/account/auth/signin`,
+      signIn: '/account/auth/signin',
       verifyRequest: '/account/auth/verify-request',
     },
   }
