@@ -1,6 +1,5 @@
 import { auth } from '@/auth';
 import { redirect } from 'next/navigation';
-import UpdateUsername from "@/app/ui/updateUsername";
 import SignUpNewsletter from '@/app/ui/signUpNewsletter';
 
 export default async function ReceiveEmail({ searchParams }: { searchParams: { location: string } }){
