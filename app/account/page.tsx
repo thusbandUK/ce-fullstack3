@@ -40,7 +40,10 @@ export default async function Account({ searchParams }: { searchParams: { locati
             >Change username</Link>
             <Link
               href="/account/delete"
-            >Delete account</Link>            
+            >Delete account</Link>
+            <Link
+              href="/account/receiveEmails"
+            >Update newsletter subscription settings</Link>
         </div>
     )
 }
