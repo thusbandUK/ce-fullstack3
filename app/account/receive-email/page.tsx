@@ -7,7 +7,7 @@ export default async function ReceiveEmail({ searchParams }: { searchParams: { l
     const session: any = await auth();
 
     if (!session){
-      redirect(`/login`);
+      redirect(`/account/login`);
     }
 
     return (
