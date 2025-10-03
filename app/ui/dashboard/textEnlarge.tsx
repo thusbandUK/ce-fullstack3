@@ -34,7 +34,8 @@ const backgroundColour = 'black';
 const { toggleSlider } = useContext(TextSizeButtonContext)
 
 //toggles showSlider true / false
-const handleClick = () => {
+const handleClick: React.MouseEventHandler<HTMLButtonElement> = () => {
+  
   toggleSlider()
   return
 }
