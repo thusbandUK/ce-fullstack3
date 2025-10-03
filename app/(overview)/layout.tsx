@@ -8,14 +8,15 @@ function Layout({
 //}: {
   //children: React.ReactNode;
 //}) {
-
+//removed
+// md:w-4/5
   return (
            <>
              <header>
                <Navbar />
              </header>                     
              <main className="bg-white">
-              <div  className="w-full md:w-4/5 mx-auto md:mt-10 p-2">
+              <div  className="w-full mx-auto md:mt-10 p-2">
                {children}
                </div>
              </main>
