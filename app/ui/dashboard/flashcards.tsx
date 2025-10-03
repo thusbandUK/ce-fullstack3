@@ -312,8 +312,8 @@ return (
             {
               showMenu ?
 
-              <div>
-                <div className='grid md:grid-cols-2 gap-0'>
+              <div className="mt-10">
+                <div className='md:w-4/5 mx-auto grid md:grid-cols-2 gap-0'>
                   <MenuItemButton
                     heading="Multiple choice"
                     content="Select to answer flash cards using multiple choice responses"
@@ -401,36 +401,3 @@ return (
     
 )
 }
-/*
-
-(canZoom  === true) ?
-             
-             (<MCQZoom
-                oneFlashcardData={allFlashcardsData[flashcard]}            
-                handleQuestionClick={handleQuestionClick}
-                multipleChoiceResponse={multipleChoiceResponse}
-              />)
-
-              :
-              
-              (<MCQNoZoom 
-                oneFlashcardData={allFlashcardsData[flashcard]}            
-                handleQuestionClick={handleQuestionClick}
-                multipleChoiceResponse={multipleChoiceResponse}
-              />   )          
-
-{ canZoom ?
-  <MCQZoom
-    oneFlashcardData={allFlashcardsData[flashcard]}            
-    handleQuestionClick={handleQuestionClick}
-    multipleChoiceResponse={multipleChoiceResponse}
-  />
-  :
-  <MCQNoZoom 
-  oneFlashcardData={allFlashcardsData[flashcard]}            
-  handleQuestionClick={handleQuestionClick}
-  multipleChoiceResponse={multipleChoiceResponse}
-/>  
-
-}
-*/
