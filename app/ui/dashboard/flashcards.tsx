@@ -1,26 +1,18 @@
 "use client";
 
-//import { fetchFlashcards } from "@/app/lib/data"
-//import DOMPurify from "isomorphic-dompurify";
-//import IndividualFlashcard from "./individual-flashcard/IndividualFlashcard";
 import { createContext, useState, useContext, useEffect } from 'react';
 import { FlashcardData } from "@/app/lib/definitions";
 import MCQNoZoom from "./mcqNoZoom";
 import Response from "./response";
 import { assessedResponse } from "@/app/lib/definitions";
 import WrittenFlashcard from "./writtenFlashcard";
-//import { CardSkeleton } from './skeletons';
-//import { Suspense } from 'react';
-//import MenuItem from './menuItem';
 import MenuItemButton from './menuItemButton';
 import MultipleChoiceResponse from './multipleChoiceResponse';
 import WrittenSummary from './writtenSummary';
-import TextEnlarge from './textEnlarge';
 import MCQZoom from './mcqZoom';
-//import { TextSizeButtonContext } from './textEnlargeContainer';
 import { TextSizeButtonContext } from '@/app/providers';
 
-
+//defines context for written responses to flashcards
 export const ResponseAssessmentContext = createContext<assessedResponse[]>([]);
 
 export default function FlashcardPresentation({allFlashcardsData}: {allFlashcardsData: FlashcardData[]}) {
@@ -34,11 +26,11 @@ export default function FlashcardPresentation({allFlashcardsData}: {allFlashcard
     const [response, setResponse] = useState<string>("");
     //this stores the feedback response for multiple choice questions
     const [multipleChoiceResponse, setMultipleChoiceResponse]  = useState<string>("");
-    //this stores true / false on whether or not to render menu for multiple choice or written response    
+    //this stores true / false on whether or not to render menu for multiple choice or written response
     const [showMenu, setShowMenu] = useState<boolean>(true);
     //this summarises performance after all written flashcards in a set have been answered and individually marked
     const [writtenSummary, setWrittenSummary] = useState<string>("");
-    //this stores the question numbers of correctly answered multiple choice questions    
+    //this stores the question numbers of correctly answered multiple choice questions
     const [correctlyAnsweredQuestions, setCorrectlyAnsweredQuestions] = useState<number[]>([]);
     //this stores the question numbers of questions answered with a written response
     const [answeredWrittenQuestions, setAnsweredWrittenQuestions] = useState<number[]>([]);
@@ -49,26 +41,22 @@ export default function FlashcardPresentation({allFlashcardsData}: {allFlashcard
     //this stores the time (in milliseconds) at which the user starts
     const [startTime, setStartTime] = useState<number>(0);
     //this stores the question numbers of all the questions loaded up from the data source
-    const [completeSet, setCompleteSet] = useState<number[]>([]);    
+    const [completeSet, setCompleteSet] = useState<number[]>([]);
     //this stores the stage for the written response. It is toggled between "response", when user enters response
     //and "feedback", when user checks off their correct answers
-    const [writtenStage, setWrittenStage] = useState("response");    
+    const [writtenStage, setWrittenStage] = useState("response");
     //state management for written responses and checklist of points made (assessment data)
     const [responseAssessment, setResponseAssessment] = useState<assessedResponse[]>([]);
     //toggles fit on screen version and zoom-enabled version
     const [canZoom, setCanZoom] = useState<boolean>(false);
-    //const [canZoom, setCanZoom] = useContext(TextSizeButtonContext);
 
-    /*TO UNCOMMENT WHEN TEXTRESIZE LOGIC RECONNECTED VIA USECONTEXT */
-    //const showSliderObject = useContext(TextSizeButtonContext);
+    //extracts boolean from TextSizeButtonContext
+    const { showSlider } = useContext(TextSizeButtonContext);
 
-    //console.log('showSlider', showSlider)
-
-    /*TO UNCOMMENT WHEN TEXTRESIZE LOGIC RECONNECTED VIA USECONTEXT */
-    //useEffect(() => {
-      
-      //setCanZoom(showSliderObject.showSlider);
-    //}, [showSliderObject.showSlider])
+    //detects change in showSlider boolean to toggle text resizing slider on or off display
+    useEffect(() => {
+      setCanZoom(showSlider);
+    }, [showSlider])
 
     //this creates an array of sequential integers, one for each flashcard, and sets completeSet in state
     //(rather than using the native id values in allFlashcardsData, which are unlikely to be sequential)
@@ -315,28 +303,15 @@ const handleSubmitChecklist = () => {
     
     return askWrittenResponseQuestion();
 }
-/*
-const toggleCanZoom = () => {
-  return setCanZoom(!canZoom);
-}*/
 
 return (
   
     <div className="h-full">
-      {/*}
-      <TextEnlarge
-        handleParentClick={toggleCanZoom}
-        ></TextEnlarge>*/}
-      {/*<h1>Flashcards presentation page</h1>*/}
-        
-        {/* TO UNCOMMENT WHEN USECONTEXT RECONNECTED
-         <TextEnlarge 
-         handleParentClick={() => {console.log('handleParentClick decoy')}}
-         />*/}
+      
 {/** className="w-full md:w-4/5 mx-auto mt-10 p-2" */}
-            { 
+            {
               showMenu ?
-              
+
               <div>
                 <div className='grid md:grid-cols-2 gap-0'>
                   <MenuItemButton
@@ -356,31 +331,27 @@ return (
               :
               null
             }
-            
-            
+
             {/*Renders a multiple choice question*/}
-            { flashcard === -1 ? 
+            { flashcard === -1 ?
             null
             :
             (canZoom  === true) ?
-             
+
              (<MCQZoom
-                oneFlashcardData={allFlashcardsData[flashcard]}            
+                oneFlashcardData={allFlashcardsData[flashcard]}
                 handleQuestionClick={handleQuestionClick}
                 multipleChoiceResponse={multipleChoiceResponse}
               />)
 
               :
-              
-              (<MCQNoZoom 
-                oneFlashcardData={allFlashcardsData[flashcard]}            
+
+              (<MCQNoZoom
+                oneFlashcardData={allFlashcardsData[flashcard]}
                 handleQuestionClick={handleQuestionClick}
                 multipleChoiceResponse={multipleChoiceResponse}
-              />   )  
-            
-             
-
-            }            
+              />)
+            }
 
             {/*Renders a written response question */}
             { writtenFlashcard === -1 ? 

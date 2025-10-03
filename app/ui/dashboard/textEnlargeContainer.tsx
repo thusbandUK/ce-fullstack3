@@ -1,6 +1,6 @@
 "use client"
 import TextEnlarge from "./textEnlarge"
-import { createContext, useContext, useState } from 'react';
+//import { createContext, useContext, useState } from 'react';
 
 
 //export const TextSizeButtonContext = createContext(false);
@@ -20,24 +20,25 @@ export default function TextEnlargeContainer (){
 
     /*const [showSlider, setShowSlider] = useState<boolean>(false);*/
 
-    const handleClick = () => {
-        console.log('handleParentClick triggered')
+    //const handleClick = () => {
+      //  console.log('handleParentClick triggered')
         //return setShowSlider(!showSlider);
-    }
+    //}
 
     return (
         <div>
-            {/*
+            {/**/}
               <TextEnlarge
-                handleParentClick={handleClick}
+                
               >
-    </TextEnlarge>*/}
+              </TextEnlarge>
               
         </div>
     )
 }
 
 /*
+handleParentClick={handleClick}
 <TextSizeButtonContext.Provider value={showSlider}>
                 
               </TextSizeButtonContext.Provider>
