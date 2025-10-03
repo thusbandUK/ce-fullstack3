@@ -1,4 +1,4 @@
-import DashboardSkeleton from '../../ui/dashboard/skeletons';
+import DashboardSkeleton from '@/app/ui/dashboard/skeletons';
 // '@/app/ui/skeletons';
 //import { CardSkeleton } from '../ui/dashboard/skeletons';
 

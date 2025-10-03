@@ -1,44 +1,33 @@
 "use client"
 import TextEnlarge from "./textEnlarge"
-import { createContext, useContext, useState } from 'react';
+import { useState, useEffect } from "react";
+import { usePathname } from 'next/navigation'
 
-
-//export const TextSizeButtonContext = createContext(false);
-/*const SidebarContext = createContext();
-
-export function Sidebar() {
-  const [isOpen, setIsOpen] = useState();
-
-  return (
-    <SidebarContext.Provider value={{ isOpen }}>
-      <SidebarNav />
-    </SidebarContext.Provider>
-  );
-}*/
+/*
+The function of this container is conditionally to render the TextEnlarge button only on suitable pages,
+at current: the flashcards dashboard. The parent element (Navbar) cannot read the url or manage state,
+since it is a server component
+*/
 
 export default function TextEnlargeContainer (){
 
-    /*const [showSlider, setShowSlider] = useState<boolean>(false);*/
+  const [showButton, setShowButton] = useState<boolean>(false);
+  const pathname = usePathname();
 
-    const handleClick = () => {
-        console.log('handleParentClick triggered')
-        //return setShowSlider(!showSlider);
-    }
+  useEffect(() => {
+    pathname.includes("flashcard") && pathname.includes("set") ? setShowButton(true) : setShowButton(false);
+  }, [pathname])
 
     return (
         <div>
-            {/*
-              <TextEnlarge
-                handleParentClick={handleClick}
-              >
-    </TextEnlarge>*/}
-              
+          {
+            showButton ?
+          
+              <TextEnlarge>
+              </TextEnlarge>
+            :
+            null
+          }
         </div>
     )
 }
-
-/*
-<TextSizeButtonContext.Provider value={showSlider}>
-                
-              </TextSizeButtonContext.Provider>
-*/

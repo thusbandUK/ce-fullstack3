@@ -4,38 +4,40 @@ import { TextSizeButtonContext } from "@/app/providers";
 import { useContext } from "react";
 
 /*
-This component renders a button with two differently sized capital A's, ie a text resizing button
+
+Connectivity
+
+This component renders a button with two differently sized capital A's, ie a text resizing button.
+It is designed to appear in the navbar on suitable pages, including the flashcards page, so that text
+can be responsively resized. It works via a React context - TextSizeButtonContext - so that the effect of
+clicking it can be transmitted to flashcards.tsx in ui/dashboard, which is not a direct parent or child.
+In order for said transmission to be possible, both this component and flashcards.tsx need to be children (of children of etc...) 
+of the RootLayout component in /layout.tsx. Meanwhile the {children} term in /layout.tsx needs to be 
+sandwiched by the tags for the Providers component in /providers.tsx, where the TextSizeButtonContext 
+is initiated.
+
+Conditional rendering
+
+This should only show on pages where it can be used, specifically the flashcards dashboard, hence the
+parent element textEnlargeContainer. It cannot be conditionally rendered directly via the grandparent
+navbar component, since it is a use server component which cannot manage state / read the url
 */
 
-export default function TextEnlarge(
-    {handleParentClick}
-    :
-    {handleParentClick: () => void}
-){
+export default function TextEnlarge(){
 
 //this assigns the colours of the letters (the two A's)
 const svgFillColour = '#D98FBF';
-//background colour
+//this assigns the background colour of the button
 const backgroundColour = 'black';
 
-const showSliderObject = useContext(TextSizeButtonContext);
+//this extracts the reference to the toggleSlider function initiated in Providers
+const { toggleSlider } = useContext(TextSizeButtonContext)
 
-const { toggleSlider, showSlider } = useContext(TextSizeButtonContext)
-
-console.log('first render showSlider', showSlider)
-
+//toggles showSlider true / false
 const handleClick = () => {
-  console.log('child handle click triggered')
   toggleSlider()
-  console.log(toggleSlider)
-  console.log('showSlider', showSlider)
-  console.log('got passed toggle slider')
-  showSliderObject.toggleSlider
-  console.log('showSlider', showSlider)
-  return //handleParentClick();
-
-}/**/
-//
+  return
+}
 
 return (
       <div className="absolute enlarge-text">

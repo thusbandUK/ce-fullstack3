@@ -25,8 +25,9 @@ export default async function Page({ params }: { params: { examboard_id: string 
       }
     }
 //className='w-11/12 md:w-4/5 mx-auto mt-10'
+// className="w-full md:w-4/5 mx-auto mt-10 p-2"
     return (
-      <div className="w-full md:w-4/5 mx-auto mt-10 p-2">
+      <div className="w-full md:w-4/5 mx-auto">
         
         
         <h1>Select your set of flashcards</h1>

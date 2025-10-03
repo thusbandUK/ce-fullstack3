@@ -2,6 +2,7 @@ import Image from "next/image";
 import ChemistryElephantLogo from "./ui/dashboard/chemistryElephantLogo";
 import MovingElephantAnimation from "./ui/dashboard/movingElephantAnimation";
 import Link from "next/link";
+import Navbar from "./ui/dashboard/navbar";
 
 export interface anchorsInterface {
   elephantA: string;
@@ -19,6 +20,11 @@ export default function Home() {
   }
 
   return (
+    <>
+    <header>
+          <Navbar />
+        </header>                     
+        <main className="bg-white">
     <div className="w-full md:w-4/5 mx-auto md:mt-10 p-2">
       <MovingElephantAnimation 
         anchors={anchors}
@@ -72,7 +78,10 @@ export default function Home() {
 
 
       </div>
+      
     </div>
+    </main>
+    </>
     
   );
 }

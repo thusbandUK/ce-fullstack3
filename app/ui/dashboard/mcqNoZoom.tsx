@@ -74,9 +74,9 @@ export default function MCQNoZoom(
           
         return highest.response;
     }    
-    
+    // px-2 
     return (
-        <div className="w-full h-full flex flex-col justify-between px-2 pb-4">
+        <div className="w-full h-full flex flex-col justify-between pb-4">
                     <div className="h-13-vh md:h-25-vh flex">
                       <div
                         ref={divRef}                      
