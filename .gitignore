@@ -4,7 +4,7 @@
 /toDoHidden.txt
 
 # mail test
-/app/about/mailTest.tsx
+/app/(overview)/about/mailTest.tsx
 
 # flashcard content
 /app/lib/flashcard-seed-data.json
