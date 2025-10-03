@@ -41,7 +41,7 @@ const handleClick: React.MouseEventHandler<HTMLButtonElement> = () => {
 }
 
 return (
-      <div className="absolute enlarge-text">
+      <div className="enlarge-text">
         <button onClick={handleClick} aria-label="resize text">
         <svg id="enlarge-text-svg" style={{backgroundColor: backgroundColour}} width="76" height="76" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg">
           {/*<!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->

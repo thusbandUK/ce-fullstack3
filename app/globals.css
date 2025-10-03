@@ -153,7 +153,7 @@ body {
 
 
 /* https://developer.mozilla.org/en-US/docs/Web/CSS/position-anchor */
-.anchor {
+/*.anchor {
   anchor-name: --text-anchor;
 }
 
@@ -162,7 +162,7 @@ body {
   left: anchor(right);
   bottom: anchor(top);
   top: 0;
-}
+}*/
 
 #enlarge-text-svg {
     margin-top: 0.5rem;
