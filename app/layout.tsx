@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+//NOTE: globals (below) should ONLY be imported to this layout, not descendent layout components
 import "./globals.css";
-import Navbar from "./ui/dashboard/navbar";
 import CELogoContainer from "./ui/dashboard/cELogoContainer";
 import Providers from "./providers";
  
@@ -17,12 +17,12 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-//}: Readonly<{
-  //children: React.ReactNode;
-//}>) {
-}: {
+}: Readonly<{
   children: React.ReactNode;
-}) {
+}>) {
+//}: {
+  //children: React.ReactNode;
+//}) {
   
   return (
     <html lang="en">

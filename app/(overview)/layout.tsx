@@ -1,11 +1,13 @@
-import "../globals.css";
 import Navbar from "../ui/dashboard/navbar";
 
 function Layout({
   children,
-}: {
+}: Readonly<{
   children: React.ReactNode;
-}) {
+}>) {
+//}: {
+  //children: React.ReactNode;
+//}) {
 
   return (
            <>
