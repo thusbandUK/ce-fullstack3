@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 //NOTE: globals (below) should ONLY be imported to this layout, not descendent layout components
-import "./globals.css";
+import "./global.css";
 import CELogoContainer from "./ui/dashboard/cELogoContainer";
 import Providers from "./providers";
  
