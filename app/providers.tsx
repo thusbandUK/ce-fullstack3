@@ -18,7 +18,6 @@ export default function Providers ({
     const [showSlider, setShowSlider] = useState(false);
 
     const toggleSliderFunction = () => {
-      window.alert("button clicked")
         setShowSlider(!showSlider);
     }
 
