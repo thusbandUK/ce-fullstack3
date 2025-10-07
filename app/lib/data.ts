@@ -3,6 +3,12 @@ import { z } from 'zod';
 import { FlashcardData, ExamboardData, TopicData, QuestionsData, UserData } from './definitions';
 import { queryMaker, questionSetSimplifiedArray, randomSelectionOfFifteen } from './functions';
 
+const IndividualCardSchema = z.object({
+  //examboard_id: z.string(), 
+  //topic: z.string(), 
+  flashcard_code: z.string() 
+})
+
 const ExamboardSchema = z.object({
   examboard_id: z.string()
 });
@@ -86,6 +92,42 @@ export async function fetchTopics(examboardId: string) {
 
     return data.rows;
   } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch flashcard data.');
+  }
+}
+/*
+const IndividualCardSchema = z.object({
+  examboardId: z.string(), 
+  topic: z.string(), 
+  flashcardCode: z.string() 
+})*/
+
+export async function fetchIndividualFlashcardByCode(flashcardCode: string) {
+  //REMOVED PARAMS
+  //Could come in useful because you could link - try other flashcards from this topic?
+  //examboardId: string, topic: string, 
+
+  //sanitises the arguments passed
+  //NOTE IF YOU RESUME USE OF THE EXAMBOARD AND TOPIC YOU'LL NEED TO UPDATE THE INDIVIDUALCARDSCHEMA
+  const validatedData = IndividualCardSchema.safeParse({
+    //examboard_id: examboardId,
+    //topic: topic,
+    flashcard_code: flashcardCode,
+  })
+  
+
+  const query ='SELECT flashcards.id, flashcards.definition, flashcards.question, flashcards.name, flashcards.multiple_choice_responses, flashcards.correct_answer, flashcards.checklist  FROM flashcards WHERE name = $1;'
+
+  const argument = [validatedData.data?.flashcard_code];
+  
+  try {    
+
+    const data = await sql.query<FlashcardData>(query, argument);
+
+    return data.rows;
+
+  } catch (error) {    
     console.error('Database Error:', error);
     throw new Error('Failed to fetch flashcard data.');
   }
