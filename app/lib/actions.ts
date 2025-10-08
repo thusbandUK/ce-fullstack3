@@ -6,12 +6,12 @@ import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { signIn } from '@/auth';
 import { AuthError } from 'next-auth';
-import { UserEmailSchema } from './data';
+import { UserEmailSchema } from './schema';
 import { UserDetails } from './definitions';
 import { locationParser } from './functions';
 
 const FormSchema = z.object({
-  username: z.coerce.string({invalid_type_error: "Name must be a string",}).max(20).min(5),  
+  username: z.coerce.string({invalid_type_error: "Name must be a string",}).max(20).min(5),
   mailTick: z.coerce.boolean(),
 });
  
