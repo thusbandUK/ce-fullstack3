@@ -117,7 +117,8 @@ export async function fetchIndividualFlashcardByCode(flashcardCode: string) {
   })
   
 
-  const query ='SELECT flashcards.id, flashcards.definition, flashcards.question, flashcards.name, flashcards.multiple_choice_responses, flashcards.correct_answer, flashcards.checklist  FROM flashcards WHERE name = $1;'
+  //const query ='SELECT flashcards.id, flashcards.definition, flashcards.question, flashcards.name, flashcards.multiple_choice_responses, flashcards.correct_answer, flashcards.checklist  FROM flashcards WHERE name = $1;'
+  const query ='SELECT * FROM flashcards WHERE name = $1;'
 
   const argument = [validatedData.data?.flashcard_code];
   
