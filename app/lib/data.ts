@@ -1,12 +1,16 @@
+"use server"
+
 import { sql } from '@vercel/postgres';
 import { z } from 'zod';
 import { FlashcardData, ExamboardData, TopicData, QuestionsData, UserData } from './definitions';
 import { queryMaker, questionSetSimplifiedArray, randomSelectionOfFifteen } from './functions';
+import { UserEmailSchema } from './schema';
+import { redirect } from 'next/navigation'
 
 const IndividualCardSchema = z.object({
   //examboard_id: z.string(), 
   //topic: z.string(), 
-  flashcard_code: z.string() 
+  flashcard_code: z.string({invalid_type_error: "Code must be three letters",}).regex(/^[A-Za-z]+$/).max(3).min(3).toUpperCase(), 
 })
 
 const ExamboardSchema = z.object({
@@ -17,9 +21,13 @@ const TopicSchema = z.object({
   topic_id: z.string()
 });
 
-export const UserEmailSchema = z.object({
-  validatedEmail: z.string().email("This is not a valid email.")
-})
+export type CodeState = {
+  
+  message?: string | null;
+  errors?: {
+    code?: string[];
+  };
+};
 
 export async function fetchUser(email: string | undefined | null) {
   if ((email === undefined) || email === null){
@@ -96,12 +104,11 @@ export async function fetchTopics(examboardId: string) {
     throw new Error('Failed to fetch flashcard data.');
   }
 }
+
 /*
-const IndividualCardSchema = z.object({
-  examboardId: z.string(), 
-  topic: z.string(), 
-  flashcardCode: z.string() 
-})*/
+Similarly named to the function directly below. This fetches a single flashcard from a link in which
+the params contain a three-letter code that links to a specific flashcard
+*/
 
 export async function fetchIndividualFlashcardByCode(flashcardCode: string) {
   //REMOVED PARAMS
@@ -116,8 +123,6 @@ export async function fetchIndividualFlashcardByCode(flashcardCode: string) {
     flashcard_code: flashcardCode,
   })
   
-
-  //const query ='SELECT flashcards.id, flashcards.definition, flashcards.question, flashcards.name, flashcards.multiple_choice_responses, flashcards.correct_answer, flashcards.checklist  FROM flashcards WHERE name = $1;'
   const query ='SELECT * FROM flashcards WHERE name = $1;'
 
   const argument = [validatedData.data?.flashcard_code];
@@ -133,6 +138,64 @@ export async function fetchIndividualFlashcardByCode(flashcardCode: string) {
     throw new Error('Failed to fetch flashcard data.');
   }
 }
+
+
+
+/*
+This is the function where users can enter a three letter code from an insta post to check their answer, 
+rather than landing directly on the flashcard page from a complete link. The function validates the
+code to make sure nothing nefarious is entered. It will return an error if anything other than three
+letters is entered (not caps sensitive, it just coerces to upper case via the relevant zod object).
+It will also return an error if the three-letter code is not recognised. 
+If the code is recognised, it is spliced into the url to which the function redirects, so that they go
+to the flashcard
+it uses IndividualCardSchema and CodeState (both defined at top of this module)
+*/
+
+export async function fetchIndividualFlashcardByCodeInternal(prevState: CodeState, formData: FormData) {
+
+  //sanitises the arguments passed
+  const validatedData = IndividualCardSchema.safeParse({
+    flashcard_code: formData.get("flashcard-code"),
+  })
+
+  //returns error if entered code is anything other than three letters
+  if (!validatedData.success) {
+    return {
+      message: 'Code rejected. It must be three letters. Please try again.',
+      errors: {
+        code: validatedData.error.flatten().fieldErrors.flashcard_code,
+      },
+    };
+  }
+
+  //database query for three letter code
+  const query ='SELECT name FROM flashcards WHERE name = $1;'
+  const argument = [validatedData.data?.flashcard_code];
+
+  try {
+    //calls database to check for a flashcard with the entered three letter code
+    const data = await sql.query(query, argument);
+    
+    //returns error if code not recognised
+    if (data.rows.length === 0){
+      return {
+        message: 'No data for that code. Double check the code and try again.',
+      }
+    }
+
+  } catch (error){
+    console.log(error)
+    return {
+      message: 'Database Error: Failed to collect flashcard.'
+    };
+  }
+
+  //redirects user to the individual flashcard page, specifying the validated three-letter code
+  redirect(`/flashcards/individual/${validatedData.data?.flashcard_code}/set`)
+
+}
+
 
 export async function fetchComplementaryTopic(examboardId: string) {
   
