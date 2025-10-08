@@ -15,7 +15,7 @@ import { TextSizeButtonContext } from '@/app/providers';
 //defines context for written responses to flashcards
 export const ResponseAssessmentContext = createContext<assessedResponse[]>([]);
 
-export default function FlashcardPresentation({allFlashcardsData}: {allFlashcardsData: FlashcardData[]}) {
+export default function FlashcardPresentation({allFlashcardsData, forceMCQ}: {allFlashcardsData: FlashcardData[], forceMCQ: boolean}) {
 
     //below two variables assign the number of the question...
     //for MCQ
@@ -189,6 +189,12 @@ export default function FlashcardPresentation({allFlashcardsData}: {allFlashcard
     setStartTime(startingTime);    
     return askQuestion();
 }
+
+useEffect(() => {
+  if (forceMCQ){
+    handleClick();
+  }
+}, [forceMCQ])
 
 //this function initiates the written response format of question
 const handleWrittenClick = () => {
