@@ -8,7 +8,7 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
 }
 
 export function Button({ children, className, ...rest }: ButtonProps) {
-  console.log(children);
+  
   return (
     <button
       {...rest}
