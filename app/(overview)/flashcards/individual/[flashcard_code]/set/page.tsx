@@ -24,7 +24,9 @@ import { fetchIndividualFlashcardByCode } from "@/app/lib/data";
 return (    
     <div className="h-82-vh">
         {allFlashcardsData.length === 0 ?
-        null:
+        <p>Sorry, looks like there is no flashcard with that code.</p>
+        
+        :
         <FlashcardPresentation
           allFlashcardsData={allFlashcardsData}
           forceMCQ={true}
