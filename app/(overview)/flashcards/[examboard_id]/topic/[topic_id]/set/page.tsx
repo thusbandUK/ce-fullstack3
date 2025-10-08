@@ -22,6 +22,7 @@ return (
         null:
         <FlashcardPresentation
           allFlashcardsData={allFlashcardsData}
+          forceMCQ={false}
         />
         }       
     </div>

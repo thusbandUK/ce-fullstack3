@@ -15,6 +15,7 @@ return (
         <Suspense fallback={<CardSkeleton />}>
         <FlashcardPresentation
           allFlashcardsData={allFlashcardsData}
+          forceMCQ={false}
         />
         </Suspense>
         }
