@@ -190,6 +190,9 @@ export default function FlashcardPresentation({allFlashcardsData, forceMCQ}: {al
     return askQuestion();
 }
 
+//this function bypasses the multiple choice / written response menu and automatically loads 
+//multiple choice question, so that inbound people wanting to check the answer from a flashcard on 
+//eg insta is immediately transferred to the same exact same thing they saw in the post
 useEffect(() => {
   if (forceMCQ){
     handleClick();
