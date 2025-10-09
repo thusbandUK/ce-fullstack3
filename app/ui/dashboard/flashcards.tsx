@@ -49,6 +49,8 @@ export default function FlashcardPresentation({allFlashcardsData, forceMCQ}: {al
     const [responseAssessment, setResponseAssessment] = useState<assessedResponse[]>([]);
     //toggles fit on screen version and zoom-enabled version
     const [canZoom, setCanZoom] = useState<boolean>(false);
+    //records multiple choice question numbers for any questions user got wrong at least once
+    const [wrongFirstTime, setWrongFirstTime] = useState<number[]>([])
 
     //extracts boolean from TextSizeButtonContext
     const { showSlider } = useContext(TextSizeButtonContext);
@@ -112,8 +114,10 @@ export default function FlashcardPresentation({allFlashcardsData, forceMCQ}: {al
       //if there are no remaining questions, the time to complete the set is computed and delivered as part of a success message
       if (remainingQuestions.length === 0){
           const finishingTime = Date.now();
-          const timeElapsed = (finishingTime - startTime)/1000;
-          setResponse(`Great job! ${completeSet.length} questions answered correctly in ${count} attempts and in ${timeElapsed} seconds. Woop!`);
+          const timeElapsed = (finishingTime - startTime)/1000;          
+          const IncorrectlyAnswerQuestions = wrongFirstTime.map((x: number) => allFlashcardsData[x].question)
+          //console.log(IncorrectlyAnswerQuestions)
+          setResponse(`Great job! ${completeSet.length} questions answered correctly in ${count} attempts and in ${timeElapsed} seconds. Woop! You got these questions wrong at least once: ${IncorrectlyAnswerQuestions.join(", ")}`);
           setFlashcard(-1);
           return;
           //return askWrittenResponseQuestion();
@@ -274,7 +278,10 @@ const handleWrittenClick = () => {
           setCorrectlyAnsweredQuestions(updatedArray);
       } else {
           //setResponse("Yikes, you got it wrong! &#128556;");
-          setMultipleChoiceResponse("wrong");
+          setMultipleChoiceResponse("wrong");          
+          if (!wrongFirstTime.includes(flashcard)){
+            setWrongFirstTime([...wrongFirstTime, flashcard])
+          }
           queueQuestion(flashcard);
       }
       //increments count of question attempts
