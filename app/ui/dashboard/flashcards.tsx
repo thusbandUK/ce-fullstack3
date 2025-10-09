@@ -3,7 +3,6 @@
 import { createContext, useState, useContext, useEffect } from 'react';
 import { FlashcardData } from "@/app/lib/definitions";
 import MCQNoZoom from "./mcqNoZoom";
-import Response from "./response";
 import { assessedResponse } from "@/app/lib/definitions";
 import WrittenFlashcard from "./writtenFlashcard";
 import MenuItemButton from './menuItemButton';
@@ -11,6 +10,7 @@ import MultipleChoiceResponse from './multipleChoiceResponse';
 import WrittenSummary from './writtenSummary';
 import MCQZoom from './mcqZoom';
 import { TextSizeButtonContext } from '@/app/providers';
+import McqSummary from './mcqSummary';
 
 //defines context for written responses to flashcards
 export const ResponseAssessmentContext = createContext<assessedResponse[]>([]);
@@ -19,11 +19,10 @@ export default function FlashcardPresentation({allFlashcardsData, forceMCQ}: {al
 
     //below two variables assign the number of the question...
     //for MCQ
+    //notice here the number is the position in the array of the flashcardData object for a given question
     const [flashcard, setFlashcard] = useState<number>(-1);
     //for written response
-    const [writtenFlashcard, setWrittenFlashcard] = useState<number>(-1);
-    //this sets the feedback response given by the app to the user, once they have completed everything
-    const [response, setResponse] = useState<string>("");
+    const [writtenFlashcard, setWrittenFlashcard] = useState<number>(-1);    
     //this stores the feedback response for multiple choice questions
     const [multipleChoiceResponse, setMultipleChoiceResponse]  = useState<string>("");
     //this stores true / false on whether or not to render menu for multiple choice or written response
@@ -50,7 +49,9 @@ export default function FlashcardPresentation({allFlashcardsData, forceMCQ}: {al
     //toggles fit on screen version and zoom-enabled version
     const [canZoom, setCanZoom] = useState<boolean>(false);
     //records multiple choice question numbers for any questions user got wrong at least once
-    const [wrongFirstTime, setWrongFirstTime] = useState<number[]>([])
+    const [wrongFirstTime, setWrongFirstTime] = useState<string[]>([])
+    //stores feedback for performance with multiple choice questions
+    const [mcqSummary, setMcqSummary] = useState<string>("");
 
     //extracts boolean from TextSizeButtonContext
     const { showSlider } = useContext(TextSizeButtonContext);
@@ -114,13 +115,10 @@ export default function FlashcardPresentation({allFlashcardsData, forceMCQ}: {al
       //if there are no remaining questions, the time to complete the set is computed and delivered as part of a success message
       if (remainingQuestions.length === 0){
           const finishingTime = Date.now();
-          const timeElapsed = (finishingTime - startTime)/1000;          
-          const IncorrectlyAnswerQuestions = wrongFirstTime.map((x: number) => allFlashcardsData[x].question)
-          //console.log(IncorrectlyAnswerQuestions)
-          setResponse(`Great job! ${completeSet.length} questions answered correctly in ${count} attempts and in ${timeElapsed} seconds. Woop! You got these questions wrong at least once: ${IncorrectlyAnswerQuestions.join(", ")}`);
+          const timeElapsed = (finishingTime - startTime)/1000;
+          setMcqSummary(`Great job! ${completeSet.length} questions answered correctly in ${count} attempts and in ${timeElapsed} seconds. Woop!`)
           setFlashcard(-1);
-          return;
-          //return askWrittenResponseQuestion();
+          return;          
       }
       //if the number of recently answered questions is greater than or equal to the number or remaining questions, the question
       //at the front of the recentQuestions queue is assigned
@@ -170,9 +168,7 @@ export default function FlashcardPresentation({allFlashcardsData, forceMCQ}: {al
         setWrittenFlashcard(-1);
         //iterates through the assessment data to calculate how many ticks they got out of a possible total
         const marksHarvest = harvestAssessmentData();
-        //returns a response summarising performance
-        //return setResponse(`Great job!  ${marksHarvest.correctAnswers} marks out of ${marksHarvest.maximumMark} in written response. See your points to work on below.`);
-        //setResponse(`Great job!  ${marksHarvest.correctAnswers} marks out of ${marksHarvest.maximumMark} in written response. See your points to work on below.`)
+        //returns a response summarising performance        
         return setWrittenSummary(`Great job!  ${marksHarvest.correctAnswers} marks out of ${marksHarvest.maximumMark} in written response. See your points to work on below.`)
     }
     
@@ -209,8 +205,8 @@ const handleWrittenClick = () => {
     //function creates an array of objects in which assessment data will be stored, then passes it to state to 
     //create a context which can be used in children components
     
-    //resets response statement
-    setResponse("");
+    //resets response statement    
+    setWrittenSummary("");
     
     const arrayOfResponsesInitiator: assessedResponse[] = [];
     completeSet.forEach((x: number) => {
@@ -272,15 +268,15 @@ const handleWrittenClick = () => {
       
       if (suggestedAnswer === correctAnswer){
           setMultipleChoiceResponse("right");
-          //setResponse("You got it right. &#129395;");
+          
           const updatedArray = correctlyAnsweredQuestions;
           updatedArray.push(flashcard);
           setCorrectlyAnsweredQuestions(updatedArray);
       } else {
-          //setResponse("Yikes, you got it wrong! &#128556;");
+          
           setMultipleChoiceResponse("wrong");          
-          if (!wrongFirstTime.includes(flashcard)){
-            setWrongFirstTime([...wrongFirstTime, flashcard])
+          if (!wrongFirstTime.includes(allFlashcardsData[flashcard].id)){
+            setWrongFirstTime([...wrongFirstTime, allFlashcardsData[flashcard].id])
           }
           queueQuestion(flashcard);
       }
@@ -394,14 +390,16 @@ return (
 
 
             {/*Renders the response once all flashcards completed */}
-            { response ? 
-            <ResponseAssessmentContext.Provider value={responseAssessment}>
-              <Response               
-                summary={response}
-                allFlashcardsData={allFlashcardsData}                
-              />
-            </ResponseAssessmentContext.Provider>
-            : null}
+            { mcqSummary ? 
+               <McqSummary
+                 summary={mcqSummary}
+                 allFlashcardsData={allFlashcardsData}
+                 wrongFirstTime={wrongFirstTime}
+               >
+               </McqSummary>
+               :
+               null
+            }
 
             {/*Renders the feedback summary once all flashcards completed as written responses */}
             { writtenSummary ? 
