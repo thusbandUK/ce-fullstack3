@@ -14,6 +14,7 @@
 /app/lib/mockFeedbackData.ts
 /app/lib/old-flashcard-seed-data.json
 /app/ui/dashboard/writtenSummaryMock.tsx
+/app/(overview)/flashcards/mock/
 
 # db init content
 /app/seed/initiation.sql
