@@ -49,7 +49,7 @@ export default function FlashcardPresentation({allFlashcardsData, forceMCQ}: {al
     //toggles fit on screen version and zoom-enabled version
     const [canZoom, setCanZoom] = useState<boolean>(false);
     //records multiple choice question numbers for any questions user got wrong at least once
-    const [wrongFirstTime, setWrongFirstTime] = useState<string[]>([])
+    const [wrongFirstTime, setWrongFirstTime] = useState<number[]>([])
     //stores feedback for performance with multiple choice questions
     const [mcqSummary, setMcqSummary] = useState<string>("");
 

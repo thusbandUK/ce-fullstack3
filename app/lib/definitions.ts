@@ -48,7 +48,7 @@ export type ExamboardData = {
 };
 
 export type FlashcardData = {
-  id: string;
+  id: number;
   definition: string;
   question: string;
   name: string;

@@ -26,7 +26,7 @@ const McqSummaryMock = (
     {
         summary: string,
         allFlashcardsData: FlashcardData[],
-        wrongFirstTime: string[]
+        wrongFirstTime: number[]
     }
 ) => {
 
@@ -57,10 +57,10 @@ allFlashcardsData.map((x) => {
   console.log(x.id);
 })
 
-    const questionExtractor = (indexAsString: string) => {
-      console.log(indexAsString);
+    const questionExtractor = (indexAsNumber: number) => {
+      console.log(indexAsNumber);
       const extractedQuestionData = allFlashcardsData.filter((x) => {
-        return x.id === Number(indexAsString);
+        return x.id === indexAsNumber;
       })
       console.log(extractedQuestionData[0])
       return extractedQuestionData[0];
