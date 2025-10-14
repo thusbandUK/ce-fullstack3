@@ -4,6 +4,12 @@ import { useContext } from "react";
 import { assessedResponse, FlashcardData } from '@/app/lib/definitions';
 import ChecklistFeedback from './checklistFeedback';
 import DOMPurify from "isomorphic-dompurify";
+import McqMarkScheme from './mcqMarkScheme';
+
+/*
+This is the first draft, which will be replaced by the contents of mcqSummaryMock
+Note issues: McqMarkScheme is missing keyNumber prop data, which will be corrected in mcqSummaryMock
+*/
 
 const McqSummary = (
     {
@@ -30,10 +36,17 @@ const McqSummary = (
 
     const mappedForId = rightFirstTime.map((x) => x.id)
 
-    console.log('wrongFirstTime')
-    console.log(wrongFirstTime)
-    console.log('rightFirstTime')
-    console.log(mappedForId)
+    //console.log('wrongFirstTime')
+    //console.log(wrongFirstTime)
+    //console.log('rightFirstTime')
+    //console.log(mappedForId)
+
+    const questionExtractor = (indexAsString: string) => {
+      const extractedQuestionData = allFlashcardsData.filter((x) => {
+        return x.id === indexAsString;
+      })
+      return extractedQuestionData[0];
+    }
     
     //const responseAssessment = useContext(ResponseAssessmentContext);
 
@@ -46,37 +59,33 @@ const McqSummary = (
               ></p>
             </div>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-0">
-                {/**
-            {responseAssessment.map((x: assessedResponse, i) => {
+              <h2>You got these right first time</h2>
+              {
+                rightFirstTime.map((x) => (
+                  <McqMarkScheme
+                    question={x.question}
+                    multipleChoiceResponses={x.multiple_choice_responses}
+                    correctAnswer={x.correct_answer}
+                  >                    
+                  </McqMarkScheme>
 
-                return (
-                    <div
-                      key={i}
-                      className="border-2 border-black rounded-lg p-5 variable-background"
-                    >
-                      <h2 
-                        className="text-2xl"
-                        dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(allFlashcardsData[x.flashcardDataIndex].question)}}
-                      ></h2>
-                      
-                      <div className="p-1 mt-4">
-                        { x.response ?
-                            <p
-                              className="text-lg italic"
-                            >
-                              &quot;{x.response}&quot;
-                            </p>
-                          : null
-                        }
-                        
-                      </div>
-                      <ChecklistFeedback
-                        responseAssessment={x}
-                        allFlashcardsData={allFlashcardsData}                      
-                      />                      
-                    </div>
-                )
-            })} */}
+                ))
+
+              }
+
+            </div>
+            
+
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-0">
+              <h2>You got these wrong at least once</h2>
+                {wrongFirstTime.map((x) => (
+                  <McqMarkScheme
+                    question={questionExtractor(x).question}
+                    multipleChoiceResponses={questionExtractor(x).multiple_choice_responses}
+                    correctAnswer={questionExtractor(x).correct_answer}
+                  >                    
+                  </McqMarkScheme>
+                ))}
             </div>
         </div>
     )
