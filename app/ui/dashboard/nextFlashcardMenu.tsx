@@ -9,6 +9,8 @@ import MenuItemRedirect from "./menuItemRedirect";
 import { fetchFlashcardsByTopicDescriptor } from "@/app/lib/data";
 import { redirect } from "next/navigation";
 import { useState } from "react";
+import { fetchTopicsByExamboardTitle } from "@/app/lib/data";
+//import { auth } from "@/auth";
 /*
 this will be passed topics / examboards / referredViaIndividual
 
@@ -59,12 +61,8 @@ export default function NextFlashcardMenu(
     const [ error, setError] = useState<string>("");
 
     const params = useParams<{examboard_id: string}>()
-    console.log('params...')
-    console.log(params)
 
     const findTopic = async ({topic}: {topic: string}) => {
-        console.log('find topic called?')
-        console.log(topic.replace(/^Topic:\s*/, ""))
         try {
             const response = await fetchFlashcardsByTopicDescriptor(topic.replace(/^Topic:\s*/, ""))
             if (response){
@@ -74,19 +72,28 @@ export default function NextFlashcardMenu(
             }
             return
         } catch (error) {
-            console.log('error log starts')
-            //console.log(Object.entries(error));
-            console.log('error log finshess')
-            if (error instanceof Error){
-                console.log('instance of error')
+            if (error instanceof Error){                
                 return setError(error.message)
             }
             return setError("Something went wrong!")
-
         }
-        
-        
-        console.log('hello!')
+    }
+
+    const findExamboard = async ({examboard}: {examboard: string}) => {
+        try {
+            const response = await fetchTopicsByExamboardTitle(examboard)
+            if (response){
+              if (response.message){
+                setError(response.message);
+              }
+            }
+            return
+        } catch (error) {
+            if (error instanceof Error){                
+                return setError(error.message)
+            }
+            return setError("Something went wrong!")
+        }
     }
 
     return (
@@ -99,19 +106,23 @@ export default function NextFlashcardMenu(
                 <h3>Do the rest of the topic</h3>
                 {examboards.map((x) => (
                     <MenuItemRedirect
-                      heading={x}                      
-                      content={`Topic: ${topics[x as keyof topic]}`}                      
-                      arrowCommand={'SELECT'}                      
+                      heading={x}
+                      content={`Topic: ${topics[x as keyof topic]}`}
+                      arrowCommand={'SELECT'}
                       dbCall={findTopic}
-                    
-                    >
-                    
+                    >                    
                     </MenuItemRedirect>
-
-                   
-                    
-
-                ))}                
+                ))}
+                <h3>Try other topics from available examboards</h3>
+                {examboards.map((x) => (
+                    <MenuItemRedirect
+                      heading={x}
+                      content={`All available topics`}
+                      arrowCommand={'SELECT'}
+                      dbCall={findExamboard}
+                    >                    
+                    </MenuItemRedirect>
+                ))}
                 </div>
                 :
                 <div>
@@ -124,8 +135,3 @@ export default function NextFlashcardMenu(
         </div>
     )
 }
-/*
-<div>
-                        <p>Examboard: {x}</p>
-                        <p>Topic: {topics[x as keyof topic]}</p>
-                    </div>*/

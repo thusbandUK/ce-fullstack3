@@ -24,6 +24,11 @@ const TopicTitleSchema = z.object({
   topic_title: z.string({invalid_type_error: "Topic title should not contain any special characters other than period",}).regex(/^[a-zA-Z0-9. ]+$/).toLowerCase()
 })
 
+//checks that TopicTitle string contains no special characters other than periods
+const ExamboardTitleSchema = z.object({
+  examboard_title: z.string({invalid_type_error: "Topic title should not contain any special characters other than period",}).regex(/^[a-zA-Z0-9. ]+$/)
+})
+
 export type CodeState = {
   message?: string | null;
   errors?: {
@@ -327,5 +332,70 @@ export async function fetchFlashcardsByTopicDescriptor(topicTitle: string) {
 
   //redirects user to the requested set of flashcards
   redirect(`/flashcards/${idAndExamboard.examboard}/topic/${idAndExamboard.id}/set`);
+
+}
+
+export async function fetchTopicsByExamboardTitle(examboardTitle: string) {
+
+  //validates topicTitle string (see TopicTitleSchema defined above)
+  const validatedData = ExamboardTitleSchema.safeParse({
+    examboard_title: examboardTitle
+  })
+
+  //returns error if validation fails, esp if it fails regex because of containing special characters other than periods
+  if (!validatedData.success) {
+    //logs error to server console
+    console.error('BAD ACTOR ALERT! Examboard-title validation failure with error', validatedData.error.flatten().fieldErrors.examboard_title, 'suggests someone has passed a topic-title containing special characters other than periods.')
+    console.error('string passed:', examboardTitle)
+    //returns vague message to user
+    return {
+      message: 'Oh dear, something went wrong.',
+    };
+  }
+
+  //extracts validated topicTitle
+  const validatedExamboardTitle = validatedData.data?.examboard_title;
+  
+  //defines database query and argument
+  const initialQuery = "SELECT id FROM examboards WHERE examboard = $1;"
+  const initialArgument = [validatedExamboardTitle];
+
+  //defines an empty object, to which database values can be added, so that the values can be used
+  //below the try / catch statement
+  let examboardIdForRedirect = ""
+
+  try {
+    
+    //calls database
+    const examboardData = await sql.query(initialQuery, initialArgument);
+
+    //returns error message if no data found
+    if (examboardData.rows.length === 0){
+      //logs message to server console, to record any broken topic titles
+      console.error(`Topic-title '${validatedExamboardTitle}' did not return any values from the database`)
+      //returns message to user
+      return {
+        message: "Oh dear, there does not seem to be any data available for that request.",
+      };
+    }
+    
+    //passes database values to object defined above try/ catch statement
+    examboardIdForRedirect = examboardData.rows[0].id;
+
+  } catch (error: unknown) {
+    //this is a TypeScript thing, since error is unknown, it has to be checked that the error is
+    //an error object, in which case the message value can be accessed
+    if (error instanceof Error){
+      console.error('Database Error:', error.message);
+      throw new Error("Something went wrong.");
+    } else {
+      console.error('Database Error', error);
+      throw new Error("Something went wrong.")
+    }
+    
+  }
+
+  //redirects user to the requested set of flashcards
+  redirect(`/flashcards/${examboardIdForRedirect}/topic`);
 
 }
