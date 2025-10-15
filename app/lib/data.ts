@@ -8,8 +8,6 @@ import { UserEmailSchema } from './schema';
 import { redirect } from 'next/navigation'
 
 const IndividualCardSchema = z.object({
-  //examboard_id: z.string(), 
-  //topic: z.string(), 
   flashcard_code: z.string({invalid_type_error: "Code must be three letters",}).regex(/^[A-Za-z]+$/).max(3).min(3).toUpperCase(), 
 })
 
@@ -21,8 +19,12 @@ const TopicSchema = z.object({
   topic_id: z.string()
 });
 
+//checks that TopicTitle string contains no special characters other than periods
+const TopicTitleSchema = z.object({
+  topic_title: z.string({invalid_type_error: "Topic title should not contain any special characters other than period",}).regex(/^[a-zA-Z0-9. ]+$/).toLowerCase()
+})
+
 export type CodeState = {
-  
   message?: string | null;
   errors?: {
     code?: string[];
@@ -111,15 +113,9 @@ the params contain a three-letter code that links to a specific flashcard
 */
 
 export async function fetchIndividualFlashcardByCode(flashcardCode: string) {
-  //REMOVED PARAMS
-  //Could come in useful because you could link - try other flashcards from this topic?
-  //examboardId: string, topic: string, 
 
-  //sanitises the arguments passed
-  //NOTE IF YOU RESUME USE OF THE EXAMBOARD AND TOPIC YOU'LL NEED TO UPDATE THE INDIVIDUALCARDSCHEMA
-  const validatedData = IndividualCardSchema.safeParse({
-    //examboard_id: examboardId,
-    //topic: topic,
+  //sanitises the arguments passed  
+  const validatedData = IndividualCardSchema.safeParse({    
     flashcard_code: flashcardCode,
   })
   
@@ -265,210 +261,71 @@ export async function fetchRandomSetOfFlashcards(examboardId: string) {
 }
 
 /*
-export async function fetchRevenue() {
-  try {
-    // Artificially delay a response for demo purposes.
-    // Don't do this in production :)
-
-    //console.log('Fetching revenue data...');
-    //await new Promise((resolve) => setTimeout(resolve, 3000));
-
-    const data = await sql<Revenue>`SELECT * FROM revenue`;
-
-    console.log('Data fetch completed after 3 seconds.');
-
-    return data.rows;
-  } catch (error) {
-    console.error('Database Error:', error);
-    throw new Error('Failed to fetch revenue data.');
-  }
-}
-
-export async function fetchLatestInvoices() {
-  try {
-    const data = await sql<LatestInvoiceRaw>`
-      SELECT invoices.amount, customers.name, customers.image_url, customers.email, invoices.id
-      FROM invoices
-      JOIN customers ON invoices.customer_id = customers.id
-      ORDER BY invoices.date DESC
-      LIMIT 5`;
-
-    const latestInvoices = data.rows.map((invoice) => ({
-      ...invoice,
-      amount: formatCurrency(invoice.amount),
-    }));
-    return latestInvoices;
-  } catch (error) {
-    console.error('Database Error:', error);
-    throw new Error('Failed to fetch the latest invoices.');
-  }
-}
-
-export async function fetchCardData() {
-  try {
-    // You can probably combine these into a single SQL query
-    // However, we are intentionally splitting them to demonstrate
-    // how to initialize multiple queries in parallel with JS.
-    const invoiceCountPromise = sql`SELECT COUNT(*) FROM invoices`;
-    const customerCountPromise = sql`SELECT COUNT(*) FROM customers`;
-    const invoiceStatusPromise = sql`SELECT
-         SUM(CASE WHEN status = 'paid' THEN amount ELSE 0 END) AS "paid",
-         SUM(CASE WHEN status = 'pending' THEN amount ELSE 0 END) AS "pending"
-         FROM invoices`;
-
-    const data = await Promise.all([
-      invoiceCountPromise,
-      customerCountPromise,
-      invoiceStatusPromise,
-    ]);
-
-    const numberOfInvoices = Number(data[0].rows[0].count ?? '0');
-    const numberOfCustomers = Number(data[1].rows[0].count ?? '0');
-    const totalPaidInvoices = formatCurrency(data[2].rows[0].paid ?? '0');
-    const totalPendingInvoices = formatCurrency(data[2].rows[0].pending ?? '0');
-
-    return {
-      numberOfCustomers,
-      numberOfInvoices,
-      totalPaidInvoices,
-      totalPendingInvoices,
-    };
-  } catch (error) {
-    console.error('Database Error:', error);
-    throw new Error('Failed to fetch card data.');
-  }
-}
-
-const ITEMS_PER_PAGE = 6;
-export async function fetchFilteredInvoices(
-  query: string,
-  currentPage: number,
-) {
-  const offset = (currentPage - 1) * ITEMS_PER_PAGE;
-
-  try {
-    const invoices = await sql<InvoicesTable>`
-      SELECT
-        invoices.id,
-        invoices.amount,
-        invoices.date,
-        invoices.status,
-        customers.name,
-        customers.email,
-        customers.image_url
-      FROM invoices
-      JOIN customers ON invoices.customer_id = customers.id
-      WHERE
-        customers.name ILIKE ${`%${query}%`} OR
-        customers.email ILIKE ${`%${query}%`} OR
-        invoices.amount::text ILIKE ${`%${query}%`} OR
-        invoices.date::text ILIKE ${`%${query}%`} OR
-        invoices.status ILIKE ${`%${query}%`}
-      ORDER BY invoices.date DESC
-      LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}
-    `;
-
-    return invoices.rows;
-  } catch (error) {
-    console.error('Database Error:', error);
-    throw new Error('Failed to fetch invoices.');
-  }
-}
-
-export async function fetchInvoicesPages(query: string) {
-  try {
-    const count = await sql`SELECT COUNT(*)
-    FROM invoices
-    JOIN customers ON invoices.customer_id = customers.id
-    WHERE
-      customers.name ILIKE ${`%${query}%`} OR
-      customers.email ILIKE ${`%${query}%`} OR
-      invoices.amount::text ILIKE ${`%${query}%`} OR
-      invoices.date::text ILIKE ${`%${query}%`} OR
-      invoices.status ILIKE ${`%${query}%`}
-  `;
-
-    const totalPages = Math.ceil(Number(count.rows[0].count) / ITEMS_PER_PAGE);
-    return totalPages;
-  } catch (error) {
-    console.error('Database Error:', error);
-    throw new Error('Failed to fetch total number of invoices.');
-  }
-}
-
-export async function fetchInvoiceById(id: string) {
-  try {
-    const data = await sql<InvoiceForm>`
-      SELECT
-        invoices.id,
-        invoices.customer_id,
-        invoices.amount,
-        invoices.status
-      FROM invoices
-      WHERE invoices.id = ${id};
-    `;
-
-    const invoice = data.rows.map((invoice) => ({
-      ...invoice,
-      // Convert amount from cents to dollars
-      amount: invoice.amount / 100,
-    }));
-    console.log(invoice); // Invoice is an empty array []
-    return invoice[0];
-  } catch (error) {
-    console.error('Database Error:', error);
-    throw new Error('Failed to fetch invoice.');
-  }
-}
-
-export async function fetchCustomers() {
-  try {
-    const data = await sql<CustomerField>`
-      SELECT
-        id,
-        name
-      FROM customers
-      ORDER BY name ASC
-    `;
-
-    const customers = data.rows;
-    return customers;
-  } catch (err) {
-    console.error('Database Error:', err);
-    throw new Error('Failed to fetch all customers.');
-  }
-}
-
-export async function fetchFilteredCustomers(query: string) {
-  try {
-    const data = await sql<CustomersTableType>`
-		SELECT
-		  customers.id,
-		  customers.name,
-		  customers.email,
-		  customers.image_url,
-		  COUNT(invoices.id) AS total_invoices,
-		  SUM(CASE WHEN invoices.status = 'pending' THEN invoices.amount ELSE 0 END) AS total_pending,
-		  SUM(CASE WHEN invoices.status = 'paid' THEN invoices.amount ELSE 0 END) AS total_paid
-		FROM customers
-		LEFT JOIN invoices ON customers.id = invoices.customer_id
-		WHERE
-		  customers.name ILIKE ${`%${query}%`} OR
-        customers.email ILIKE ${`%${query}%`}
-		GROUP BY customers.id, customers.name, customers.email, customers.image_url
-		ORDER BY customers.name ASC
-	  `;
-
-    const customers = data.rows.map((customer) => ({
-      ...customer,
-      total_pending: formatCurrency(customer.total_pending),
-      total_paid: formatCurrency(customer.total_paid),
-    }));
-
-    return customers;
-  } catch (err) {
-    console.error('Database Error:', err);
-    throw new Error('Failed to fetch customer table.');
-  }
-}
+This function takes the title of a topic, eg: "2.1.4 Acids", validates the argument to ensure it contains
+no special characters, eg: ;<> etc, then searches the database to return the topic_id and examboards_id
+for that topic. Those details are then used to redirect the user to the page which will render the
+flashcards for that topic.
 */
+export async function fetchFlashcardsByTopicDescriptor(topicTitle: string) {
+
+  //validates topicTitle string (see TopicTitleSchema defined above)
+  const validatedData = TopicTitleSchema.safeParse({
+    topic_title: topicTitle
+  })
+
+  //returns error if validation fails, esp if it fails regex because of containing special characters other than periods
+  if (!validatedData.success) {
+    //logs error to server console
+    console.error('BAD ACTOR ALERT! Topic-title validation failure with error', validatedData.error.flatten().fieldErrors.topic_title, 'suggests someone has passed a topic-title containing special characters other than periods.')
+    //returns vague message to user
+    return {
+      message: 'Oh dear, something went wrong.',
+    };
+  }
+
+  //extracts validated topicTitle
+  const validatedTopicTitle = validatedData.data?.topic_title;
+  
+  //defines database query and argument
+  const initialQuery = "SELECT id, examboards_id FROM topics WHERE $1 LIKE '%' || LOWER(topic_code) || '%' AND $1 LIKE '%' || LOWER(topic_description) || '%';"
+  const initialArgument = [validatedTopicTitle];
+
+  //defines an empty object, to which database values can be added, so that the values can be used
+  //below the try / catch statement
+  let idAndExamboard = {id: "", examboard: ""}
+
+  try {
+    
+    //calls database
+    const idAndExamboardData = await sql.query(initialQuery, initialArgument);
+
+    //returns error message if no data found
+    if (idAndExamboardData.rows.length === 0){
+      //logs message to server console, to record any broken topic titles
+      console.error(`Topic-title '${validatedTopicTitle}' did not return any values from the database`)
+      //returns message to user
+      return {
+        message: "Oh dear, there does not seem to be any data available for that request.",
+      };
+    }
+    
+    //passes database values to object defined above try/ catch statement
+    idAndExamboard = {id: idAndExamboardData.rows[0].id, examboard: idAndExamboardData.rows[0].examboards_id}
+
+  } catch (error: unknown) {
+    //this is a TypeScript thing, since error is unknown, it has to be checked that the error is
+    //an error object, in which case the message value can be accessed
+    if (error instanceof Error){
+      console.error('Database Error:', error.message);
+      throw new Error("Something went wrong.");
+    } else {
+      console.error('Database Error', error);
+      throw new Error("Something went wrong.")
+    }
+    
+  }
+
+  //redirects user to the requested set of flashcards
+  redirect(`/flashcards/${idAndExamboard.examboard}/topic/${idAndExamboard.id}/set`);
+
+}
