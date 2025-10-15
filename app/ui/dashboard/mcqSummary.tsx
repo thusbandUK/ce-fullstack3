@@ -9,7 +9,7 @@ import DOMPurify from "isomorphic-dompurify";
 import McqMarkScheme from './mcqMarkScheme';
 import NextFlashcardMenu from './nextFlashcardMenu';
 import Link from 'next/link';
-
+import { topic } from '@/app/lib/definitions';
 /*
 This is the updated draft, which was developed in mcqSummaryMock
 Note issues: flashcard.id is assigned as a string in the FlashcardData type, but a number in the database,
@@ -21,12 +21,20 @@ const McqSummaryMock = (
     {
         summary,
         allFlashcardsData,
-        wrongFirstTime
+        wrongFirstTime,
+        repeatSet,
+        referredViaIndividual,
+        topics,
+        examboards
     }: 
     {
         summary: string,
         allFlashcardsData: FlashcardData[],
-        wrongFirstTime: number[]
+        wrongFirstTime: number[],
+        repeatSet: () => void,
+        referredViaIndividual: boolean,
+        topics: topic,
+        examboards: string[]
     }
 ) => {
 
@@ -125,7 +133,12 @@ allFlashcardsData.map((x) => {
                   </div>
                 ))}
 
-                <NextFlashcardMenu />
+                <NextFlashcardMenu 
+                  repeatSet={repeatSet}
+                  referredViaIndividual={referredViaIndividual}
+                  topics={topics}
+                  examboards={examboards}
+                />
             
         </div>
     )
