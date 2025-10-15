@@ -316,6 +316,41 @@ const handleSubmitChecklist = () => {
     return askWrittenResponseQuestion();
 }
 
+const repeatSet = () => {
+  //notice here the number is the position in the array of the flashcardData object for a given question
+  setFlashcard(-1);
+  //for written response
+  setWrittenFlashcard(-1);    
+  //this stores the feedback response for multiple choice questions
+  setMultipleChoiceResponse("");
+  //this stores true / false on whether or not to render menu for multiple choice or written response
+  setShowMenu(true);
+  //this summarises performance after all written flashcards in a set have been answered and individually marked
+  setWrittenSummary("");
+  //this stores the question numbers of correctly answered multiple choice questions
+  setCorrectlyAnsweredQuestions([]);
+  //this stores the question numbers of questions answered with a written response
+  setAnsweredWrittenQuestions([]);
+  //this counts the number of attempts required by the user to answer every multiple choice question correctly
+  setCount(1);
+  //this stores the three most recently attempted questions that the user got wrong (see queueQuestion function below)
+  setRecentQuestions([]);
+  //this stores the time (in milliseconds) at which the user starts
+  setStartTime(0);
+  //this stores the question numbers of all the questions loaded up from the data source
+  setCompleteSet([]);
+  //this stores the stage for the written response. It is toggled between "response", when user enters response
+  //and "feedback", when user checks off their correct answers
+  setWrittenStage("response");
+  //state management for written responses and checklist of points made (assessment data)
+  setResponseAssessment([]);
+    //records multiple choice question numbers for any questions user got wrong at least once
+  setWrongFirstTime([])
+  //stores feedback for performance with multiple choice questions
+  setMcqSummary("");
+  return;
+}
+
 return (
   
     <div className="h-full">
@@ -395,6 +430,10 @@ return (
                  summary={mcqSummary}
                  allFlashcardsData={allFlashcardsData}
                  wrongFirstTime={wrongFirstTime}
+                 repeatSet={repeatSet}
+                 referredViaIndividual={forceMCQ}
+                 topics={allFlashcardsData[0].topic}
+                 examboards={allFlashcardsData[0].examboards}
                >
                </McqSummary>
                :
