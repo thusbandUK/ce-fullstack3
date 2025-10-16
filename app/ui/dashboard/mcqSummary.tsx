@@ -25,7 +25,8 @@ const McqSummaryMock = (
         repeatSet,
         referredViaIndividual,
         topics,
-        examboards
+        examboards,
+        loggedIn
     }: 
     {
         summary: string,
@@ -34,7 +35,8 @@ const McqSummaryMock = (
         repeatSet: () => void,
         referredViaIndividual: boolean,
         topics: topic,
-        examboards: string[]
+        examboards: string[],
+        loggedIn: boolean
     }
 ) => {
 
@@ -138,6 +140,7 @@ allFlashcardsData.map((x) => {
                   referredViaIndividual={referredViaIndividual}
                   topics={topics}
                   examboards={examboards}
+                  loggedIn={loggedIn}
                 />
             
         </div>

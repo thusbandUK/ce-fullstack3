@@ -15,7 +15,7 @@ import McqSummary from './mcqSummary';
 //defines context for written responses to flashcards
 export const ResponseAssessmentContext = createContext<assessedResponse[]>([]);
 
-export default function FlashcardPresentation({allFlashcardsData, forceMCQ}: {allFlashcardsData: FlashcardData[], forceMCQ: boolean}) {
+export default function FlashcardPresentation({allFlashcardsData, forceMCQ, loggedIn}: {allFlashcardsData: FlashcardData[], forceMCQ: boolean, loggedIn: boolean}) {
 
     //below two variables assign the number of the question...
     //for MCQ
@@ -434,6 +434,7 @@ return (
                  referredViaIndividual={forceMCQ}
                  topics={allFlashcardsData[0].topic}
                  examboards={allFlashcardsData[0].examboards}
+                 loggedIn={loggedIn}
                >
                </McqSummary>
                :

@@ -23,6 +23,7 @@ return (
         <FlashcardPresentation
           allFlashcardsData={allFlashcardsData}
           forceMCQ={false}
+          loggedIn={ session ? true : false}
         />
         }       
     </div>

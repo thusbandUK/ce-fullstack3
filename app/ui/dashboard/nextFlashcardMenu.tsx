@@ -49,13 +49,15 @@ export default function NextFlashcardMenu(
         repeatSet,
         referredViaIndividual,
         topics,
-        examboards
+        examboards,
+        loggedIn
     }:
     {
         repeatSet: () => void,
         referredViaIndividual: boolean,
         topics: topic,
-        examboards: string[]
+        examboards: string[],
+        loggedIn: boolean
     }
 ){
 
@@ -67,7 +69,7 @@ export default function NextFlashcardMenu(
 
     const findTopic = async ({topic}: {topic: string}) => {
         try {
-            const response = await fetchFlashcardsByTopicDescriptor(topic.replace(/^Topic:\s*/, ""))
+            const response = await fetchFlashcardsByTopicDescriptor(topic.replace(/^Topic:\s*/, ""), loggedIn)
             if (response){
               if (response.message){
                 setError(response.message);
@@ -136,7 +138,7 @@ export default function NextFlashcardMenu(
                       heading={x}
                       content={`All available topics`}
                       arrowCommand={'SELECT'}
-                      dbCall={findExamboard}
+                      dbCall={findExamboard}                      
                     >                    
                     </MenuItemRedirect>
                 ))}

@@ -1,9 +1,12 @@
 import FlashcardPresentation from "@/app/ui/dashboard/flashcards";
 import { fetchIndividualFlashcardByCode } from "@/app/lib/data";
+import { auth } from "@/auth";
 
     export default async function Page({ params }: { params: { flashcard_code: string } }) {    
 
     const allFlashcardsData = await fetchIndividualFlashcardByCode(params.flashcard_code);
+
+    const session: any = await auth();
 
     /*
     So, I would like this to go straight into the multiple choice question, one option for which
@@ -30,6 +33,7 @@ return (
         <FlashcardPresentation
           allFlashcardsData={allFlashcardsData}
           forceMCQ={true}
+          loggedIn={ session ? true : false}
         />
         }       
     </div> 

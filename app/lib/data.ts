@@ -21,7 +21,8 @@ const TopicSchema = z.object({
 
 //checks that TopicTitle string contains no special characters other than periods
 const TopicTitleSchema = z.object({
-  topic_title: z.string({invalid_type_error: "Topic title should not contain any special characters other than period",}).regex(/^[a-zA-Z0-9. ]+$/).toLowerCase()
+  topic_title: z.string({invalid_type_error: "Topic title should not contain any special characters other than period",}).regex(/^[a-zA-Z0-9. ]+$/).toLowerCase(),
+  logged_in: z.boolean()
 })
 
 //checks that TopicTitle string contains no special characters other than periods
@@ -271,11 +272,12 @@ no special characters, eg: ;<> etc, then searches the database to return the top
 for that topic. Those details are then used to redirect the user to the page which will render the
 flashcards for that topic.
 */
-export async function fetchFlashcardsByTopicDescriptor(topicTitle: string) {
+export async function fetchFlashcardsByTopicDescriptor(topicTitle: string, loggedIn: boolean) {
 
   //validates topicTitle string (see TopicTitleSchema defined above)
   const validatedData = TopicTitleSchema.safeParse({
-    topic_title: topicTitle
+    topic_title: topicTitle,
+    logged_in: loggedIn
   })
 
   //returns error if validation fails, esp if it fails regex because of containing special characters other than periods
@@ -289,7 +291,10 @@ export async function fetchFlashcardsByTopicDescriptor(topicTitle: string) {
   }
 
   //extracts validated topicTitle
-  const validatedTopicTitle = validatedData.data?.topic_title;
+  //const validatedTopicTitle = validatedData.data?.topic_title;
+  //const validatedLoggedIn = validatedData.data?.logged_in;
+
+  const { topic_title: validatedTopicTitle, logged_in: validatedLoggedIn } = validatedData.data
   
   //defines database query and argument
   const initialQuery = "SELECT id, examboards_id, complementary FROM topics WHERE $1 LIKE '%' || LOWER(topic_code) || '%' AND $1 LIKE '%' || LOWER(topic_description) || '%';"
@@ -317,7 +322,9 @@ export async function fetchFlashcardsByTopicDescriptor(topicTitle: string) {
     //passes database values to object defined above try/ catch statement
     idAndExamboard = {id: idAndExamboardData.rows[0].id, examboard: idAndExamboardData.rows[0].examboards_id}
 
-    if (idAndExamboardData.rows[0].complementary === false){
+    //if the topic is not complementary and the user is logged in, a link is returned, which will
+    //bring up a dialogue modal, informing the user they will need to sign in to access the content
+    if ((idAndExamboardData.rows[0].complementary) === false && (validatedLoggedIn === false)){
       return {
         callback: `/account/login?location=/flashcards/${idAndExamboard.examboard}/topic/${idAndExamboard.id}/set`
       }

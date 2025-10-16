@@ -2,8 +2,11 @@ import { fetchRandomSetOfFlashcards } from "@/app/lib/data";
 import FlashcardPresentation from "@/app/ui/dashboard/flashcards";
 import { CardSkeleton } from "@/app/ui/dashboard/skeletons"; 
 import { Suspense } from 'react';
+import { auth } from "@/auth";
 
 export default async function Page({ params }: { params: { examboard_id: string } }) {    
+
+    const session: any = await auth();
 
     const allFlashcardsData = await fetchRandomSetOfFlashcards(params.examboard_id) 
 //
@@ -16,6 +19,7 @@ return (
         <FlashcardPresentation
           allFlashcardsData={allFlashcardsData}
           forceMCQ={false}
+          loggedIn={ session ? true : false}
         />
         </Suspense>
         }

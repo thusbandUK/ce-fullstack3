@@ -11,13 +11,13 @@ export default function MenuItemRedirect(
     heading, 
     content,
     dbCall,
-    arrowCommand
+    arrowCommand,
   }: {
     heading: string, 
     content: string,
     //dbCall: ((examboard: string) => void) | (({topic}: {topic: string}) => void)   
     dbCall: ({examboard, topic}: {examboard: string, topic: string}) => void 
-    arrowCommand: string | null
+    arrowCommand: string | null,
   }){
 
     const modalContent = null;
