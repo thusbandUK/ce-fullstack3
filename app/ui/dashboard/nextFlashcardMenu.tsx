@@ -10,6 +10,7 @@ import { fetchFlashcardsByTopicDescriptor } from "@/app/lib/data";
 import { redirect } from "next/navigation";
 import { useState } from "react";
 import { fetchTopicsByExamboardTitle } from "@/app/lib/data";
+import Modal from "./modal";
 //import { auth } from "@/auth";
 /*
 this will be passed topics / examboards / referredViaIndividual
@@ -59,6 +60,8 @@ export default function NextFlashcardMenu(
 ){
 
     const [ error, setError] = useState<string>("");
+    const [ showModal, setShowModal ] = useState<boolean>(false);
+    const [ callback, setCallback ] = useState<string>("")
 
     const params = useParams<{examboard_id: string}>()
 
@@ -68,6 +71,11 @@ export default function NextFlashcardMenu(
             if (response){
               if (response.message){
                 setError(response.message);
+              } else if (response.callback){
+                console.log('callback')
+                console.log(response.callback)
+                setShowModal(true);
+                setCallback(response.callback)
               }
             }
             return
@@ -93,6 +101,15 @@ export default function NextFlashcardMenu(
                 return setError(error.message)
             }
             return setError("Something went wrong!")
+        }
+    }
+
+    const modalContent = {
+        heading: "Sign in!",
+        content: "You must be signed in to access this content",
+        link: {
+            url: callback,
+            text: "Sign in or sign up"
         }
     }
 
@@ -131,7 +148,37 @@ export default function NextFlashcardMenu(
                 </div>
 
             }
-            
+            <label htmlFor={`my_modal_${34}`} className="cursor-pointer">Open modal</label>
+            <Modal 
+                  modalContent={modalContent}
+                  identifier={34}
+                  remoteCheck={true}
+                  isChecked={showModal}
+                  toggleModal={() => setShowModal(!showModal)}
+                />
         </div>
     )
 }
+
+/*
+{
+                showModal ? 
+                <Modal 
+                  modalContent={modalContent}
+                  identifier={34}
+                />
+                :
+                null
+            }
+
+(alias) type ModalContent = {
+    heading: string;
+    content: string;
+    link: null | {
+        url: string;
+        text: string;
+    };
+}
+import ModalContent
+
+*/

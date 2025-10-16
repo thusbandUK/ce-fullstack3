@@ -68,6 +68,9 @@ export default function MenuItem(
               <Modal
                 identifier={identifier}
                 modalContent={modalContent}
+                remoteCheck={false}
+                isChecked={false}
+                toggleModal={() => {}}
               ></Modal>              
             </>
             }

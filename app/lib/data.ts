@@ -292,7 +292,7 @@ export async function fetchFlashcardsByTopicDescriptor(topicTitle: string) {
   const validatedTopicTitle = validatedData.data?.topic_title;
   
   //defines database query and argument
-  const initialQuery = "SELECT id, examboards_id FROM topics WHERE $1 LIKE '%' || LOWER(topic_code) || '%' AND $1 LIKE '%' || LOWER(topic_description) || '%';"
+  const initialQuery = "SELECT id, examboards_id, complementary FROM topics WHERE $1 LIKE '%' || LOWER(topic_code) || '%' AND $1 LIKE '%' || LOWER(topic_description) || '%';"
   const initialArgument = [validatedTopicTitle];
 
   //defines an empty object, to which database values can be added, so that the values can be used
@@ -317,6 +317,12 @@ export async function fetchFlashcardsByTopicDescriptor(topicTitle: string) {
     //passes database values to object defined above try/ catch statement
     idAndExamboard = {id: idAndExamboardData.rows[0].id, examboard: idAndExamboardData.rows[0].examboards_id}
 
+    if (idAndExamboardData.rows[0].complementary === false){
+      return {
+        callback: `/account/login?location=/flashcards/${idAndExamboard.examboard}/topic/${idAndExamboard.id}/set`
+      }
+    }
+    
   } catch (error: unknown) {
     //this is a TypeScript thing, since error is unknown, it has to be checked that the error is
     //an error object, in which case the message value can be accessed
