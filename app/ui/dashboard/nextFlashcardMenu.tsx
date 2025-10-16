@@ -1,48 +1,51 @@
 "use client"
 
-import Link from "next/link";
-import { useParams } from 'next/navigation'
+import { useParams } from 'next/navigation';
 import { topic } from "@/app/lib/definitions";
-//import MenuItemButton from "./menuItemButton";
 import MenuItem from "./menuItem";
+import MenuItemButton from "./menuItemButton";
 import MenuItemRedirect from "./menuItemRedirect";
 import { fetchFlashcardsByTopicDescriptor } from "@/app/lib/data";
-import { redirect } from "next/navigation";
 import { useState } from "react";
 import { fetchTopicsByExamboardTitle } from "@/app/lib/data";
 import Modal from "./modal";
-//import { auth } from "@/auth";
+
 /*
-this will be passed topics / examboards / referredViaIndividual
+This module renders a menu of options for users who have just completed a set of flashcards
+
+The component is passed:
+
+        repeatSet - a function that resets state in FlashcardPresentation so question set can be repeated
+        referredViaIndividual - did the user do a single flashcard, using social media link
+        topics - the topic(s) associated with the question (set)(an object of form {[examboard]: [topic title]})
+        examboards - the examboards associated with the question (set)(array of form ["examboard1", ...])
+        loggedIn - a boolean passed down from the routes which call FlashcardsPresentation, true if logged in
 
 
-referredViaIndividual OR JUST JUST FORCEMCQ BOOLEAN
-topics / examboards
-topics, examboards string | null
 
-Okay, repeat set now just resets all of the state values in FlashcardPresentation and 
-they loop through the whole thing again
 
-Next: examboard, that value should be sent when Flashcard renders, infaaact, if it's a number, that
-just goes straight into the link, if it's a string then that signals it came via individual, so the 
-referredViaIndividual boolean is unnecessary, so individuals only returntopics / examboards, but can't
-we just harvest that from params? (or is that not a use client t'ing)
+Options
 
-if (referredViaIndividual){
-    render 
-    1) other questions from this topic via [EXAMBAORD]
-    2) other questions from this topic via [OTHER EXAMBOARD]
-    ...
-} else {
-    render
-    repeat this same topic
-    choose another topic from [EXAMBOARD BUT WE ALREADY KNOW WHICH, ONLY, DO WE?]
-}
+If they were referred from an individual flashcard, their options are:
 
+1) do the other questions in the set for any examboards which feature that question
+    (calls fetchFlashcardsByTopicDescriptor, passing the title of the topic to the function, which
+        redirects the user to that topic, via a modal warning them they will need to sign up for
+        non-complementary topics
+    )
+2) choose other topics from any available examboards
+    (calls fetchTopicsByExamboardTitle, similar to option 1, but just takes them to the available topics
+        for that exam board
+    )
+
+If they appeared from any other route, it's all must more straight forward, their options are:
+
+1) repeat the topic (just resets state in parent FlashcardsPresentation component and they start again)
+2) choose other topics from the same examboard, the id for which is extracted via params
 
 */
 
-//{ params }: { params: { examboard_id: string } }
+
 
 export default function NextFlashcardMenu(
     {
@@ -74,8 +77,6 @@ export default function NextFlashcardMenu(
               if (response.message){
                 setError(response.message);
               } else if (response.callback){
-                console.log('callback')
-                console.log(response.callback)
                 setShowModal(true);
                 setCallback(response.callback)
               }
@@ -145,42 +146,34 @@ export default function NextFlashcardMenu(
                 </div>
                 :
                 <div>
-                  <button onClick={repeatSet}>Click to repeat set</button>
-                  <Link href={`/flashcards/${params.examboard_id}/topic`}>Choose another topic</Link>
+                  <MenuItemButton 
+                    heading={"Repeat"}
+                    content={"Click to repeat the same set. If you did the multiple choice questions, you could try writing your answers this time."}
+                    signalClick={repeatSet}
+                    arrowCommand={"SELECT"}
+                  />
+                  <div className="border-2 border-black rounded-lg p-5">
+                  <MenuItem
+                    heading={"New topic"}
+                    content={"Choose a different topic"}
+                    link={`/flashcards/${params.examboard_id}/topic`}
+                    modalContent={null}
+                    logInterest={null}
+                    identifier={null}
+                    arrowCommand={"SELECT"}                  
+                  />
+                  </div>
                 </div>
 
             }
-            <label htmlFor={`my_modal_${34}`} className="cursor-pointer">Open modal</label>
+            <label htmlFor={`my_modal_${34}`} className="cursor-pointer"></label>
             <Modal 
-                  modalContent={modalContent}
-                  identifier={34}
-                  remoteCheck={true}
-                  isChecked={showModal}
-                  toggleModal={() => setShowModal(!showModal)}
-                />
+              modalContent={modalContent}
+              identifier={34}
+              remoteCheck={true}
+              isChecked={showModal}
+              toggleModal={() => setShowModal(!showModal)}
+            />
         </div>
     )
 }
-
-/*
-{
-                showModal ? 
-                <Modal 
-                  modalContent={modalContent}
-                  identifier={34}
-                />
-                :
-                null
-            }
-
-(alias) type ModalContent = {
-    heading: string;
-    content: string;
-    link: null | {
-        url: string;
-        text: string;
-    };
-}
-import ModalContent
-
-*/

@@ -446,7 +446,12 @@ return (
             <ResponseAssessmentContext.Provider value={responseAssessment}>
               <WrittenSummary               
                 summary={writtenSummary}
-                allFlashcardsData={allFlashcardsData}                
+                allFlashcardsData={allFlashcardsData}
+                repeatSet={repeatSet}
+                referredViaIndividual={forceMCQ}
+                topics={allFlashcardsData[0].topic}
+                examboards={allFlashcardsData[0].examboards}
+                loggedIn={loggedIn}
               />
             </ResponseAssessmentContext.Provider>
             : null}

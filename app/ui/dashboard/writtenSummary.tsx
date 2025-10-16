@@ -4,15 +4,27 @@ import { useContext } from "react";
 import { assessedResponse, FlashcardData } from '@/app/lib/definitions';
 import ChecklistFeedback from './checklistFeedback';
 import DOMPurify from "isomorphic-dompurify";
+import NextFlashcardMenu from './nextFlashcardMenu';
+import { topic } from '@/app/lib/definitions';
 
 const WrittenSummary = (
     {
         summary,
-        allFlashcardsData
+        allFlashcardsData,
+        repeatSet,
+        referredViaIndividual,
+        topics,
+        examboards,
+        loggedIn,
     }: 
     {
         summary: string,
-        allFlashcardsData: FlashcardData[]
+        allFlashcardsData: FlashcardData[],
+        repeatSet: () => void,
+        referredViaIndividual: boolean,
+        topics: topic,
+        examboards: string[],
+        loggedIn: boolean        
     }
 ) => {
     
@@ -58,6 +70,13 @@ const WrittenSummary = (
                 )
             })}
             </div>
+            <NextFlashcardMenu 
+              repeatSet={repeatSet}
+              referredViaIndividual={referredViaIndividual}
+              topics={topics}
+              examboards={examboards}
+              loggedIn={loggedIn}
+            />
         </div>
     )
 }
