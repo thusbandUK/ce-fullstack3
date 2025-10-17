@@ -109,6 +109,7 @@ const McqSummaryMock = (
                     multipleChoiceResponses={x.multiple_choice_responses}
                     correctAnswer={x.correct_answer}
                     keyNumber={Number(x.id)}
+                    referredViaIndividual={referredViaIndividual}
                   >                    
                   </McqMarkScheme>
                   </div>

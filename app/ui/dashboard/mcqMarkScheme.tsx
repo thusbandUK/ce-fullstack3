@@ -53,12 +53,14 @@ export default function McqMarkScheme(
     question,
     multipleChoiceResponses,
     correctAnswer,
-    keyNumber
+    keyNumber,
+    referredViaIndividual
   }:{
     question: string,
     multipleChoiceResponses: MCQData,
     correctAnswer: string,
     keyNumber: number,
+    referredViaIndividual: boolean
   }
 ){
 
@@ -95,7 +97,7 @@ export default function McqMarkScheme(
               
             >
               <div
-                dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(multipleChoiceResponses[correctAnswer as keyof MCQData])}}
+                dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(`${ referredViaIndividual ? `${correctAnswer}: ` : ""}${multipleChoiceResponses[correctAnswer as keyof MCQData]}`)}}
                 className={`${inconsolata.className} my-auto box-border px-1 py-1 w-full overflow-y-hidden`}                          
                 style={{fontSize: `16px`}}
               >
@@ -113,7 +115,7 @@ export default function McqMarkScheme(
                      )}
                       >
                         <div
-                          dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(multipleChoiceResponses[x as keyof MCQData])}}
+                          dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(`${ referredViaIndividual ? `${x}: ` : ""}${multipleChoiceResponses[x as keyof MCQData]}`)}}
                           className={`${inconsolata.className} my-auto box-border px-1 py-1 w-full overflow-y-hidden`}                          
                           style={{fontSize: `16px`}}
                         >
