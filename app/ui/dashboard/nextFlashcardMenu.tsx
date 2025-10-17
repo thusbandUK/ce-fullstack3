@@ -119,7 +119,9 @@ export default function NextFlashcardMenu(
 
     return (
         <div id="next-flashcard-menu" className="mt-8">
-            <h2>Try more flashcards</h2>            
+            <div className="flex flex-col items-center mt-5">
+              <h2>Try more flashcards</h2>
+            </div>
             { error ? <p className="mt-2 text-sm text-red-500">{error} Try a different option.</p> : null}
             <div  className="grid md:grid-cols-2 gap-0 mt-5">
             {
@@ -127,6 +129,7 @@ export default function NextFlashcardMenu(
                 
                 <>
                 {examboards.map((x) => (
+                    <div key={x}>
                     <MenuItemRedirect
                       heading={`${topics[x as keyof topic]}`}
                       content={`Other flashcards from ${x} topic: ${topics[x as keyof topic]}`}
@@ -134,9 +137,11 @@ export default function NextFlashcardMenu(
                       dbCall={findTopic}
                     >                    
                     </MenuItemRedirect>
+                    </div>
                 ))}
                 
                 {examboards.map((x) => (
+                    <div key={x}>
                     <MenuItemRedirect
                       heading={x}
                       content={`All available topics from ${x}`}
@@ -144,6 +149,7 @@ export default function NextFlashcardMenu(
                       dbCall={findExamboard}                      
                     >                    
                     </MenuItemRedirect>
+                    </div>
                 ))}
                 </>
                 :

@@ -84,7 +84,7 @@ export default function McqMarkScheme(
           ></h3>
         </div>
         <div className="grid md:grid-cols-2 gap-0 mt-5">
-        {
+        
             <div 
               className={clsx("border-2 flex min-h-[15vh] flex-col items-end border-black rounded-lg px-5 py-1",
                {
@@ -94,6 +94,7 @@ export default function McqMarkScheme(
                  'bg-elephant-pink': keyNumber % 4 === 3
               }
               )}
+              key={correctAnswer}
               
             >
               <div
@@ -103,10 +104,10 @@ export default function McqMarkScheme(
               >
               </div>  
             </div>
-        }
+        
         {
             lettersOfResponses.filter((x) => x !== correctAnswer).map((x) => (                    
-                    <>
+                    <div key={x}>
                       <div className={clsx('border-2 flex min-h-[15vh] flex-col items-end border-black rounded-lg px-5 py-1',
                         {
                             'variable-background': x === correctAnswer,
@@ -121,7 +122,7 @@ export default function McqMarkScheme(
                         >
                         </div>                        
                       </div>
-                    </>
+                    </div>
                 
             ))
         }

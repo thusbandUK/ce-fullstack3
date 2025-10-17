@@ -25,7 +25,7 @@ export default function TextEnlargeContainer (){
     if (!pathname.includes("set")){
       showButton(false)
     }    
-  }, [pathname])
+  }, [pathname, showButton])
 
     return (
         <div>

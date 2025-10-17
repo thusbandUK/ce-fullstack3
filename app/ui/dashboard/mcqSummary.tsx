@@ -142,6 +142,7 @@ const McqSummaryMock = (
                 multipleChoiceResponses={questionExtractor(x).multiple_choice_responses}
                 correctAnswer={questionExtractor(x).correct_answer}
                 keyNumber={Number(x)}
+                referredViaIndividual={referredViaIndividual}
               >                    
               </McqMarkScheme>
               </div>

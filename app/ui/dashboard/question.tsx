@@ -1,9 +1,6 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { FlashcardData, MCQData, HTMLElementEvent, customMouseEventHandler } from '@/app/lib/definitions';
+import React, { useEffect, useState } from 'react';
 import DOMPurify from "isomorphic-dompurify";
-import { shuffle } from '@/app/lib/functions';
-import clsx from 'clsx';
-import {Space_Mono, Inconsolata} from "next/font/google";
+import {Inconsolata} from "next/font/google";
 
 const inconsolata = Inconsolata({
     subsets: ['latin'],
@@ -37,7 +34,7 @@ export default function Question(
       setResizeableFontValue(resizeableFontValue - 1);
     }
   
-  })
+  }, [divRef, resizeableFontValue])
 
     return (
         <div
