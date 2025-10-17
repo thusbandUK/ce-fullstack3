@@ -7,7 +7,7 @@ export interface Slider {
     showSlider: boolean;
   };
 
-export const TextSizeButtonContext = createContext({toggleSlider: () => {console.log('finally I got some action!')}, showSlider: false});
+export const TextSizeButtonContext = createContext({toggleSlider: () => {}, showSlider: false, showButton: (value: boolean) => {}, buttonShowing: false});
 
 export default function Providers ({
     children,
@@ -16,13 +16,20 @@ export default function Providers ({
   }) {
 
     const [showSlider, setShowSlider] = useState(false);
+    const [buttonShowing, setButtonShowing] = useState(false);
 
+    //toggles the appearance of the slider, which enables resizing of text when it is showing
     const toggleSliderFunction = () => {
-        setShowSlider(!showSlider);
+      setShowSlider(!showSlider);
     }
 
+    //enables the textEnlarge button to be shown or removed
+    const showButtonFunction = (value: boolean) => {
+      setButtonShowing(value);
+    }    
+
   return (
-    <TextSizeButtonContext.Provider value={{toggleSlider: toggleSliderFunction, showSlider: showSlider}}>
+    <TextSizeButtonContext.Provider value={{toggleSlider: toggleSliderFunction, showButton: showButtonFunction, showSlider: showSlider, buttonShowing: buttonShowing}}>
       {children}
     </TextSizeButtonContext.Provider>
   );

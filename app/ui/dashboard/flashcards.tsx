@@ -54,12 +54,19 @@ export default function FlashcardPresentation({allFlashcardsData, forceMCQ, logg
     const [mcqSummary, setMcqSummary] = useState<string>("");
 
     //extracts boolean from TextSizeButtonContext
-    const { showSlider } = useContext(TextSizeButtonContext);
+    const { showSlider, showButton } = useContext(TextSizeButtonContext);
 
     //detects change in showSlider boolean to toggle text resizing slider on or off display
     useEffect(() => {
       setCanZoom(showSlider);
     }, [showSlider])
+
+    //default value of flashcard is -1 and only changes if the user selects the multiple choice format,
+    //so this is monitored. If the user selects multipleChoice, the textResize button is rendered so
+    //that uses can resize text as necessary
+    useEffect(() => {
+      flashcard === -1 ? showButton(false) : showButton(true);      
+    }, [flashcard])
 
     //this creates an array of sequential integers, one for each flashcard, and sets completeSet in state
     //(rather than using the native id values in allFlashcardsData, which are unlikely to be sequential)
