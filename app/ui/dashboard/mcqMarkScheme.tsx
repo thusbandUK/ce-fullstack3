@@ -37,12 +37,11 @@ export type FlashcardData = {
 
 */
 
-import React, { useEffect, useState, useRef } from 'react';
-import { FlashcardData, MCQData, HTMLElementEvent, customMouseEventHandler } from '@/app/lib/definitions';
+import React, { useEffect, useState } from 'react';
+import { MCQData } from '@/app/lib/definitions';
 import DOMPurify from "isomorphic-dompurify";
-import { shuffle } from '@/app/lib/functions';
 import clsx from 'clsx';
-import {Space_Mono, Inconsolata} from "next/font/google";
+import {Inconsolata} from "next/font/google";
 
 const inconsolata = Inconsolata({
     subsets: ['latin'],
@@ -93,8 +92,14 @@ export default function McqMarkScheme(
                  'bg-elephant-pink': keyNumber % 4 === 3
               }
               )}
-              dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(multipleChoiceResponses[correctAnswer as keyof MCQData])}}
+              
             >
+              <div
+                dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(multipleChoiceResponses[correctAnswer as keyof MCQData])}}
+                className={`${inconsolata.className} my-auto box-border px-1 py-1 w-full overflow-y-hidden`}                          
+                style={{fontSize: `16px`}}
+              >
+              </div>  
             </div>
         }
         {
@@ -109,7 +114,7 @@ export default function McqMarkScheme(
                       >
                         <div
                           dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(multipleChoiceResponses[x as keyof MCQData])}}
-                          className={`${inconsolata.className} my-auto box-border px-1 py-1 w-full overflow-y-hidden h-full`}                          
+                          className={`${inconsolata.className} my-auto box-border px-1 py-1 w-full overflow-y-hidden`}                          
                           style={{fontSize: `16px`}}
                         >
                         </div>                        
