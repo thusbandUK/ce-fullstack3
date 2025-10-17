@@ -12,12 +12,22 @@ const inconsolata = Inconsolata({
   })
 
 export default function MCQNoZoom(
-    {oneFlashcardData, handleQuestionClick,multipleChoiceResponse}: 
-    {oneFlashcardData: FlashcardData; handleQuestionClick: React.MouseEventHandler<HTMLDivElement>; multipleChoiceResponse: string}
+    {
+      oneFlashcardData,
+      handleQuestionClick,
+      multipleChoiceResponse,
+      referredViaIndividual
+    }: 
+    {
+      oneFlashcardData: FlashcardData;
+      handleQuestionClick: React.MouseEventHandler<HTMLDivElement>;
+      multipleChoiceResponse: string;
+      referredViaIndividual: boolean;
+    }
 ) {
 
     const {multiple_choice_responses: multipleChoiceResponses, question} = oneFlashcardData;
-    const [randomisedQuestionSet, setRandomisedQuestionSet] = useState<string[]>([]);    
+    const [questionSet, setQuestionSet] = useState<string[]>([]);    
     const [responseTextSize, setResponseTextSize] = useState<number>(48);    
 
     //this is the ref used to compare scroll height and client height for the question
@@ -51,8 +61,12 @@ export default function MCQNoZoom(
     component state changes) and without it, the buttons switch places while the feedback is displayed
     */
     useEffect(() => {
+      if (referredViaIndividual){
+        setQuestionSet(Object.keys(multipleChoiceResponses as MCQData));
+        return
+      }
         const shuffledDeck: string[] = shuffle(Object.keys(multipleChoiceResponses as MCQData));
-        setRandomisedQuestionSet(shuffledDeck);        
+        setQuestionSet(shuffledDeck);        
         return
     }, [oneFlashcardData, multipleChoiceResponses])
     
@@ -90,17 +104,17 @@ export default function MCQNoZoom(
                     </div>
                     <div className="grid md:grid-cols-2 gap-0 w-full h-68-vh md:h-56-vh">
                     
-                   {randomisedQuestionSet.map((MCQ: string) => (
+                   {questionSet.map((MCQ: string) => (
                      <div ref={pRefs[MCQ as keyof MCQData]} onClick={handleQuestionClick} tabIndex={0} role="button" key={MCQ} id={MCQ} style={{cursor:'pointer'}} className={clsx('border-2 h-17-vh md:h-28-vh flex border-black rounded-lg px-5 py-1',
                         {
-                            'bg-elephant-bright-orange': randomisedQuestionSet.indexOf(MCQ) === 0,
-                            'bg-elephant-red': randomisedQuestionSet.indexOf(MCQ) === 1,
-                            'bg-elephant-orange': randomisedQuestionSet.indexOf(MCQ) === 2,
-                            'bg-elephant-pink': randomisedQuestionSet.indexOf(MCQ) === 3
+                            'bg-elephant-bright-orange': questionSet.indexOf(MCQ) === 0,
+                            'bg-elephant-red': questionSet.indexOf(MCQ) === 1,
+                            'bg-elephant-orange': questionSet.indexOf(MCQ) === 2,
+                            'bg-elephant-pink': questionSet.indexOf(MCQ) === 3
                         }
                      )}>                      
                       <Answers
-                        response={multipleChoiceResponses[MCQ as keyof MCQData]}
+                        response={`${ referredViaIndividual ? `${MCQ}: ` : ""}${multipleChoiceResponses[MCQ as keyof MCQData]}`}
                         highest={returnHighestCharacters() === MCQ ? true : false }
                         multipleChoiceResponse={multipleChoiceResponse}
                         pRef={pRefs[MCQ as keyof MCQData]}

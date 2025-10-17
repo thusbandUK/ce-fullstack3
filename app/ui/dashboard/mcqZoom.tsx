@@ -13,18 +13,32 @@ const inconsolata = Inconsolata({
   })
 
 export default function MCQZoom(
-    {oneFlashcardData, handleQuestionClick,multipleChoiceResponse}: 
-    {oneFlashcardData: FlashcardData; handleQuestionClick: React.MouseEventHandler<HTMLButtonElement>; multipleChoiceResponse: string}
+    {
+      oneFlashcardData,
+      handleQuestionClick,
+      multipleChoiceResponse,
+      referredViaIndividual
+    }: 
+    {
+      oneFlashcardData: FlashcardData;
+      handleQuestionClick: React.MouseEventHandler<HTMLButtonElement>;
+      multipleChoiceResponse: string;
+      referredViaIndividual: boolean
+    }
 ) {
 
     const {multiple_choice_responses: multipleChoiceResponses, question} = oneFlashcardData;
-    const [randomisedQuestionSet, setRandomisedQuestionSet] = useState<string[]>([]);
+    const [questionSet, setQuestionSet] = useState<string[]>([]);
     const [fontSize, setFontSize] = useState<number>(32);
     
 
     useEffect(() => {
-        const shuffledDeck: string[] = shuffle(Object.keys(multipleChoiceResponses as MCQData));
-        setRandomisedQuestionSet(shuffledDeck);        
+      if (referredViaIndividual){
+        setQuestionSet(Object.keys(multipleChoiceResponses as MCQData));
+        return
+      }
+        const shuffledDeck: string[] = shuffle(Object.keys(multipleChoiceResponses as MCQData));        
+        setQuestionSet(shuffledDeck);        
         return
     }, [oneFlashcardData, multipleChoiceResponses])
     
@@ -70,17 +84,17 @@ export default function MCQZoom(
                     </div>
                     <div className="grid md:grid-cols-2 gap-0 w-full">
                     
-                   {randomisedQuestionSet.map((MCQ: string) => (
+                   {questionSet.map((MCQ: string) => (
                      <div key={MCQ} style={{cursor:'pointer'}} className={clsx('border-2 flex flex-col items-end border-black rounded-lg px-5 py-1',
                         {
-                            'bg-elephant-bright-orange': randomisedQuestionSet.indexOf(MCQ) === 0,
-                            'bg-elephant-red': randomisedQuestionSet.indexOf(MCQ) === 1,
-                            'bg-elephant-orange': randomisedQuestionSet.indexOf(MCQ) === 2,
-                            'bg-elephant-pink': randomisedQuestionSet.indexOf(MCQ) === 3
+                            'bg-elephant-bright-orange': questionSet.indexOf(MCQ) === 0,
+                            'bg-elephant-red': questionSet.indexOf(MCQ) === 1,
+                            'bg-elephant-orange': questionSet.indexOf(MCQ) === 2,
+                            'bg-elephant-pink': questionSet.indexOf(MCQ) === 3
                         }
                      )}>
                       <p
-                        dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(multipleChoiceResponses[MCQ as keyof MCQData])}}
+                        dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(`${ referredViaIndividual ? `${MCQ}: ` : ""}${multipleChoiceResponses[MCQ as keyof MCQData]}`)}}
                         className={clsx(`${inconsolata.className} my-auto box-border px-1 py-1 w-full`,
                           {
                             'break-normal': fontSize <= 60,
@@ -89,7 +103,7 @@ export default function MCQZoom(
                         )}
                         aria-live={multipleChoiceResponse ? "off" : "polite"}
                         style={{fontSize: `${fontSize}px`}}
-                        aria-label={`possible answer ${randomisedQuestionSet.indexOf(MCQ) + 1}`}
+                        aria-label={`possible answer ${questionSet.indexOf(MCQ) + 1}`}
                       >
                       </p>
                       <button

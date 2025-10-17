@@ -390,6 +390,7 @@ return (
                 oneFlashcardData={allFlashcardsData[flashcard]}
                 handleQuestionClick={handleQuestionClick}
                 multipleChoiceResponse={multipleChoiceResponse}
+                referredViaIndividual={forceMCQ}
               />)
 
               :
@@ -398,6 +399,7 @@ return (
                 oneFlashcardData={allFlashcardsData[flashcard]}
                 handleQuestionClick={handleQuestionClick}
                 multipleChoiceResponse={multipleChoiceResponse}
+                referredViaIndividual={forceMCQ}
               />)
             }
 
