@@ -119,8 +119,8 @@ export default function NextFlashcardMenu(
 
     return (
         <div id="next-flashcard-menu" className="mt-8">
-            <h2>Try more flashcards</h2>
-            { error ? <p>Yikes, you got an error. {error}</p> : null}
+            <h2>Try more flashcards</h2>            
+            { error ? <p className="mt-2 text-sm text-red-500">{error} Try a different option.</p> : null}
             <div  className="grid md:grid-cols-2 gap-0 mt-5">
             {
                 referredViaIndividual ?
