@@ -1,10 +1,7 @@
 "use client"
 
 import React from 'react';
-import { ResponseAssessmentContext } from './flashcards';
-import { useContext } from "react";
-import { assessedResponse, FlashcardData } from '@/app/lib/definitions';
-import ChecklistFeedback from './checklistFeedback';
+import { FlashcardData } from '@/app/lib/definitions';
 import DOMPurify from "isomorphic-dompurify";
 import McqMarkScheme from './mcqMarkScheme';
 import NextFlashcardMenu from './nextFlashcardMenu';
@@ -44,41 +41,40 @@ const McqSummaryMock = (
     function that takes all the flashcard data and split it between wrongFirstTime and a new
     array, rightFirstTime
     
-    */
-
-    console.log('mcqSummaryTriggering')
+    */    
 
     const rightFirstTime = allFlashcardsData.filter((x) => {
         return !wrongFirstTime.includes(x.id)
     })
 
-    const mappedForId = rightFirstTime.map((x) => x.id)
+    const feedbackMessage = () => {
+      const scroll = `Scroll down to review your answer${referredViaIndividual ? "" : "s"}. Correct answer is shown in colour.`
+      if (referredViaIndividual){
+        
+        if (rightFirstTime.length === 0){
+          return `Wrong the first time but right in the end. This topic needs more work! ${summary} ${scroll}`
+        } else if (wrongFirstTime.length === 0) {
+          return `Right first time, great job! ${summary} ${scroll}`        
+        } else {
+          return `Not bad! ${summary} ${scroll}`
+        }
+      }
+      
+      if (rightFirstTime.length === 0){
+        return `You got there in the end, but all answers were wrong the first time. This topic needs more work! ${summary} ${scroll}`
+      } else if (wrongFirstTime.length === 0) {
+        return `Every question right first time, great job! ${summary} ${scroll}`        
+      } else {
+        return `Not bad! ${summary} ${scroll}`
+      }      
+    }
 
-    console.log('wrongFirstTime')
-    console.log(wrongFirstTime)
-    console.log('rightFirstTime')
-    console.log(mappedForId)
-    const one = 1;
-const flashcardWithIdOne = allFlashcardsData.filter((x) => {return x.id === 1})
-
-console.log(flashcardWithIdOne[0])
-
-allFlashcardsData.map((x) => {
-  console.log(x.id);
-})
-
-    const questionExtractor = (indexAsNumber: number) => {
-      console.log(indexAsNumber);
+    const questionExtractor = (indexAsNumber: number) => {      
       const extractedQuestionData = allFlashcardsData.filter((x) => {
         return x.id === indexAsNumber;
-      })
-      console.log(extractedQuestionData[0])
+      })      
       return extractedQuestionData[0];
     }
-    
-    //const responseAssessment = useContext(ResponseAssessmentContext);
-
-    let key = 1;
 
     return (
         <div className="w-full lg:w-4/5 m-auto py-2 lg:mt-10">
@@ -87,11 +83,18 @@ allFlashcardsData.map((x) => {
           </div>
             <div className="bg-elephant-violet text-white w-full flex flex-col border-2 border-black rounded-lg mt-5 p-5 py-10">
               <p
-                dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(summary)}}
+                dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(feedbackMessage())}}
                 className="text-base"
               ></p>
-              <p className="text-base">Scroll down to see which flashcards you got right first time and which you got wrong at least once. Correct answer is shown in colour. Or skip straight to checking out more <Link href="#next-flashcard-menu">flashcards</Link>.</p>
+              <p className="text-base">Or skip straight to checking out more <Link href="#next-flashcard-menu" className="font-bold hover:underline active:text-black">flashcards</Link>.</p>
             </div>
+            {
+              rightFirstTime.length === 0 ?
+
+              null
+
+            :
+            <>
             <div className="flex flex-col items-center mt-5">
               <span style={{fontSize: "50px"}}>&#129395;</span>
               <h2>Right first time  </h2>
@@ -114,26 +117,43 @@ allFlashcardsData.map((x) => {
 
               }
 
+              </>
+            }
 
-            
 
+            {
+              wrongFirstTime.length === 0 ?
+
+              null
+
+            :
+
+            <>
             <div className="flex flex-col items-center mt-5">
               <span style={{fontSize: "50px"}}>&#128556;</span>
               <h2>Wrong at least once </h2>
             </div>
             
+            {wrongFirstTime.map((x) => (
+              <div key={x}>
+              <McqMarkScheme
+                question={questionExtractor(x).question}
+                multipleChoiceResponses={questionExtractor(x).multiple_choice_responses}
+                correctAnswer={questionExtractor(x).correct_answer}
+                keyNumber={Number(x)}
+              >                    
+              </McqMarkScheme>
+              </div>
+            ))}
+            </>
+
+            }
+            
+
+            
+            
               
-                {wrongFirstTime.map((x) => (
-                  <div key={x}>
-                  <McqMarkScheme
-                    question={questionExtractor(x).question}
-                    multipleChoiceResponses={questionExtractor(x).multiple_choice_responses}
-                    correctAnswer={questionExtractor(x).correct_answer}
-                    keyNumber={Number(x)}
-                  >                    
-                  </McqMarkScheme>
-                  </div>
-                ))}
+                
 
                 <NextFlashcardMenu 
                   repeatSet={repeatSet}

@@ -116,7 +116,8 @@ export default function FlashcardPresentation({allFlashcardsData, forceMCQ, logg
       if (remainingQuestions.length === 0){
           const finishingTime = Date.now();
           const timeElapsed = (finishingTime - startTime)/1000;
-          setMcqSummary(`Great job! ${completeSet.length} questions answered correctly in ${count} attempts and in ${timeElapsed} seconds. Woop!`)
+          const plural = forceMCQ ? "" : "s";
+          setMcqSummary(`${completeSet.length} question${plural} answered correctly in ${count} attempt${count > 1 ? "s" : ""} and in ${timeElapsed} seconds.`)
           setFlashcard(-1);
           return;          
       }
