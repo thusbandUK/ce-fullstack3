@@ -16,7 +16,7 @@ export default function MenuItemRedirect(
     heading: string, 
     content: string,
     //dbCall: ((examboard: string) => void) | (({topic}: {topic: string}) => void)   
-    dbCall: ({examboard, topic}: {examboard: string, topic: string}) => void 
+    dbCall: (heading: string) => void 
     arrowCommand: string | null,
   }){
 
@@ -24,7 +24,7 @@ export default function MenuItemRedirect(
     
     const handleClick = () => {      
       
-      return dbCall({examboard: heading, topic: content});
+      return dbCall(heading);
     }
 
     return (

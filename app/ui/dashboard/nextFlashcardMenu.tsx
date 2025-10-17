@@ -43,9 +43,10 @@ If they appeared from any other route, it's all must more straight forward, thei
 1) repeat the topic (just resets state in parent FlashcardsPresentation component and they start again)
 2) choose other topics from the same examboard, the id for which is extracted via params
 
+The database call functions are both passed the headings of the respective menus (menuItemRedirect),
+in the case of fetch topics that's the topic and in the case of fetch examboards that's the examboard
+
 */
-
-
 
 export default function NextFlashcardMenu(
     {
@@ -70,14 +71,14 @@ export default function NextFlashcardMenu(
 
     const params = useParams<{examboard_id: string}>()
 
-    const findTopic = async ({topic}: {topic: string}) => {
-        try {
-            const response = await fetchFlashcardsByTopicDescriptor(topic.replace(/^Topic:\s*/, ""), loggedIn)
+    const findTopic = async (topic: string) => {
+        try {            
+            const response = await fetchFlashcardsByTopicDescriptor(topic, loggedIn)
             if (response){
               if (response.message){
                 setError(response.message);
               } else if (response.callback){
-                setShowModal(true);
+                setShowModal(true);                
                 setCallback(response.callback)
               }
             }
@@ -90,7 +91,7 @@ export default function NextFlashcardMenu(
         }
     }
 
-    const findExamboard = async ({examboard}: {examboard: string}) => {
+    const findExamboard = async (examboard: string) => {
         try {
             const response = await fetchTopicsByExamboardTitle(examboard)
             if (response){
@@ -117,35 +118,36 @@ export default function NextFlashcardMenu(
     }
 
     return (
-        <div id="next-flashcard-menu" className="mt-3">
+        <div id="next-flashcard-menu" className="mt-8">
             <h2>Try more flashcards</h2>
             { error ? <p>Yikes, you got an error. {error}</p> : null}
+            <div  className="grid md:grid-cols-2 gap-0 mt-5">
             {
                 referredViaIndividual ?
-                <div>
-                <h3>Do the rest of the topic</h3>
+                
+                <>
                 {examboards.map((x) => (
                     <MenuItemRedirect
-                      heading={x}
-                      content={`Topic: ${topics[x as keyof topic]}`}
+                      heading={`${topics[x as keyof topic]}`}
+                      content={`Other flashcards from ${x} topic: ${topics[x as keyof topic]}`}
                       arrowCommand={'SELECT'}
                       dbCall={findTopic}
                     >                    
                     </MenuItemRedirect>
                 ))}
-                <h3>Try other topics from available examboards</h3>
+                
                 {examboards.map((x) => (
                     <MenuItemRedirect
                       heading={x}
-                      content={`All available topics`}
+                      content={`All available topics from ${x}`}
                       arrowCommand={'SELECT'}
                       dbCall={findExamboard}                      
                     >                    
                     </MenuItemRedirect>
                 ))}
-                </div>
+                </>
                 :
-                <div>
+                <>
                   <MenuItemButton 
                     heading={"Repeat"}
                     content={"Click to repeat the same set. If you did the multiple choice questions, you could try writing your answers this time."}
@@ -163,9 +165,10 @@ export default function NextFlashcardMenu(
                     arrowCommand={"SELECT"}                  
                   />
                   </div>
-                </div>
+                </>
 
             }
+            </div>
             <label htmlFor={`my_modal_${34}`} className="cursor-pointer"></label>
             <Modal 
               modalContent={modalContent}
