@@ -7,8 +7,8 @@ import { TextSizeButtonContext } from '@/app/providers';
 
 /*
 The function of this container is conditionally to render the TextEnlarge button only on suitable pages,
-at current: only when mcqZoom or mcqNoZoom is rendered. The parent element (Navbar) cannot read the url or manage state,
-since it is a server component
+at current: only when mcqZoom or mcqNoZoom is rendered. The parent element (Navbar) cannot read the url 
+or manage state, since it is a server component
 */
 
 export default function TextEnlargeContainer (){
