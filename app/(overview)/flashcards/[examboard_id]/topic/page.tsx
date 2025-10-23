@@ -1,18 +1,16 @@
 "use server"
 
-import { fetchTopics } from "@/app/lib/data";
+import { fetchTopics } from '../../../../../app/lib/data'
 import { TopicData, ModalContent } from "@/app/lib/definitions";
-import MenuItem from "@/app/ui/dashboard/menuItem";
-import { auth } from "@/auth";
+import MenuItem from '../../../../../app/ui/dashboard/menuItem'
+import { auth } from '../../../../../auth';
 import { Suspense } from "react";
-import { CardSkeleton, TopicsSkeleton } from "@/app/ui/dashboard/skeletons";
-import DashboardSkeleton from "@/app/ui/dashboard/skeletons";
-
+import { CardSkeleton, TopicsSkeleton } from "../../../../../app/ui/dashboard/skeletons";
 
 export default async function Page({ params }: { params: { examboard_id: string } }) {
   
     const session: any = await auth();
-
+    
     const topics = await fetchTopics(params.examboard_id);
 
     const modalContent: ModalContent = 

@@ -3,7 +3,7 @@
 import TextEnlarge from "./textEnlarge"
 import { useEffect, useContext } from "react";
 import { usePathname } from 'next/navigation';
-import { TextSizeButtonContext } from '@/app/providers';
+import { TextSizeButtonContext } from '../../providers'
 
 /*
 The function of this container is conditionally to render the TextEnlarge button only on suitable pages,

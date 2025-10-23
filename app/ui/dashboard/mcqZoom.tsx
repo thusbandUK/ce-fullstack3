@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { FlashcardData, MCQData } from '@/app/lib/definitions';
-import { shuffle } from '@/app/lib/functions';
+import { FlashcardData, MCQData } from '../../lib/definitions';
+import { shuffle } from '../../lib/functions';
 import clsx from 'clsx';
 import {Inconsolata} from "next/font/google";
 import DOMPurify from "isomorphic-dompurify";

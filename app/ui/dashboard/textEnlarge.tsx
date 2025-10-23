@@ -1,6 +1,6 @@
 "use client";
 
-import { TextSizeButtonContext } from "@/app/providers";
+import { TextSizeButtonContext } from '../../providers';
 import { useContext } from "react";
 
 /*

@@ -1,5 +1,5 @@
 import NavLinks from "./nav-links";
-import { auth } from '@/auth';
+import { auth } from '../../../auth'
 import ChemistryElephantLogo from "./chemistryElephantLogo";
 import TextEnlargeContainer from "./textEnlargeContainer";
 

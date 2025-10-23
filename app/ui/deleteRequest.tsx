@@ -1,6 +1,6 @@
 'use client';
 
-import { Button } from '@/app/ui/button';
+import { Button } from './button'
 import { State2, initiateDelete } from '../lib/deleteAccount';
 import { useFormState } from 'react-dom';
 
