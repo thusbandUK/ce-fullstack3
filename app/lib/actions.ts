@@ -11,14 +11,14 @@ import { UserDetails } from './definitions';
 import { locationParser } from './functions';
 
 const FormSchema = z.object({
-  username: z.coerce.string({invalid_type_error: "Name must be a string",}).max(20).min(5),
+  username: z.coerce.string({invalid_type_error: "Username can only contain letters and numbers",}).regex(/^[a-zA-Z0-9]+$/, { message: "Username can only contain letters and numbers" }).max(20).min(5),
   mailTick: z.coerce.boolean(),
 });
  
 const NewUser = FormSchema;
 
 const UpdateUsernameSchema = z.object({
-  username: z.coerce.string({invalid_type_error: "Name must be a string",}).max(20).min(5),  
+  username: z.coerce.string({invalid_type_error: "Username can only contain letters and numbers",}).regex(/^[a-zA-Z0-9]+$/, { message: "Username can only contain letters and numbers" }).max(20).min(5),  
   email: z.coerce.string({invalid_type_error: "Invalid email"}).email()
 });
 
@@ -163,7 +163,7 @@ export async function updateUser(email: string, prevState: State, formData: Form
   });
     
   // If form validation fails, return errors early. Otherwise, continue.  
-  if (!validatedFields.success) {    
+  if (!validatedFields.success) {
     return {
       message: 'Username rejected. Must be between 5 and 20 letters long.',      
       errors: {        
