@@ -57,16 +57,19 @@ textarea {
   }
 }
 
+/*
+obvious really but the media query needs to be for prefers *dark*, this just sets all the problem
+elements to background white, foreground black
+
+https://tailwindcss.com/docs/dark-mode
+*/
 @media (prefers-color-scheme: dark) {
-  html.adaptive {
-    color-scheme: light;
-  }
-  body.adaptive {
-    --background: #ffffff;
-    --foreground: #171717;
-  }
+  html,body, input, :root {    
+    background-color: #ffffff;
+    color: #171717;
+  }  
 }
-/**/
+
 
 
 h1 {
