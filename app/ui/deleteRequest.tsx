@@ -1,47 +1,56 @@
 'use client';
 
-import { Button } from './button'
 import { State2, initiateDelete } from '../lib/deleteAccount';
 import { useFormState } from 'react-dom';
+import ArrowCommand from './dashboard/arrowCommand';
 
-export default function DeleteRequest({  
+export default function DeleteRequest({
   email
-}: {  
-  email: string;  
+}: {
+  email: string;
 }) {
-  
+
   const initialState: State2 = { message: null, errors: {email: []}};
   const bindEmailInitiateDelete = initiateDelete.bind(null, email);
-  const [state, formAction] = useFormState(bindEmailInitiateDelete, initialState);  
+  const [state, formAction] = useFormState(bindEmailInitiateDelete, initialState);
 
   return (
     <form action={formAction}>
-      
-      <div className="rounded-md bg-gray-50 p-4 md:p-6">
-        {/* Email */}
-        <div className="mb-4">
-          <label>
-            Email
-          </label>
-          <div className="relative">            
-            <p>{email}</p>           
-          </div>
-          <div id="error-message" aria-live="polite" aria-atomic="true">
-              {state.message &&              
-                <p className="mt-2 text-sm text-red-500" >
+      <div className="w-full flex flex-col pb-4 mx-auto grid grid-cols-6">
+        <div className="col-start-1 col-span-6 md:col-span-4 w-full border-2 border-black rounded-lg p-5">{/*COL 1 */}
+          <p>Sorry to hear you want to delete your account. Click delete and we will send you an
+            email with a link to the address below. Clicking the link will return you back to the website,
+            at which point you will click one more button to confirm that you wish to delete 
+            your account.
+          </p>
+          {/* Email - printed from props, user cannot modify*/}
+          <div className="mb-4 mt-4">
+            <label>
+              Email
+            </label>
+            <div className="relative">
+              <p>{email}</p>
+            </div>
+            <div id="error-message" aria-live="polite" aria-atomic="true">
+              {state.message &&
+                <p className="mt-2 text-sm text-red-500">
                   {state.message}
                 </p>
               }
+            </div>
           </div>
-          
-        </div>
-        
+        </div>{/*COL 1 ENDS */}
+        <div className="col-start-1 md:col-start-5 col-span-6 md:col-span-2 border-2 border-black rounded-lg flex flex-col justify-end">{/*COL 2*/}
+          <div className="m-5">
+            <button type="submit">
+              <ArrowCommand
+                borderGray={false}
+                command={"DELETE"}
+              />
+            </button>
+          </div>
+        </div>{/*COL 2 ENDS*/}
       </div>
-      <div className="mt-6 flex justify-end gap-4">
-        
-        <Button type="submit">Send email with link to delete account</Button>
-      </div>
-      
     </form>
   );
 }
