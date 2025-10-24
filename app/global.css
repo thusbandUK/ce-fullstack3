@@ -58,10 +58,10 @@ textarea {
 }
 
 @media (prefers-color-scheme: dark) {
-  html {
+  html.adaptive {
     color-scheme: light;
   }
-  body {
+  body.adaptive {
     --background: #ffffff;
     --foreground: #171717;
   }
