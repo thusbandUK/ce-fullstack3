@@ -71,7 +71,7 @@ export default async function Account({ searchParams }: { searchParams: { locati
               </div>
               {
                 Object.keys(menuContent).map((x) => (
-                  <div className="border border-black rounded-lg p-5 h-full">
+                  <div key={x} className="border border-black rounded-lg p-5 h-full">
                     <MenuItem
                       heading={menuContent[x as keyof menuContentType].heading}
                       content={menuContent[x as keyof menuContentType].content}
