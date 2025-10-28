@@ -32,18 +32,14 @@ const oneFlashcardData = {
     }
  }
 
-const handleQuestionClick = () => console.log('button clicked');
-const multipleChoiceResponse = "C"
+const multipleChoiceResponse = "right"
 const referredViaIndividual = false
-/*
-const person = {
-    greet: (name: string) => `Hello ${name}`,
-  }
-  const spy = vi.spyOn(person, 'greet').mockImplementation(() => 'mocked')
-  expect(person.greet('Alice')).toBe('mocked')
-  expect(spy.mock.calls).toEqual([['Alice']])
-*/
+
 // Mock the module
+/*
+This is a common requirement in component tests because rendering the component will call
+various functions, many of which will crash the test render, esp server calls
+*/
 vi.mock('next/font/google', () => ({
     Inconsolata: vi.fn(() => 'mocked value'),
   }));
@@ -51,8 +47,10 @@ vi.mock('next/font/google', () => ({
 
 describe('MCQZoom', async () => {
     it('renders MCQZoom', async () => {
-      const handleQuestionClick = vi.fn();
-      //const onClick = vi.fn();
+      //mocks handleQuestionClick
+      const handleQuestionClick = vi.fn((event) => {        
+        return event.target.id;
+      });
 
       render(<MCQZoom 
         oneFlashcardData={oneFlashcardData}
@@ -67,24 +65,66 @@ describe('MCQZoom', async () => {
       expect(screen.getByText(oneFlashcardData.multiple_choice_responses.C)).toBeInTheDocument();
       expect(screen.getByText(oneFlashcardData.multiple_choice_responses.D)).toBeInTheDocument();
       
-//screen.getByRole('')
-
-//screen.getByRole('button', { id: 'A' }).fill('admin')
-//expect(screen.getByRole('paragraph', { name: 'possible answer 1' })).toHaveTextContent(oneFlashcardData.multiple_choice_responses.A)
-//expect(screen.getByRole('paragraph', { name: 'possible answer 2' })).toHaveTextContent(oneFlashcardData.multiple_choice_responses.B)
-//expect(screen.getByRole('paragraph', { name: 'possible answer 3' })).toHaveTextContent(oneFlashcardData.multiple_choice_responses.C)
-//expect(screen.getByRole('paragraph', { name: 'possible answer 4' })).toHaveTextContent(oneFlashcardData.multiple_choice_responses.D)
-
-      //expect(screen.getAllByRole('button')[0]).toHaveTextContent('SELECT');
-
       screen.getAllByRole('button').forEach((x) => {
         expect(x).toHaveTextContent('SELECT');
       })
 
-    await userEvent.click(screen.getAllByRole('button')[0]);
+    await userEvent.click(screen.getAllByRole('button')[0]);    
     await userEvent.click(screen.getAllByRole('button')[1]);
     await userEvent.click(screen.getAllByRole('button')[2]);
     await userEvent.click(screen.getAllByRole('button')[3]);
+
+    expect(handleQuestionClick).toHaveReturnedWith("A");
+    expect(handleQuestionClick).toHaveReturnedWith("B");
+    expect(handleQuestionClick).toHaveReturnedWith("C");
+    expect(handleQuestionClick).toHaveReturnedWith("D");
+    expect(handleQuestionClick).not.toHaveReturnedWith("E");    
+
+    expect(handleQuestionClick).toHaveBeenCalledTimes(4);
+    });
+    
+  })
+
+  describe('MCQZoom', async () => {
+    it('renders MCQZoom in sequence A to D if referredViaIndividual is true', async () => {
+      //mocks handleQuestionClick
+      const handleQuestionClick = vi.fn((event) => {        
+        return event.target.id;
+      });
+
+      render(<MCQZoom 
+        oneFlashcardData={oneFlashcardData}
+        handleQuestionClick={handleQuestionClick}
+        multipleChoiceResponse={multipleChoiceResponse}
+        referredViaIndividual={true} 
+      />);
+      
+      expect(screen.getByText(`A: ${oneFlashcardData.multiple_choice_responses.A}`)).toBeInTheDocument();
+      expect(screen.getByText(`B: ${oneFlashcardData.multiple_choice_responses.B}`)).toBeInTheDocument();
+      expect(screen.getByText(`C: ${oneFlashcardData.multiple_choice_responses.C}`)).toBeInTheDocument();
+      expect(screen.getByText(`D: ${oneFlashcardData.multiple_choice_responses.D}`)).toBeInTheDocument();
+      
+      screen.getAllByRole('button').forEach((x) => {
+        expect(x).toHaveTextContent('SELECT');
+      })
+
+    expect(handleQuestionClick).not.toHaveReturnedWith("A");  
+    await userEvent.click(screen.getAllByRole('button')[0]);
+    expect(handleQuestionClick).toHaveReturnedWith("A");
+
+    expect(handleQuestionClick).not.toHaveReturnedWith("B");
+    await userEvent.click(screen.getAllByRole('button')[1]);
+    expect(handleQuestionClick).toHaveReturnedWith("B");
+
+    expect(handleQuestionClick).not.toHaveReturnedWith("C");
+    await userEvent.click(screen.getAllByRole('button')[2]);
+    expect(handleQuestionClick).toHaveReturnedWith("C");
+    
+    expect(handleQuestionClick).not.toHaveReturnedWith("D");
+    await userEvent.click(screen.getAllByRole('button')[3]);
+    expect(handleQuestionClick).toHaveReturnedWith("D");
+    
+    expect(handleQuestionClick).not.toHaveReturnedWith("E");    
 
     expect(handleQuestionClick).toHaveBeenCalledTimes(4);
     });
