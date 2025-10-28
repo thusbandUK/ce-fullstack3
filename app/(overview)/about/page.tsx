@@ -5,50 +5,37 @@ import CELogoAnimation from "../../ui/dashboard/cELogoAnimation";
 import MovingElephantAnimation from "../../ui/dashboard/movingElephantAnimation";
 import Link from "next/link";
 import ArrowCommand from "../../ui/dashboard/arrowCommand";
+import SignUpNewsletter from "../../ui/signUpNewsletter";
+import { redirect } from 'next/navigation';
 //import MailTest from "./mailTest";
 
 //import CombinedAnimation2 from "../animation/explosion";
 
-export default async function About(){    
-//<MailTest></MailTest>className="m-auto md:ml-10 p-5"
+export default async function About(){
+  
+  const session: any = await auth();
+  const mockLocation = ""
+
+    if (!session){
+      redirect(`/account/login`);
+    }
+
      return (
-    <>
-      <div className="w-100 mx-auto mt-5">
-            <div className="rounded-lg flex flex-col  px-5 py-1 m-auto " style={{border: 'black solid 1px'}}>
-              <div className="spacer"></div>
-              <h1>Email sent!</h1>
-              <div className="spacer"></div>
-            </div>    
-                
-            <div  className="md:grid md:grid-cols-6 gap-0 w-full items-center justify-center rounded-lg" >
-            <div className="col-start-1 col-span-6 md:col-span-4 w-full flex flex-col border border-black rounded-lg p-5">
-          <p>A message has been sent to your email account. Open the message and click the link to delete your account. &#40;You might need to check your spam folder&#41;</p>
-          
-          <p className="my-3">No email received?</p>
-          <p>Click to send another email</p>
-          
-         
+      <div>
+        <div className="w-full flex flex-col mx-auto grid grid-cols-6">
+          <div className="border-2 w-full flex flex-col border-black rounded-lg px-5 py-1 m-auto col-start-1 col-span-6">
+            <div className="spacer"></div>
+            <h1>Newsletter</h1>
+            <div className="spacer"></div>
           </div>
-
-
-          <div className="col-start-1 md:col-start-5 h-full col-span-6 md:col-span-2 border border-black rounded-lg flex flex-col justify-end">
-          <Link
-            href='/account/delete/none'            
-          >
-                    <label htmlFor="response" className="cursor-pointer">
-                      <div className="m-5">
-                      <ArrowCommand 
-                        borderGray={false}
-                        command="SEND AGAIN"
-                      />   
-                      </div>                   
-                    </label>
-                    </Link>
-                    </div>
-
           </div>
-          </div> 
-    </>
+      
+      <SignUpNewsletter
+        email={session.user.email}        
+        location={mockLocation}
+        receivingNewsletter={session.user.receive_email}
+      ></SignUpNewsletter>
+    </div>
 )
 }
 
