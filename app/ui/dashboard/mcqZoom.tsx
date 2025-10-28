@@ -7,6 +7,33 @@ import DOMPurify from "isomorphic-dompurify";
 import ArrowCommand from './arrowCommand';
 import Slider from './slider';
 
+/*
+This component renders the version of the multiple choice questions that can be enlarged using the slider
+It shares much of its code and functionality with mcqNoZoom, but the crucial differences are that:
+1) arrow (select) buttons are rendered for each response and the button must be clicked to select that
+response (as opposed to in mcqNoZoom in which clicking anywhere on the response selects that answer.
+The difference is to facilitate scrolling when the responses and question have collectively come
+to fill a space larger than the screen
+2) the text can be resized, using the slider
+)
+
+props:
+
+It is passed 
+oneFlashcardData, an object containing the question, potential responses and etc for the flashcard component
+handleQuestionClick - an event handler in the parent FlashcardPresentation component 
+      (calls another function w event.target.id, this triggers render of the MultipleChoiceResponse component, 
+        passing either "right" or "wrong", which in turn renders a short-lived modal saying telling the user
+      the feedback)
+multipleChoiceResponse - simply passes the current value held in state, which is either "right" or "wrong"
+        This tallies between "off" and "polite" versions of aria-live, so that screen reader is transferred
+        between feedback modal and next question text
+referredViaIndividual - if the user has searched with a three-letter code to obtain the answer to just 
+        one flashcard, this is set to true with the effect that the sequence of potential responses
+        is no longer randomised, and also that each response starts with A:, B:, C: or D:
+
+*/
+
 const inconsolata = Inconsolata({
     subsets: ['latin'],
     weight: "300",
@@ -31,7 +58,6 @@ export default function MCQZoom(
     const [questionSet, setQuestionSet] = useState<string[]>([]);
     const [fontSize, setFontSize] = useState<number>(32);
     
-
     useEffect(() => {
       if (referredViaIndividual){
         setQuestionSet(Object.keys(multipleChoiceResponses as MCQData));
