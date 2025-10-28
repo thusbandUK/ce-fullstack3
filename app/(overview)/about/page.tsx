@@ -3,38 +3,82 @@ import { SignIn } from '../../ui/login-form';
 import { auth } from '@/auth';
 import CELogoAnimation from "../../ui/dashboard/cELogoAnimation";
 import MovingElephantAnimation from "../../ui/dashboard/movingElephantAnimation";
+import Link from "next/link";
+import ArrowCommand from "../../ui/dashboard/arrowCommand";
 //import MailTest from "./mailTest";
 
 //import CombinedAnimation2 from "../animation/explosion";
 
 export default async function About(){    
-//<MailTest></MailTest>
-    return (
-        <div  className="container m-auto h-full">
-            <div className="flex">
-                <div className="border border-black">
+//<MailTest></MailTest>className="m-auto md:ml-10 p-5"
+     return (
+    <>
+      <div className="w-100 mx-auto mt-5">
+            <div className="rounded-lg flex flex-col  px-5 py-1 m-auto " style={{border: 'black solid 1px'}}>
+              <div className="spacer"></div>
+              <h1>Email sent!</h1>
+              <div className="spacer"></div>
+            </div>    
+                
+            <div  className="md:grid md:grid-cols-6 gap-0 w-full items-center justify-center rounded-lg" >
+            <div className="col-start-1 col-span-6 md:col-span-4 w-full flex flex-col border border-black rounded-lg p-5">
+          <p>A message has been sent to your email account. Open the message and click the link to delete your account. &#40;You might need to check your spam folder&#41;</p>
+          
+          <p className="my-3">No email received?</p>
+          <p>Click to send another email</p>
+          
+         
+          </div>
 
-                </div>
-                <div className="border border-black">
 
-                </div>
-                <div className="border border-black">
+          <div className="col-start-1 md:col-start-5 h-full col-span-6 md:col-span-2 border border-black rounded-lg flex flex-col justify-end">
+          <Link
+            href='/account/delete/none'            
+          >
+                    <label htmlFor="response" className="cursor-pointer">
+                      <div className="m-5">
+                      <ArrowCommand 
+                        borderGray={false}
+                        command="SEND AGAIN"
+                      />   
+                      </div>                   
+                    </label>
+                    </Link>
+                    </div>
 
-                </div>
-
-
-            </div>
-
-           
-
-           
-            
-      
-        </div>
-    )
+          </div>
+          </div> 
+    </>
+)
 }
 
 /*
+ <div className="col-start-1 col-span-6 md:col-span-4 w-full">
+
+                    <textarea 
+                      id="response"
+                      onChange={handleResponseChange}
+                      name="response"
+                      rows={5} cols={33}
+                      className="border-2 border-black rounded-lg p-5 md:p-5 w-full h-full"
+                      placeholder="Write your answer here..."
+                    >
+                
+                    </textarea>
+                    </div>
+                    <div className="col-start-1 md:col-start-5 col-span-6 md:col-span-2 border-2 border-black rounded-lg flex flex-col justify-end">
+                      <button  onClick={submitResponse}>
+                    <label htmlFor="response" className="cursor-pointer">
+                      <div className="m-5">
+                      <ArrowCommand 
+                        borderGray={false}
+                        command="SUBMIT"
+                      />   
+                      </div>                   
+                    </label>
+                    </button>
+                    </div>
+
 
 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras posuere, tortor et molestie consectetur, mi turpis maximus urna, vel ullamcorper purus metus et massa. In lacinia tellus eget metus egestas elementum vitae eget ante. Mauris vitae purus enim. Aenean suscipit sit amet ante nec feugiat. Morbi at nulla vel sem finibus vestibulum. Maecenas vitae aliquet felis, eu feugiat orci. Aliquam erat volutpat. Aenean convallis consequat risus a pretium. Donec pellentesque pharetra magna, eu blandit tellus. Quisque at lacinia purus.
 
