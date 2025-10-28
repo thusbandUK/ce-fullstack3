@@ -15,7 +15,7 @@ export default function DeleteRequest({
   const [state, formAction] = useFormState(bindEmailInitiateDelete, initialState);
 
   return (
-    <form action={formAction}>
+    <form action={formAction} role="form" name="delete-request-form">
       <div className="w-full flex flex-col pb-4 mx-auto grid grid-cols-6">
         <div className="col-start-1 col-span-6 md:col-span-4 w-full border-2 border-black rounded-lg p-5">{/*COL 1 */}
           <p>Sorry to hear you want to delete your account. Click delete and we will send you an
