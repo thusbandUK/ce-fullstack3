@@ -7,7 +7,7 @@ export default function ArrowCommand({command, borderGray}: {command: string | n
     return (
         <>
           <div className="flex">
-            <div className={clsx("border-2 rounded-md w-fit p-2 hover:bg-black hover:text-white",
+            <div className={clsx("border-2 rounded-md w-fit my-auto p-2 hover:bg-black hover:text-white",
             {
               'border-black': borderGray === false,
               'border-slate-400': borderGray === true
