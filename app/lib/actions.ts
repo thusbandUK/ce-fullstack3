@@ -4,7 +4,7 @@ import { z } from 'zod';
 import { sql } from '@vercel/postgres';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
-import { signIn } from '@/auth';
+import { signIn } from '../../auth';
 import { AuthError } from 'next-auth';
 import { UserEmailSchema } from './schema';
 import { UserDetails } from './definitions';
@@ -154,6 +154,7 @@ export async function signUpNewsletter(email: string, location: string | null, p
 
 
 export async function updateUser(email: string, prevState: State, formData: FormData) {  
+
   
   //validates username to ensure string between 5 and 20 characters long,
   //validates email (even though passed directly from session object)
@@ -247,6 +248,12 @@ export async function signUpUser2(email: string, location: string | null, prevSt
 
 }
 
+/*
+This threw an error - the did you mean to call nextjs/server error - during a test written to test 
+updateUsername (exported from this same module). Searches suggest it is not called anywhere by
+any other module and hence can safely be deleted. Tests pending. So user can still log in and out,
+I believe this can be deleted
+
 export async function authenticate(
     prevState: string | undefined,
     formData: FormData,
@@ -268,8 +275,10 @@ export async function authenticate(
         }
       }
       throw error;
-    }/**/
+    }/**//*
   }
+
+  */
   
   export async function incrementExamboard(examboard: string){
 
