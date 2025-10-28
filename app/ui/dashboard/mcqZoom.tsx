@@ -140,6 +140,7 @@ export default function MCQZoom(
                         <ArrowCommand 
                           command="SELECT"
                           borderGray={false}
+                          disabled={false}
                          />
                       </button>
                     </div>

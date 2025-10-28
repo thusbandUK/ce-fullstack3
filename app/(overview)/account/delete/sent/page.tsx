@@ -27,6 +27,7 @@ const Sent = async () => {
                       <ArrowCommand
                         borderGray={false}
                         command="SEND AGAIN"
+                        disabled={false}
                       />
                     </div>
                   </label>

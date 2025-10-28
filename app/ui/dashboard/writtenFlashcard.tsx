@@ -103,6 +103,7 @@ const WrittenFlashcard = (
                       <ArrowCommand 
                         borderGray={false}
                         command="SUBMIT"
+                        disabled={false}
                       />   
                       </div>                   
                     </label>
@@ -166,6 +167,7 @@ const WrittenFlashcard = (
                       <ArrowCommand 
                         borderGray={false}
                         command="SUBMIT"
+                        disabled={false}
                       />   
                       </div>                   
                     </label>

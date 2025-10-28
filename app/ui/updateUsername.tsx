@@ -57,6 +57,7 @@ export default function UpdateUsername({
           <ArrowCommand
             borderGray={false}
             command={"UPDATE"}
+            disabled={false}
           />
         </button>
         </div>

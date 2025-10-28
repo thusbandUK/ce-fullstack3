@@ -22,7 +22,7 @@ describe('Slider', () => {
 
 describe('ArrowCommand', () => {
   it('renders ArrowCommand component', () => {
-    render(<ArrowCommand command="test-command" borderGray={true} />);    
+    render(<ArrowCommand command="test-command" borderGray={true} disabled={false}/>);    
     expect(screen.getByRole('paragraph')).toHaveTextContent('test-command');   
   });  
 });

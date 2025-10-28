@@ -46,6 +46,7 @@ export default function DeleteRequest({
               <ArrowCommand
                 borderGray={false}
                 command={"DELETE"}
+                disabled={false}
               />
             </button>
           </div>

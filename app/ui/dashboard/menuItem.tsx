@@ -54,6 +54,7 @@ export default function MenuItem(
               <ArrowCommand
                   command={arrowCommand}
                   borderGray={modalContent!==null}
+                  disabled={false}
                 >                  
               </ArrowCommand>              
             </Link>
@@ -63,6 +64,7 @@ export default function MenuItem(
                 <ArrowCommand
                   command={arrowCommand}
                   borderGray={modalContent!==null}
+                  disabled={false}
                 ></ArrowCommand>
               </label>
               <Modal

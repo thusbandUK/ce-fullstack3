@@ -88,7 +88,8 @@ export default function MockUpdateUsername({
         <button type="submit">
           <ArrowCommand
             borderGray={false}
-            command={"UPDATE"} 
+            command={"UPDATE"}
+            disabled={false}
           />
         </button>
         </div>

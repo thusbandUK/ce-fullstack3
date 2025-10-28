@@ -48,6 +48,7 @@ export default function MenuItemButton(
               <ArrowCommand
                   command={arrowCommand}
                   borderGray={false}
+                  disabled={false}
                 >                  
               </ArrowCommand>
             </button>
