@@ -7,6 +7,7 @@ import Link from "next/link";
 import ArrowCommand from "../../ui/dashboard/arrowCommand";
 import SignUpNewsletter from "../../ui/signUpNewsletter";
 import { redirect } from 'next/navigation';
+import DeleteRequestRenew from "@/app/ui/deleteRequestRenew";
 //import MailTest from "./mailTest";
 
 //import CombinedAnimation2 from "../animation/explosion";
@@ -14,32 +15,63 @@ import { redirect } from 'next/navigation';
 export default async function About(){
   
   const session: any = await auth();
-  const mockLocation = ""
+  //const mockLocation = ""
 
     if (!session){
       redirect(`/account/login`);
     }
 
+    let message:string = ""
+
+    const mockParams = "already"
+    
+    const filler = "Press the button to send a new one"
+      if (mockParams){
+        switch (mockParams){
+          case "none":
+          message = `Sorry you have not received any message. ${filler}.`
+          break;
+          case "expired":
+          message = `Looks like your link expired. ${filler} and make sure to click the link within one hour.`
+          break;
+          case "corrupted":
+          message = `Looks like there's something wrong with your link. Curious! ${filler}.`
+          break;
+          case "already":
+          message = `We already have a record of you requesting an email to delete your account. ${filler}.`
+          break;
+          case "wrong":
+          message = `The credentials you have supplied do not match those we have stored. Curious! ${filler}.`
+        }
+      } else {
+        message = `Not sure what has happened but press the button if you need a new link to delete your account.`
+      }   
+
      return (
-      <div>
-        <div className="w-full flex flex-col mx-auto grid grid-cols-6">
-          <div className="border-2 w-full flex flex-col border-black rounded-lg px-5 py-1 m-auto col-start-1 col-span-6">
-            <div className="spacer"></div>
-            <h1>Newsletter</h1>
-            <div className="spacer"></div>
+      <>
+          <div className="w-100 mx-auto mt-5">
+            <div className="rounded-lg flex flex-col  px-5 py-1 m-auto " style={{border: 'black solid 1px'}}>
+              <div className="spacer"></div>
+              <h1>New link</h1>
+              <div className="spacer"></div>
+            </div>
+            
           </div>
-          </div>
-      
-      <SignUpNewsletter
-        email={session.user.email}        
-        location={mockLocation}
-        receivingNewsletter={session.user.receive_email}
-      ></SignUpNewsletter>
-    </div>
+          <DeleteRequestRenew
+            email={session.user.email}
+            message={message}
+          ></DeleteRequestRenew>
+          
+        
+        </>
 )
 }
 
 /*
+<div  className="md:grid md:grid-cols-6 gap-0 w-full items-center justify-center rounded-lg">
+              <div className="col-start-1 col-span-6 md:col-span-4 w-full flex flex-col border border-black rounded-lg p-5">
+          <p>{message}</p>
+
  <div className="col-start-1 col-span-6 md:col-span-4 w-full">
 
                     <textarea 
