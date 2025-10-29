@@ -190,7 +190,7 @@ export async function checkExisting(email: string){
   redirect(`/account/delete/already`);
 
 }
-//, formData: FormData
+
 export async function initiateDelete(email: string, prevState: State2){
   
   //validates email to ensure not corrupted, it expects one thing and one thing only
