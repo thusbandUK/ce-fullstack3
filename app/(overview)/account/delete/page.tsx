@@ -13,7 +13,7 @@ const Delete = async () => {
         redirect(`/login`);
     }
 
-    const existingCredentials: any = await checkExisting(session.user.email);
+    await checkExisting(session.user.email);
 
     return (
         <>
