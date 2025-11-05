@@ -1,8 +1,16 @@
 import Link from "next/link";
 import ArrowCommand from '../../../../ui/dashboard/arrowCommand';
+import { auth } from "@/auth";
+import { redirect } from "next/navigation";
 
 const Sent = async () => {
 
+  const session: any = await auth();
+
+  if (!session){
+    redirect(`/account/login`);
+  }
+  
     return (
         <>
           <div className="w-100 mx-auto mt-5">
