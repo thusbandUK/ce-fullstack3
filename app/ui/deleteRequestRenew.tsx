@@ -35,7 +35,7 @@ export default function DeleteRequestRenew({
             <button type="submit">
               <ArrowCommand
                 borderGray={false}
-                command={"UPDATE"}
+                command={"NEW LINK"}
                 disabled={false}
               />
             </button>
