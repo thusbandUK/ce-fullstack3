@@ -1,8 +1,12 @@
 import { Button } from './button';
 import { signIn } from "@/auth";
 import { locationParser } from '../lib/functions';
+import ArrowCommand from './dashboard/arrowCommand';
+import BottomRow from './dashboard/bottomRow';
+import LeftHandColumn from './dashboard/leftHandColumn';
+import RightHandColumn from './dashboard/rightHandColumn';
 
-export function SignIn({
+export function InitiateSignIn({
   location,
   provider,
   ...props
@@ -54,7 +58,26 @@ export function SignIn({
         await signIn(provider, { redirectTo: whereToRedirect});
       }}
     >
-      <Button {...props}>Sign In</Button>
+      <BottomRow>
+        <LeftHandColumn>
+          <div className="spacer"></div>
+          <p>Click sign in to login to Chemistry Elephant</p>
+          <div className="spacer"></div>
+        </LeftHandColumn>
+        <RightHandColumn>
+          <div className="m-5">
+            <button type="submit">
+              <ArrowCommand
+                command="SIGN IN"
+                borderGray={false}
+                disabled={false}
+              />
+            </button>
+          </div>
+        </RightHandColumn>
+      </BottomRow>
     </form>
   )
 }
+
+//{/*<Button {...props}>Sign In</Button> */}

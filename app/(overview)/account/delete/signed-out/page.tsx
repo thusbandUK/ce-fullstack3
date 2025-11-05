@@ -4,7 +4,7 @@ import HeaderDivs from "../../../../ui/dashboard/header";
 import BottomRow from "../../../../ui/dashboard/bottomRow";
 import LeftHandColumn from "../../../../ui/dashboard/leftHandColumn";
 import RightHandColumn from "../../../../ui/dashboard/rightHandColumn";
-import { SignIn } from "../../../../ui/login-form";
+import { InitiateSignIn } from "../../../../ui/initiateSignIn";
 
 export default async function Page(){
 
@@ -23,7 +23,7 @@ export default async function Page(){
             </LeftHandColumn>
             <RightHandColumn>
               <div className="m-5">
-                <SignIn
+                <InitiateSignIn
                   location={'account/delete/sent'}
                 />
               </div>

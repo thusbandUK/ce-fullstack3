@@ -1,5 +1,5 @@
 import SignOut from "@/app/ui/dashboard/signOut";
-import { SignIn } from "@/app/ui/login-form";
+import { InitiateSignIn } from "@/app/ui/initiateSignIn";
 import { auth } from '@/auth';
 import { redirect } from 'next/navigation';
 import MenuItem from '../../ui/dashboard/menuItem';
@@ -65,7 +65,7 @@ export default async function Account({ searchParams }: { searchParams: { locati
                 { session ?
                   <SignOut />
                   :
-                  <SignIn
+                  <InitiateSignIn
                     location="/account"
                   />}
               </div>
