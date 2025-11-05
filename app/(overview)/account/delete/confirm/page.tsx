@@ -1,22 +1,22 @@
-import DeleteConfirm from "@/app/ui/deleteConfirm";
-import { auth } from '@/auth';
+import DeleteConfirm from "../../../../ui/deleteConfirm";
+import { auth } from '../../../../../auth';
 import { redirect } from 'next/navigation';
+import HeaderDivs from "../../../../ui/dashboard/header";
 
 const Confirm = async () => {
-    
+
     const session: any = await auth();
 
     if (!session){
-      redirect(`/login`);
+        redirect(`/account/login`);
     }
-        
+
     return (
         <>
-          <p>Hello, I&#39;m the confirm page</p>
+          <HeaderDivs h1Content="Confirm"></HeaderDivs>
           <DeleteConfirm
             sessionEmail={session.user?.email}
-          >
-          </DeleteConfirm>
+          />
         </>
     )
 }
