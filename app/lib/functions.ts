@@ -31,8 +31,9 @@ export const locationParser = (location: string | null | undefined) => {
 export type paramsObject = {
     again: string;
 }
+
 export const renewDeleteMessage = (params: paramsObject) => {
-    
+
     let message: string = "";
     const filler: string = "Press the button to send a new one";
     if (params.again){
@@ -51,6 +52,10 @@ export const renewDeleteMessage = (params: paramsObject) => {
           break;
           case "wrong":
           message = `The credentials you have supplied do not match those we have stored. Curious! ${filler}.`
+          default:
+          message = `Not sure what has happened but press the button if you need a new link to delete your account.`
+          break;
+
         }
       } else {
         message = `Not sure what has happened but press the button if you need a new link to delete your account.`
