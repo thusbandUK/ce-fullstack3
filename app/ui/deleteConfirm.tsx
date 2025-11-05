@@ -1,79 +1,95 @@
 'use client';
 
-import { Button } from './button'
 import { State3, confirmDelete } from '../lib/deleteAccount';
 import { useFormState } from 'react-dom';
 import { useSearchParams } from 'next/navigation'
 import Link from "next/link";
+import LeftHandColumn from './dashboard/leftHandColumn';
+import RightHandColumn from './dashboard/rightHandColumn';
+import BottomRow from './dashboard/bottomRow';
+import ArrowCommand from './dashboard/arrowCommand';
+import { useEffect, useTransition, useState } from 'react';
+import { autoSignOut } from '../lib/deleteAccount';
 
-export default function DeleteConfirm({  
+export default function DeleteConfirm({
   sessionEmail
-}: {  
-  sessionEmail: string;  
+}: {
+  sessionEmail: string;
 }) {
-  //const initialState: State = { message: null, errors: {} };
+
   const initialState: State3 = { message: null, linkParams: null, errors: {email: [], token: []}};
   const bindFormDataConfirmDelete = confirmDelete.bind(null);
-  const [state, formAction] = useFormState(bindFormDataConfirmDelete, initialState);
-  
-    const searchParams = useSearchParams()
- 
-    const token = searchParams.get('token')
-    const email = searchParams.get('email')
+  const [ state, formAction ] = useFormState(bindFormDataConfirmDelete, initialState);
+  const [ isPending, startTransition ] = useTransition();
+  const [ clientSideError, setClientSideError ] = useState("");
 
-    console.log(token)
-    console.log(email)
- 
+  const searchParams = useSearchParams();
+  const token = searchParams.get('token');
+  const email = searchParams.get('email');
+
+  useEffect(() => {
     if (!token || !email){
-        return ('Something has gone wrong. Please wait to be redirected')
+      setClientSideError("Problem with your link, you need to request a new one.")
     }
-
-    if (sessionEmail !== email){
-      return ('Something has gone wrong.')
+    if (sessionEmail === email){
+      return
     }
-
-  
+    startTransition(async () => {
+      await autoSignOut();
+    })
+    }, [])
 
   return (
     <form action={formAction}>
-      
-      <div className="rounded-md bg-gray-50 p-4 md:p-6">
-        {/* Email */}
-        <div className="mb-4">
-          <label>
-            Email
-          </label>
+      <BottomRow>
+        <LeftHandColumn>
+          <p>Sorry you are leaving. Hope you have found Chemistry Elephant useful. You know where we are if you need us again.</p>
+          {/*Hidden email section */}
           <div className="relative">
-            <input type="hidden" name="email" id="email" value={email} />
-            <p>{email}</p>
-          </div>          
-        </div>
-        {/*Hidden token section */}
-        <div>
-          <input type="hidden" name="token" id="token" value={token} />
-        </div>
-        
-      </div>
-      <div className="mt-6 flex justify-end gap-4">
-        
-        <Button type="submit">Click to delete all records associated with your account and log out</Button>
-      </div>
-      <div id="error-message" aria-live="polite" aria-atomic="true">
-              {state.message &&              
-                <p className="mt-2 text-sm text-red-500" >
-                  {state.message}
-                </p>
-              }
-      </div>
-      <div id="link" aria-live="polite" aria-atomic="true">
-              {state.linkParams &&
+            <input type="hidden" name="email" id="email" value={ email === null ? undefined : email} />
+          </div>
+          {/*Hidden token section */}
+          <div>
+            <input type="hidden" name="token" id="token" value={token === null ? undefined : token} />
+          </div>
+          <p>Click confirm to delete all records associated with your account and log out</p>
+          <div id="error-message" aria-live="polite" aria-atomic="true">
+            {state.message &&
+              <p className="mt-2 text-sm text-red-500">
+                {state.message}
+              </p>
+            }
+            {clientSideError &&
+              <p className="mt-2 text-sm text-red-500">
+                {clientSideError}
+              </p>
+            }
+          </div>
+        </LeftHandColumn>
+        <RightHandColumn>
+          <div className="m-5" id="link" aria-live="polite" aria-atomic="true">
+            {clientSideError || state.message?
               <Link
-                className="mt-2 text-sm text-red-500" 
-                href={`/account/delete/${state.linkParams}`}
-              >Click to send a new email</Link>               
-              }
-      </div>
-      
+                href={`/account/delete/${state.message ? state.linkParams: 'corrupted'}`}
+              >
+                <ArrowCommand
+                  command={"NEW LINK"}
+                  borderGray={false}
+                  disabled={false}
+                />
+              </Link>
+              :
+              <button type="submit">
+                <ArrowCommand
+                  command={"CONFIRM"}
+                  borderGray={false}
+                  disabled={false}
+                />
+              </button>
+            }
+          </div>
+        </RightHandColumn>
+      </BottomRow>
     </form>
   );
 }
