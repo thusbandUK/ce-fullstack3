@@ -21,6 +21,7 @@ const crypto = require('crypto');
 import { sendMail } from './send-mail';
 import { dateCompare } from './dateCompare';
 const SITE_URL = process.env.SITE_URL;
+import { signOut } from '../../auth';
 
 const InitiateDeleteSchema = z.object({
   email: z.coerce.string({invalid_type_error: "Invalid email"}).email()
@@ -28,7 +29,7 @@ const InitiateDeleteSchema = z.object({
 
 const ConfirmDeleteSchema = z.object({
   email: z.coerce.string({invalid_type_error: "Corrupted email"}).email(),  
-  token: z.coerce.string({invalid_type_error: "Corrupted token"}).min(64).max(64),
+  token: z.coerce.string({invalid_type_error: "Corrupted token"}).regex(/^[a-zA-Z0-9]+$/, { message: "link can only contain letters and numbers" }).min(64).max(64),
 });
  
 const NewConfirmEmail = InitiateDeleteSchema;
@@ -51,6 +52,16 @@ export type State3 = {
     token?: string[];
   };
 };
+
+//self explanatory name. It's specifically for use in the unlikely but not impossible scenario that
+//someone generates a delete account link but manages to open it on a browser where a different user
+//is logged in. It redirects to account/delete/signout, which will explain what has happened
+
+export async function autoSignOut(){
+
+  await signOut({redirectTo: '/account/delete/signed-out'})
+
+}
 
 export async function confirmDelete(prevState: State3, formData: FormData){
 
