@@ -116,6 +116,7 @@ export const {handlers, signIn, signOut, auth} = NextAuth(() => {
         },
       },
     providers,
+    //https://next-auth.js.org/configuration/options#pages
     pages: {
       signIn: '/account/auth/signin',
       verifyRequest: '/account/auth/verify-request',
