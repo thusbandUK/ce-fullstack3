@@ -23,6 +23,7 @@ textarea {
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --altcha-max-width: 100%;
 }
 
 .global-input-width {
@@ -33,6 +34,12 @@ textarea {
   .global-input-width {
     width: 50%;
   }
+
+  .altcha {
+    --altcha-max-width: 50%;
+  }
+
+  
 }
 
 /*Animation loader*/

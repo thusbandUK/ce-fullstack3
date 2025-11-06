@@ -75,9 +75,11 @@ export function ExecuteSignIn({
           <label htmlFor="email">
             <input type="email" name="email" id="email" className="border border-black rounded-sm global-input-width"/>
           </label>
-          <Altcha
-            ref={altchaRef}
-          />
+          <div className="mt-3">
+            <Altcha
+              ref={altchaRef}
+            />
+          </div>
 
           <div id="message" aria-live="polite" aria-atomic="true">
             {state.message &&
