@@ -1,8 +1,9 @@
 "use server"
 
-import { providerMap } from "../../../../../auth";
+import { providerMap, auth } from "../../../../../auth";
 import { ExecuteSignIn } from "../../../../ui/executeSignIn";
 import HeaderDivs from "../../../../ui/dashboard/header";
+import { redirect } from "next/navigation";
 
 /*
 This is the custom signin page, note that the example provided wasn't for email but used credentials
@@ -15,6 +16,12 @@ form action, it seems to work but the error handling is non-existent so this wil
 export default async function SignInPage(props: {
   searchParams: { callbackUrl: string | undefined }
 }) {
+
+  const session: any = await auth();
+
+  if (session){
+    redirect(`/account`);
+  }
 
 return (
     <>
