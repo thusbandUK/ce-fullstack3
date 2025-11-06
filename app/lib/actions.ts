@@ -9,6 +9,7 @@ import { AuthError } from 'next-auth';
 import { UserEmailSchema } from './schema';
 import { UserDetails } from './definitions';
 import { locationParser } from './functions';
+import { isRedirectError } from "next/dist/client/components/redirect";
 
 const FormSchema = z.object({
   username: z.coerce.string({invalid_type_error: "Username can only contain letters and numbers",}).regex(/^[a-zA-Z0-9]+$/, { message: "Username can only contain letters and numbers" }).max(20).min(5),
@@ -19,7 +20,7 @@ const NewUser = FormSchema;
 
 const UpdateUsernameSchema = z.object({
   username: z.coerce.string({invalid_type_error: "Username can only contain letters and numbers",}).regex(/^[a-zA-Z0-9]+$/, { message: "Username can only contain letters and numbers" }).max(20).min(5),  
-  email: z.coerce.string({invalid_type_error: "Invalid email"}).email()
+  email: z.coerce.string({invalid_type_error: "Invalid email"}).email({message: "Looks like your email is invalid"})
 });
 
 const UpdatedUser = UpdateUsernameSchema;
@@ -29,6 +30,13 @@ const SignUpNewsLetterSchema = z.object({
 })
 
 const UpdatedMailTick = SignUpNewsLetterSchema;
+
+const ExecuteSignInSchema = z.object({
+  email: z.coerce.string({invalid_type_error: "Invalid email"}).email(),
+  captcha: z.coerce.boolean({invalid_type_error: "Captcha failed"})
+})
+
+const UpdatedSignInDetails = ExecuteSignInSchema;
 
 export type State = {
   
@@ -47,6 +55,65 @@ export type StateSignUpNewsletter = {
     mailTick?: string[];
   };
 };
+
+export type StateExecuteSignIn = {
+  message?: string | null;
+  errors?: {    
+    email?: string[];
+    captcha?: string[];
+  };
+}
+
+/*
+executeSignInFunction is the one that actually logs in the user. They submit their email address, and
+via the next-auth signIn function an email is sent to them with a link they can click to complete the 
+sign in process.
+The function below calls signIn once their email address has been validated. Also Altcha captcha logic
+will be added to prevent bot activity.
+*/
+
+export async function executeSignInFunction(location: string | null, provider: any, prevState: StateExecuteSignIn, formData: FormData) {
+
+  //validates incoming form data
+  const dataValidation = ExecuteSignInSchema.safeParse({
+    email: formData.get("email"),
+    captcha: true
+  });
+
+  // If form validation fails, return errors early. Otherwise, continue.
+  if (!dataValidation.success) {
+    return {
+      message: 'Details rejected. Try again!',
+        errors: {
+          email: dataValidation.error.flatten().fieldErrors.email,
+          captcha: dataValidation.error.flatten().fieldErrors.captcha
+      },
+    };
+  }
+
+  try {
+    await signIn(provider?.id, formData, {
+      redirectTo: location ?? "",
+    })
+  } catch (error) {
+    //see: https://github.com/nextauthjs/next-auth/discussions/9389
+    //it seems that it has to throw an error for this one, redirects to account/auth/error
+    //calling redirect inside the try catch block does not work, but calling it from finally block
+    //means that it gets called even when an error is returned.
+
+    if (isRedirectError(error)) {
+      throw error;
+    }
+
+    return { ...prevState,
+      message: "Something went wrong. Give it a refresh and have another go."
+    }
+
+  }
+
+  redirect('/account/auth/verify-request');
+
+}
 
 export async function signUpUser(email: string, location: string | null, prevState: State, formData: FormData) {
 
