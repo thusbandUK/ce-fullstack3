@@ -1,5 +1,5 @@
 import SignOut from "../../ui/dashboard/signOut"
-import { SignIn } from '../../ui/login-form';
+//import { SignIn } from '../../ui/initiateSignIn';
 import { auth } from '@/auth';
 import CELogoAnimation from "../../ui/dashboard/cELogoAnimation";
 import MovingElephantAnimation from "../../ui/dashboard/movingElephantAnimation";
@@ -8,6 +8,11 @@ import ArrowCommand from "../../ui/dashboard/arrowCommand";
 import SignUpNewsletter from "../../ui/signUpNewsletter";
 import { redirect } from 'next/navigation';
 import DeleteRequestRenew from "@/app/ui/deleteRequestRenew";
+import HeaderDivs from "@/app/ui/dashboard/header";
+import LeftHandColumn from "@/app/ui/dashboard/leftHandColumn";
+import BottomRow from "@/app/ui/dashboard/bottomRow";
+import RightHandColumn from "@/app/ui/dashboard/rightHandColumn";
+import DeleteConfirm from "@/app/ui/deleteConfirm";
 //import MailTest from "./mailTest";
 
 //import CombinedAnimation2 from "../animation/explosion";
@@ -25,44 +30,24 @@ export default async function About(){
 
     const mockParams = "already"
     
-    const filler = "Press the button to send a new one"
-      if (mockParams){
-        switch (mockParams){
-          case "none":
-          message = `Sorry you have not received any message. ${filler}.`
-          break;
-          case "expired":
-          message = `Looks like your link expired. ${filler} and make sure to click the link within one hour.`
-          break;
-          case "corrupted":
-          message = `Looks like there's something wrong with your link. Curious! ${filler}.`
-          break;
-          case "already":
-          message = `We already have a record of you requesting an email to delete your account. ${filler}.`
-          break;
-          case "wrong":
-          message = `The credentials you have supplied do not match those we have stored. Curious! ${filler}.`
-        }
-      } else {
-        message = `Not sure what has happened but press the button if you need a new link to delete your account.`
-      }   
+    
 
      return (
       <>
-          <div className="w-100 mx-auto mt-5">
-            <div className="rounded-lg flex flex-col  px-5 py-1 m-auto " style={{border: 'black solid 1px'}}>
-              <div className="spacer"></div>
-              <h1>New link</h1>
-              <div className="spacer"></div>
-            </div>
-            
-          </div>
-          <DeleteRequestRenew
-            email={session.user.email}
-            message={message}
-          ></DeleteRequestRenew>
-          
-        
+      {/*<>
+          <p>Hello, I&#39;m the confirm page</p>
+          <DeleteConfirm
+            sessionEmail={session.user?.email}
+          >
+          </DeleteConfirm>
+     </>*/}
+      <HeaderDivs h1Content="Confirm"></HeaderDivs>
+           {/**
+             <DeleteConfirm
+               sessionEmail={session.user?.email}
+              >
+             </DeleteConfirm> */}
+             
         </>
 )
 }
