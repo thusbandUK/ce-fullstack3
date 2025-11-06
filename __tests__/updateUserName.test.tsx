@@ -4,7 +4,6 @@ import { expect, test, describe, it } from 'vitest'
 import MCQZoom from '../app/ui/dashboard/mcqZoom';
 import DeleteRequest from '../app/ui/deleteRequest';
 import UpdateUsername from '../app/ui/updateUsername';
-import UpdateUsernameCopy from '../app/ui/updateUsernameCopy';
 import {Inconsolata} from "next/font/google";
 import { vi } from 'vitest'
 import userEvent from '@testing-library/user-event'
