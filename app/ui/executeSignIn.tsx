@@ -8,6 +8,8 @@ import RightHandColumn from './dashboard/rightHandColumn';
 import { useFormState } from 'react-dom';
 import { executeSignInFunction } from '../lib/actions';
 import { StateExecuteSignIn } from '../lib/actions';
+import Altcha from './altcha';
+import { useRef } from 'react';
 
 /*This function effectively renders a button (on the login page), which directs the user to the 
   signin page
@@ -43,6 +45,10 @@ import { StateExecuteSignIn } from '../lib/actions';
   redirect (identified from params in parent login component as "location") then becomes the 
   callbackUrl params in the next function (signin page)
 
+  NOTE: form renders altcha tick box to prevent form submission by bots, logic is explained in related
+  functions and components. It submits data along with email in formData, which then requires processing
+  in executeSignInFunction, which returns error if captcha fails
+
   */  
 
 export function ExecuteSignIn({
@@ -53,19 +59,8 @@ export function ExecuteSignIn({
     const initialState: StateExecuteSignIn = { message: null, errors: {email: [], captcha: []}};
     const bindExecuteSignInFunction = executeSignInFunction.bind(null, location, provider);
     const [state, formAction] = useFormState(bindExecuteSignInFunction, initialState);
-
-    /*
-    Needs doing:
+    const altchaRef = useRef<HTMLInputElement>(null)
     
-    1) validation
-        a) client side: email DONE
-        b) server side: isEmail() zod and return if not DONE
-        c) captcha, install and configure altcha
-    2) error handling
-        a) return message via state if email invalid or altcha fails DONE
-        b) return generic message for any other error (upstream of validation checks) DONE
-     
-    */
 
   return (
     <form
@@ -80,6 +75,10 @@ export function ExecuteSignIn({
           <label htmlFor="email">
             <input type="email" name="email" id="email" className="border border-black rounded-sm global-input-width"/>
           </label>
+          <Altcha
+            ref={altchaRef}
+          />
+
           <div id="message" aria-live="polite" aria-atomic="true">
             {state.message &&
               <p className="mt-2 text-sm text-red-500" key={state.message}>

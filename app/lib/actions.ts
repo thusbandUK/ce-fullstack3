@@ -5,11 +5,12 @@ import { sql } from '@vercel/postgres';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { signIn } from '../../auth';
-import { AuthError } from 'next-auth';
 import { UserEmailSchema } from './schema';
 import { UserDetails } from './definitions';
 import { locationParser } from './functions';
 import { isRedirectError } from "next/dist/client/components/redirect";
+import { verifySolution } from 'altcha-lib';
+import { Payload } from 'altcha-lib/types';
 
 const FormSchema = z.object({
   username: z.coerce.string({invalid_type_error: "Username can only contain letters and numbers",}).regex(/^[a-zA-Z0-9]+$/, { message: "Username can only contain letters and numbers" }).max(20).min(5),
@@ -33,7 +34,7 @@ const UpdatedMailTick = SignUpNewsLetterSchema;
 
 const ExecuteSignInSchema = z.object({
   email: z.coerce.string({invalid_type_error: "Invalid email"}).email(),
-  captcha: z.coerce.boolean({invalid_type_error: "Captcha failed"})
+  hmac: z.coerce.string()
 })
 
 const UpdatedSignInDetails = ExecuteSignInSchema;
@@ -64,35 +65,74 @@ export type StateExecuteSignIn = {
   };
 }
 
+
 /*
 executeSignInFunction is the one that actually logs in the user. They submit their email address, and
 via the next-auth signIn function an email is sent to them with a link they can click to complete the 
 sign in process.
-The function below calls signIn once their email address has been validated. Also Altcha captcha logic
-will be added to prevent bot activity.
+The function below calls signIn once their email address has been validated. 
+The function also extracts the altcha data and calls verifySolution to confirm that the data matches
+what is expected
+see exemplar: https://github.com/altcha-org/altcha-starter-nodejs-ts/blob/main/src/index.ts 
 */
 
 export async function executeSignInFunction(location: string | null, provider: any, prevState: StateExecuteSignIn, formData: FormData) {
 
-  //validates incoming form data
+  const hmacKey = process.env.ALTCHA_HMAC_SECRET
+
+  // Get the 'altcha' field containing the verification payload from the form data
+  const altcha = formData.get('altcha')
+
+  // If the 'altcha' field is missing, return an error
+  if (!altcha) {
+    return {
+      ...prevState,
+      message: "Captcha failed. Did you tick the box?"
+    }
+  }
+
+  //validates incoming email address, coerces hmacKey into string
   const dataValidation = ExecuteSignInSchema.safeParse({
     email: formData.get("email"),
-    captcha: true
+    hmac: hmacKey
   });
 
-  // If form validation fails, return errors early. Otherwise, continue.
+  //If form validation fails, return errors early. Otherwise, continue.
   if (!dataValidation.success) {
     return {
       message: 'Details rejected. Try again!',
         errors: {
           email: dataValidation.error.flatten().fieldErrors.email,
-          captcha: dataValidation.error.flatten().fieldErrors.captcha
+          captcha: []
       },
     };
   }
 
+  //extracts string coerced hmacKey and validated email
+  const {hmac: validatedHmacKey, email: validatedEmail} = dataValidation.data;
+
+  //Verify the solution using the secret HMAC key
+  const verified = await verifySolution(String(altcha), validatedHmacKey)
+
+  //if the captcha doesn't verify, this returns an error message saying so
+  if (!verified){
+    return {
+      message: 'Details rejected. Try again!',
+        errors: {
+          email: [],
+          captcha: ['Unfortunately your captcha attempt failed. Are you a robot?']
+      },
+    }
+  }
+
+  //makes a copy of incoming formData
+  const updatedFormData = formData;
+  //modifies formData copy with validatedEmail
+  updatedFormData.set("email", validatedEmail)
+
   try {
-    await signIn(provider?.id, formData, {
+    //calls the next-auth function to sign in user via email sent
+    await signIn(provider?.id, updatedFormData, {
       redirectTo: location ?? "",
     })
   } catch (error) {
@@ -110,6 +150,8 @@ export async function executeSignInFunction(location: string | null, provider: a
     }
 
   }
+  //this has to be outside try catch block or it does not work, anyway, only if signIn is
+  //successful is the user redirected as below
 
   redirect('/account/auth/verify-request');
 
