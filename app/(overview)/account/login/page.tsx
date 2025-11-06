@@ -1,7 +1,6 @@
 import React from 'react';
 import { InitiateSignIn } from '../../../ui/initiateSignIn';
 import HeaderDivs from '../../../ui/dashboard/header';
-
  
 /*
 This is the login page, it's probably not really necessary as (implicitly) clicking any signin
@@ -14,8 +13,9 @@ export default function LoginPage({ searchParams }: { searchParams: { location: 
     <>
       <HeaderDivs h1Content='Login' />
       <InitiateSignIn
-          location={searchParams.location ? searchParams.location : ''}
-        />
+        location={searchParams.location ? searchParams.location : ''}
+        error={false}
+      />
     </>
   );
 }  

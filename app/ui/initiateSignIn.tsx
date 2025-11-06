@@ -1,4 +1,3 @@
-import { Button } from './button';
 import { signIn } from "@/auth";
 import { locationParser } from '../lib/functions';
 import ArrowCommand from './dashboard/arrowCommand';
@@ -9,8 +8,8 @@ import RightHandColumn from './dashboard/rightHandColumn';
 export function InitiateSignIn({
   location,
   provider,
-  ...props
-}: { location: string | null, provider?: string } & React.ComponentPropsWithRef<typeof Button>) {
+  error
+}: { location: string | null, provider?: string, error: boolean }) {
   
   /*This function effectively renders a button (on the login page), which directs the user to the 
   signin page
@@ -61,7 +60,12 @@ export function InitiateSignIn({
       <BottomRow>
         <LeftHandColumn>
           <div className="spacer"></div>
-          <p>Click sign in to login to Chemistry Elephant</p>
+          {
+            error ?
+            <p>Looks like something went wrong! Click sign in to try again.</p>
+            :
+            <p>Click sign in to login to Chemistry Elephant</p>
+          }
           <div className="spacer"></div>
         </LeftHandColumn>
         <RightHandColumn>
@@ -79,5 +83,3 @@ export function InitiateSignIn({
     </form>
   )
 }
-
-//{/*<Button {...props}>Sign In</Button> */}
