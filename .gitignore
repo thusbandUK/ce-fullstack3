@@ -16,6 +16,8 @@
 /app/ui/dashboard/writtenSummaryMock.tsx
 /app/ui/dashboard/mcqSummaryMock.tsx
 /app/(overview)/flashcards/mock/
+/app/lib/mockDatabase.ts
+__tests__/ManualAndLinks.txt
 
 # db init content
 /app/seed/initiation.sql
@@ -24,6 +26,7 @@
 
 #miscellaneous code
 /app/miscellaneous-code
+
 
 # dependencies
 /node_modules
