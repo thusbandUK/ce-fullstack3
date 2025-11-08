@@ -13,18 +13,20 @@ import LeftHandColumn from "@/app/ui/dashboard/leftHandColumn";
 import BottomRow from "@/app/ui/dashboard/bottomRow";
 import RightHandColumn from "@/app/ui/dashboard/rightHandColumn";
 import DeleteConfirm from "@/app/ui/deleteConfirm";
+import SignUpForm from "@/app/ui/signUp";
 //import MailTest from "./mailTest";
 
 //import CombinedAnimation2 from "../animation/explosion";
 
 export default async function About(){
   
-  const session: any = await auth();
+  //const session: any = await auth();
   //const mockLocation = ""
 
-    if (!session){
-      redirect(`/account/login`);
-    }
+    
+    //if (!session){
+      //redirect(`/account/login`);
+    //}
 
     let message:string = ""
 
@@ -34,20 +36,12 @@ export default async function About(){
 
      return (
       <>
-      {/*<>
-          <p>Hello, I&#39;m the confirm page</p>
-          <DeleteConfirm
-            sessionEmail={session.user?.email}
-          >
-          </DeleteConfirm>
-     </>*/}
-      <HeaderDivs h1Content="Confirm"></HeaderDivs>
-           {/**
-             <DeleteConfirm
-               sessionEmail={session.user?.email}
-              >
-             </DeleteConfirm> */}
-             
+      <HeaderDivs h1Content='Welcome!'/>
+            <SignUpForm
+              username={''}
+              email={'fake@email.com'}
+              location={'fake-location'}
+    />
         </>
 )
 }

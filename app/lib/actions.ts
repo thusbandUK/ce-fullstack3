@@ -10,7 +10,6 @@ import { UserDetails } from './definitions';
 import { locationParser } from './functions';
 import { isRedirectError } from "next/dist/client/components/redirect";
 import { verifySolution } from 'altcha-lib';
-import { Payload } from 'altcha-lib/types';
 
 const FormSchema = z.object({
   username: z.coerce.string({invalid_type_error: "Username can only contain letters and numbers",}).regex(/^[a-zA-Z0-9]+$/, { message: "Username can only contain letters and numbers" }).max(20).min(5),
