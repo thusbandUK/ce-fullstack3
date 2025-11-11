@@ -22,6 +22,7 @@ import { sendMail } from './send-mail';
 import { dateCompare } from './dateCompare';
 const SITE_URL = process.env.SITE_URL;
 import { signOut } from '../../auth';
+import { customDeleteMailHtml, customDeleteMailText } from '../emails/deleteAccountEmail';
 
 const InitiateDeleteSchema = z.object({
   email: z.coerce.string({invalid_type_error: "Invalid email"}).email()
@@ -244,15 +245,15 @@ export async function initiateDelete(email: string, prevState: State2){
 
       const returnedData = await sql.query(query, argumentData);
       
+      const deleteUrl = `${SITE_URL}/account/delete/confirm?token=${stringToken}&email=${validatedEmail}`
       
       await sendMail(
         {
           email: validatedEmail,
           sendTo: validatedEmail,
           subject: 'Link to delete account',
-          text: `Click the link to delete your account`,
-          //html: `<p>Click <a href="https://ce-fullstack3-hzaf.vercel.app/account/delete/confirm?token=${stringToken}&email=${validatedEmail}">Link</a> to delete account</p>`
-          html: `<p>Click <a href="${SITE_URL}/account/delete/confirm?token=${stringToken}&email=${validatedEmail}">Link</a> to delete account</p>`
+          text: customDeleteMailText({deleteUrl: deleteUrl, host: String(SITE_URL)}),
+          html: customDeleteMailHtml({ deleteUrl: deleteUrl, host: String(SITE_URL) })
         }
       )      
           
@@ -270,14 +271,11 @@ export async function initiateDelete(email: string, prevState: State2){
 //Separate function which updates the timestamp and the token for an existing entry
 //in the delete_token table
 
-// formData: FormData
-//, formData: FormData
 export async function renewDelete(email: string, prevState: State2){
   
   //validates email to ensure not corrupted, it expects one thing and one thing only
   //and that's a valid email
-  const validatedFields = NewConfirmEmail.safeParse({    
-    //email: formData.get('email')
+  const validatedFields = NewConfirmEmail.safeParse({
     email: email    
   });  
   
@@ -295,7 +293,6 @@ export async function renewDelete(email: string, prevState: State2){
 
   //extracts validated email
   const validatedEmail = validatedFields.data?.email;
-  //const validatedEmail = email;
 
   const token = crypto.randomBytes(32);
   const stringToken = token.toString('hex');    
@@ -310,15 +307,15 @@ export async function renewDelete(email: string, prevState: State2){
     
     const returnedData = await sql.query(query, argumentData);
     
+    const deleteUrl = `${SITE_URL}/account/delete/confirm?token=${stringToken}&email=${validatedEmail}`
+    
     await sendMail(
       {
         email: validatedEmail,
         sendTo: validatedEmail,
         subject: 'Link to delete account',
-        text: 'Click the link to delete your account',
-        //html: `<p>Click <a href="http://localhost:3000/account/delete/confirm?token=${stringToken}&email=${validatedEmail}">Link</a> to delete account</p>`,
-        //html: `<p>Click <a href="https://ce-fullstack3-hzaf.vercel.app/account/delete/confirm?token=${stringToken}&email=${validatedEmail}">Link</a> to delete account</p>`
-        html: `<p>Click <a href="${SITE_URL}/account/delete/confirm?token=${stringToken}&email=${validatedEmail}">Link</a> to delete account</p>`
+        text: customDeleteMailText({deleteUrl: deleteUrl, host: String(SITE_URL)}),
+        html: customDeleteMailHtml({ deleteUrl: deleteUrl, host: String(SITE_URL) })
       }
     )      
         
