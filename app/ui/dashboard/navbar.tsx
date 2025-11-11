@@ -18,8 +18,9 @@ export default async function Navbar(){
           {/*<div id="enlarge-text-anchor" className="anchor relative"></div>*/}
           <div className="collapse duration-500 justify-end mobile-nav">
             <input type="checkbox" id="menu-checkbox" aria-labelledby="menu-button"/>
+            
             <button 
-              className="btn btn-square btn-ghost collapse-title flex justify-end pe-0"
+              className="btn btn-square w-full btn-ghost collapse-title flex justify-end pe-0"
               id="menu-button"
               aria-expanded="false" aria-haspopup="true" aria-controls="menu-links-container" aria-label="menu button"
             >
