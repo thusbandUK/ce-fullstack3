@@ -67,22 +67,3 @@ export default function IndividualElephantSvg(
   </svg>
     )
 }
-
-/*
-section1,
-    section2,
-    section3,
-    section4,
-    section5,
-    section6,
-    section7
-
-    ,
-    section1: string,
-    section2: string,
-    section3: string,
-    section4: string,
-    section5: string,
-    section6: string,
-    section7: string
-*/
