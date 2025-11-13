@@ -1,15 +1,91 @@
-import { expect, describe, it } from 'vitest'
+import { expect, describe, it, vi } from 'vitest'
 import { shuffle, locationParser } from '../app/lib/functions';
 import { cleanUpUrl } from '../app/lib/authFunctions';
+import { colourManagement } from './colourManagementFunctionCopy'
+import { ColourManagementClass, TimeoutClass } from '../app/animation/animationFunctions';
 
 /*Tests various functions including:
 
 shuffle
 locationParser
 cleanUpUrl
+colourManagement
+ColourManagementClass
 
 */
+//tests TimeoutClass
+describe('TimeoutClass', () => {
+    it('tests functions of instance of TimeoutClass', () => {
+        const timeoutInstance = new TimeoutClass;
+        //initial value of timeout is 25
+        expect(timeoutInstance.getTimeout).toBe(25)
+        //increment timeout adds the value passed to the existing value
+        timeoutInstance.incrementTimeout = 25
+        expect(timeoutInstance.getTimeout).toBe(50)
+        //timeoutUpdate method returns the value produced when the existing time value is incremented by the value passed
+        expect(timeoutInstance.timeoutUpdate(50)).toBe(100)
+        //sets the value of timeout to the value passed
+        timeoutInstance.setTimeout = 25
+        expect(timeoutInstance.getTimeout).toBe(25)
+        
+    })
+})
+//tests ColourManagementClass
+describe('ColourManagementClass', () => {
+    it('tests ColourManagementClass, shows that separate instances each output the four colours once each when called four times', () => {
+        const colourSet: string[] = ['#F28972', '#F2C48D', '#D98FBF', '#8268A6']
+        const instance1 = new ColourManagementClass;
+        const instance2 = new ColourManagementClass;
 
+        const testColourSelectorInstance1 = vi.fn(() => {
+            return instance1.objectColourSelector()
+        })
+        const testColourSelectorInstance2 = vi.fn(() => {
+            return instance2.objectColourSelector()
+        })
+        let n = 0
+        while (n < 4){
+            n++
+            testColourSelectorInstance1()
+        }
+        let m = 0
+        while (m < 4){
+            m++
+            testColourSelectorInstance2()
+        }
+        expect(testColourSelectorInstance1).toHaveReturnedTimes(4)
+        expect(testColourSelectorInstance2).toHaveReturnedTimes(4)
+        colourSet.forEach((x: string) => {
+            expect(testColourSelectorInstance1).toHaveReturnedWith(x)
+            expect(testColourSelectorInstance2).toHaveReturnedWith(x)
+        })
+    })
+})
+
+//tests colourManagement
+describe('colourManagement function', () => {
+    it('tests colourManagement, shows sequentially outputs the four colours in a random sequence but each once per four colours in total', () => {
+        const colourSet: string[] = ['#F28972', '#F2C48D', '#D98FBF', '#8268A6']
+        const testColourSelector = vi.fn(() => {
+            return colourManagement.objectColourSelector()
+        })
+        testColourSelector()
+        expect(colourManagement.objectUsedColours.length).toBe(1);
+        expect(colourManagement.objectRemainingColours.length).toBe(3);
+        testColourSelector()
+        expect(colourManagement.objectUsedColours.length).toBe(2);
+        expect(colourManagement.objectRemainingColours.length).toBe(2);
+        testColourSelector()
+        expect(colourManagement.objectUsedColours.length).toBe(3);
+        expect(colourManagement.objectRemainingColours.length).toBe(1);
+        testColourSelector()        
+        expect(testColourSelector).toHaveReturnedTimes(4)
+        expect(testColourSelector).toHaveReturnedWith(colourSet[0])
+        expect(testColourSelector).toHaveReturnedWith(colourSet[1])
+        expect(testColourSelector).toHaveReturnedWith(colourSet[2])
+        expect(testColourSelector).toHaveReturnedWith(colourSet[3])        
+    })
+})
 
 //tests shuffle function in lib/functions
 //the function is designed to shuffled the contents of an array, which is used to randomise the 
