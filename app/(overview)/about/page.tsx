@@ -1,19 +1,8 @@
-import SignOut from "../../ui/dashboard/signOut"
-//import { SignIn } from '../../ui/initiateSignIn';
-import { auth } from '@/auth';
-import CELogoAnimation from "../../ui/dashboard/cELogoAnimation";
-import MovingElephantAnimation from "../../ui/dashboard/movingElephantAnimation";
-import Link from "next/link";
-import ArrowCommand from "../../ui/dashboard/arrowCommand";
-import SignUpNewsletter from "../../ui/signUpNewsletter";
-import { redirect } from 'next/navigation';
-import DeleteRequestRenew from "@/app/ui/deleteRequestRenew";
+
 import HeaderDivs from "@/app/ui/dashboard/header";
-import LeftHandColumn from "@/app/ui/dashboard/leftHandColumn";
-import BottomRow from "@/app/ui/dashboard/bottomRow";
-import RightHandColumn from "@/app/ui/dashboard/rightHandColumn";
-import DeleteConfirm from "@/app/ui/deleteConfirm";
+
 import SignUpForm from "@/app/ui/signUp";
+import IndividualElephantContainer from "@/app/animation/individualElephantContainer";
 //import MailTest from "./mailTest";
 
 //import CombinedAnimation2 from "../animation/explosion";
@@ -28,20 +17,22 @@ export default async function About(){
       //redirect(`/account/login`);
     //}
 
-    let message:string = ""
-
-    const mockParams = "already"
+    
     
     
 
      return (
       <>
       <HeaderDivs h1Content='Welcome!'/>
-            <SignUpForm
-              username={''}
-              email={'fake@email.com'}
-              location={'fake-location'}
-    />
+      
+      <IndividualElephantContainer 
+        startWhite={true}
+      />
+      <IndividualElephantContainer 
+        startWhite={false}
+        sizeModifier={0.3}
+      />
+            
         </>
 )
 }
