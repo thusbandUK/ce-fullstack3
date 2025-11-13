@@ -2,19 +2,27 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import IndividualElephantSvg from './individualElephantSvg';
+import { ColourManagementClass, TimeoutClass } from './animationFunctions';
 
 /*
-This is an arguably slightly convoluted module, which animates the transfer of an elephant from one
-part of the screen to another then back again, repeated indefinitely via a setInterval function in the
-bottom useEffect function.
-Various let variables keep track of which part of which elephant is being recoloured at which moment and
-others keep track of what colour each elephant should appear
-It would be more "proper" I think if all the updated values were held in state rather than global let
-variables. If it were to be updated in that way, I think a third, grandparent component would have to be
-developed, so that the child and grandchild would be rerendered on each update of the state, but this is
-sufficient for now
-*/
+This animates a stand-alone elephant, which is placed in the parent element of the component which calls 
+it. (Previous versions used css anchors but they're not compatible with various browsers.)
+Although it's stand-alone, two called in tandem can be made to appear as if they are teleporting back 
+and forth by calling the first one with startWhite prop = false, and the second with true (or vice versa)
+(defaults to true, ie starting white)
 
+Each instance of the elephant creates a new instance of ColourManagementClass (./animationFunctions), 
+which oversees the cycling between the four different colours in random sequence.
+
+The size of the elephant is controlled by the sizeModifier prop which:
+1) defaults to 0.2
+2) is multiplied by window.screenWidth to give its width (equal to its height) in pixels
+
+Similarly, each instance also has its own timeoutInstance from TimeoutClass (./animationFunctions),
+which manages the values passed to the timeout functions in a way that doesn't require any global
+let variables
+
+*/
 
 export interface ColorScheme {
   section1: string;
@@ -26,117 +34,125 @@ export interface ColorScheme {
   section7: string;
 }
 
-const IndividualElephantContainer = () => {
-     
-     const backgroundColour = "white";
+interface ElephantProps {
+  startWhite?: boolean;
+  sizeModifier?: number;
+}
 
-     const [colourPalette, setColourPalette] = useState<string[]>(['#f28972', '#F2C48D', '#D98FBF', '#8268A6']);
-     const [currentColour, setCurrentColour] = useState<string>(colourPalette[Math.floor(Math.random() * 4)]);     
-     const [ screenWidth, setScreenWidth ] = useState<number>(0)    
-     const [sectionColours, setSectionColours] = useState<ColorScheme>({
-        section1: backgroundColour,
-        section2: backgroundColour,
-        section3: backgroundColour,
-        section4: backgroundColour,
-        section5: backgroundColour,
-        section6: backgroundColour,
-        section7: backgroundColour
-       }) 
-      
-     const [screenHeight, setScreenHeight] = useState<number>(400)
+/* Note how default props are defined below */
+const IndividualElephantContainer: React.FC<ElephantProps>= ({startWhite = true, sizeModifier = 0.2}
+) => {
 
-     //sets screen width
+     //creates new instance of ColourManagementClass (see animationFunctions)
+     const colourManagementInstance = new ColourManagementClass;
+
+     //creates new instance of TimeoutClass (see animationFunctions)
+     const timeoutInstance = new TimeoutClass;
+
+     //the elephant cycles between white and one of the other four colours, but with the startWhite prop
+     //means that white is the first colour, otherwise a random colour is selected for teh starting colour
+     const initialBackgroundColour = startWhite ? "white" : colourManagementInstance.objectColourSelector();
+
+     const [ screenWidth, setScreenWidth ] = useState<number>(0)
+     const [ sectionColours, setSectionColours ] = useState<ColorScheme>({
+        section1: initialBackgroundColour,
+        section2: initialBackgroundColour,
+        section3: initialBackgroundColour,
+        section4: initialBackgroundColour,
+        section5: initialBackgroundColour,
+        section6: initialBackgroundColour,
+        section7: initialBackgroundColour
+       })
+
+     //sets screen width (note that the elephant svg component, called below, doesn't render until the
+      //screen width has been set)
      useEffect(() => {
       return setScreenWidth(window.innerWidth)
      }, [window.innerWidth])
-    
-     //similar principle as above, remainingColours is emptied as usedColours is filled, once the
-     //former is emptied, it is filled with the usedColours values and usedColours is emptied
-     let remainingColours: string[] = ['#F28972', '#F2C48D', '#D98FBF', '#8268A6'];
-     
-     let usedColours: string[] = [];
-    
-     //this is updated with the returned value of the below function colourSelector, which is called
-     //on the first pass through each of the recursive functions, emptyElephantA and ...B
-     //let nextColour = "";
 
-     
-     //this updates the state in which the current colours of each section of elephants A and B
-     //are stored
+     //resets timeoutInstance to 25 on first render only
+     useEffect(() => {
+      timeoutInstance.setTimeout = 25;
+     }, [])
+
+     //this updates the colour of one of the seven individual sections of the elephant,
+     //all of which are stored in state
      const updateState = (section: number, color: string) => {
       setSectionColours(prevState => ({
         ...prevState,
-        [`section${section}`]: color, // Updating key1's value
+        [`section${section}`]: color,
       }));
     }
 
-     //works through the remainingColours array above to cycle through the four available colours
-     //in a random order, before then starting again from the beginning
-     const colourSelector = () => {
-       if (remainingColours.length === 0){
-         remainingColours = usedColours;
-         usedColours = [];
-       }  
-       const index = Math.floor(Math.random() * remainingColours.length);
-       const selectedColour = remainingColours.splice(index, 1)[0];
-       usedColours.push(selectedColour);
-       return selectedColour;
-     }
-     
-     let finalColor = "";
+    //this handles the actual animation. It effects a mexican wave style swoosh of a new colour
+    //for each section of the elephant, each new colour added 25 milliseconds after the previous
+     const dominoFinish = useCallback(() => {
 
-     let timeout3 = 25;
-
-     const dominoFinish2 = useCallback(() => {
-
+      //array of numbers of the different sections of the elephant for the animation logic to loop
+      //over
       const arrayToConsume = [1,2,3,4,5,6,7]
-      const finalColour = colourSelector();
 
+      //if prop startWhite is true then first colour is white, else second colour is white
+      //and their opposites are a randomly selected colour
+      const firstColour = startWhite ? "white" : colourManagementInstance.objectColourSelector();
+      const secondColour = startWhite ? colourManagementInstance.objectColourSelector() : "white";
+
+      //this implements the first mexican wave of colour, which goes in one direction
       arrayToConsume.forEach((x) => {
         setTimeout(() => {
-          return updateState(x, finalColour)
-        }, timeout3 = timeout3 + 25)
+          return updateState(x, firstColour)
+        }, timeoutInstance.timeoutUpdate(25))
       })
 
-      timeout3 = timeout3 + 2000;
+      //this delays the transformation of the elephant into the second colour
+      timeoutInstance.incrementTimeout = 2000;
+
+      //this implements the second mexican wave of colour, in the opposite direction to the first
       for (let y = arrayToConsume.length; y > 0; y--){
         setTimeout(() => {
-          return updateState(y, 'white')
-        }, timeout3 = timeout3 + 25)
+          return updateState(y, secondColour)
+        }, timeoutInstance.timeoutUpdate(25))
       }
-   
-      timeout3 = timeout3 + 2000;
+
+      //another delay
+      timeoutInstance.incrementTimeout = 2000;
 
      }, [])
 
+     //this calls dominoFinish, initiating the animation
      useEffect(() => {
 
+      //defines variable constant which is incremented by one each time with each call of 
+      //domino finish via the interval function below. Once it reaches 1000 the interval
+      //is stopped. At this stage, the exact time in which each tile of the elephant will change
+      //colour has been calculated up to half an hour ahead, so it's important to stop it or else
+      //computing power will be wasted planning days or even weeks of slide colour change times
       let maxInterval = 0;
       const intervalRoutine = setInterval(() => {
-        dominoFinish2()
-        timeout3 = timeout3 + 2500;
+        dominoFinish()
+        timeoutInstance.setTimeout = 2500
+        //see notes on terminating interval above
         if (++maxInterval > 1000){
           window.clearInterval(intervalRoutine)
         }
-
       }, 1)
-      
+
      }, [])
 
+  //In the below, note how the actual elephant is only rendered once screenWidth has been calculated
   return (
     <>
-    { 
-      screenWidth ? 
+    {
+      screenWidth ?
       <IndividualElephantSvg
         sectionColours={sectionColours}
-        screenHeight={screenHeight}
         screenWidth={screenWidth}
+        sizeModifier={sizeModifier}
       ></IndividualElephantSvg>
-      : 
+      :
       null
-    
+
     }
-      
     </>
   )
 };

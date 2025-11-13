@@ -1,40 +1,24 @@
 "use client";
 
-//import { render } from "react-dom";
-//import { ColorScheme } from "./movingElephantAnimation";
-import { ColorScheme } from "./individualElephantContainer"
-//import { useEffect, useState } from "react";
-/*
-One receives props sectionColours.elephantA, the other sectionColours.elephantB
-*/
-
-const screenWidth = 400;
-
-
-
+import { ColorScheme } from "./individualElephantContainer";
 
 export default function IndividualElephantSvg(
   {
     sectionColours,
-    screenHeight,
     screenWidth,
+    sizeModifier,
   }: 
   {
     sectionColours: ColorScheme,
-    screenHeight: number,
     screenWidth: number,
+    sizeModifier: number
   }
 ){
 
-  
-  const renderedHeight = screenHeight * 0.2;
-  const renderedWidth = screenWidth * 0.2;
-  console.log('renderedWidth', renderedWidth)
-  
+    const renderedWidth = screenWidth * sizeModifier;
 
     return (
-        <svg className={`m-auto`} width={renderedWidth} height={renderedWidth} viewBox="0 0 900 900" fill="none" xmlns="http://www.w3.org/2000/svg">
-    
+  <svg className={`m-auto`} width={renderedWidth} height={renderedWidth} viewBox="0 0 900 900" fill="none" xmlns="http://www.w3.org/2000/svg">
     <g filter="url(#filter0_d_7400_5)">
       <path
         d="M100 551.167C100 540.122 108.954 531.167 120 531.167H345.707C356.753 531.167 365.707 540.122 365.707 551.167V697.162C365.707 708.208 356.752 717.162 345.707 717.162H120C108.954 717.162 100 708.208 100 697.162V551.167Z"
