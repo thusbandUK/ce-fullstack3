@@ -6,7 +6,7 @@ colour from the options that remain for subsequent OCS method calls to the usedC
 four colours have been used, the OCS method automatically transfers all four colours from used back to
 remaining so the cycle can start again.
 It's important to have a class so that every instance of the elephant can have its colour sequence
-managed by its own instance, otherwise one function could be supplying several elephants at once such
+managed by its own class instance, otherwise one function could be supplying several elephants at once such
 that they don't cycle through all four colours and or may have the same colour at the same time.
 */
 
@@ -46,6 +46,12 @@ export const ColourManagementClass = class {
       }
   };
 
+  /* Like the above, it's useful for every instance of the elephant to have its own TimeoutObject,
+  which will enable the running total of timeout (the value of which is passed to the two interval
+    functions) to be held in an object designated to that elephant, rather than as a global variable
+  )
+
+   */
 export const TimeoutClass = class {
     timeoutValue: number
     constructor(){
@@ -56,15 +62,18 @@ export const TimeoutClass = class {
         return this.timeoutValue
     }
 
+    //changes the current timeoutValue to the number passed
     set setTimeout(number: number){
         this.timeoutValue = number;
     }
 
+    //increments existing timeoutValue by the number passed
     set incrementTimeout(number: number){
         const newValue = this.timeoutValue + number
         this.timeoutValue = newValue;
     }
 
+    //increments timeoutValue by the number passed AND returns the updated value
     timeoutUpdate(increment: number){
         this.incrementTimeout = increment;
         return this.getTimeout;
