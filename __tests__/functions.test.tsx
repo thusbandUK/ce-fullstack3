@@ -26,12 +26,20 @@ describe('sequenceRandomiser', () => {
         //runs sequenceRandomiser to check the output has length 7
         expect(sequenceRandomiser().length).toBe(7)
 
-        //calls spy function four times
-        mockSequenceRandomiser()
-        mockSequenceRandomiser()
-        mockSequenceRandomiser()
-        mockSequenceRandomiser()
-        expect(mockSequenceRandomiser).toHaveBeenCalledTimes(4)
+        //this is interesting, because I effectively want to test that the output is random
+        //(one of two options) it's quite hard to write a test that always produces the same
+        //output for the same code. So basically, the mock function is called 20 times, and
+        //the two possible outputs only need to appear once each to satisfy the test.
+        //When it was just four times, it did fail the test at one point, effectively like 
+        //flipping a coin and getting heads (or tails) four times in a row. The odds of 
+        //the same result 20 times in a row are approx one a million (1 in 1,048,576) so
+        //this should be fairly reliable
+        let n = 0;
+        while (n < 20){
+            n++
+            mockSequenceRandomiser()
+        }
+        expect(mockSequenceRandomiser).toHaveBeenCalledTimes(20)
 
         //checks that the array has been returned in the increasing and decreasing directions at least once each
         expect(mockSequenceRandomiser).toHaveReturnedWith(1)
