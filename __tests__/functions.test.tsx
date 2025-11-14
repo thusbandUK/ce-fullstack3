@@ -2,7 +2,7 @@ import { expect, describe, it, vi } from 'vitest'
 import { shuffle, locationParser } from '../app/lib/functions';
 import { cleanUpUrl } from '../app/lib/authFunctions';
 import { colourManagement } from './colourManagementFunctionCopy'
-import { ColourManagementClass, TimeoutClass } from '../app/animation/animationFunctions';
+import { ColourManagementClass, TimeoutClass, sequenceRandomiser } from '../app/animation/animationFunctions';
 
 /*Tests various functions including:
 
@@ -11,8 +11,34 @@ locationParser
 cleanUpUrl
 colourManagement
 ColourManagementClass
+sequenceRandomiser
 
 */
+
+//tests sequenceRandomiser
+describe('sequenceRandomiser', () => {
+    it('tests ensures that the only output is an array of numbers of either 1 to 7 or 7 to 1', () => {
+        //spy function which returns only the first number in the array
+        const mockSequenceRandomiser = vi.fn(() => {
+            return sequenceRandomiser()[0]
+        })
+        
+        //runs sequenceRandomiser to check the output has length 7
+        expect(sequenceRandomiser().length).toBe(7)
+
+        //calls spy function four times
+        mockSequenceRandomiser()
+        mockSequenceRandomiser()
+        mockSequenceRandomiser()
+        mockSequenceRandomiser()
+        expect(mockSequenceRandomiser).toHaveBeenCalledTimes(4)
+
+        //checks that the array has been returned in the increasing and decreasing directions at least once each
+        expect(mockSequenceRandomiser).toHaveReturnedWith(1)
+        expect(mockSequenceRandomiser).toHaveReturnedWith(7)
+    })
+})
+
 //tests TimeoutClass
 describe('TimeoutClass', () => {
     it('tests functions of instance of TimeoutClass', () => {
