@@ -23,6 +23,14 @@ export const ColourManagementClass = class {
       return this.remainingColours.splice(index, 1)[0];
     }
 
+    get getUsedColours(){
+        return this.usedColours
+    }
+
+    get getRemainingColours(){
+        return this.remainingColours
+    }
+
     set resetRemainingColours(arrayOfColours: string[]){
         this.remainingColours = arrayOfColours;
     }
@@ -31,14 +39,19 @@ export const ColourManagementClass = class {
         this.usedColours.push(colour)
     }
 
+    set assignUsedColoursValue(array: string[]){
+        this.usedColours = array
+    }
+
     resetUsedColours(){
-        this.usedColours = []
+        this.assignUsedColoursValue = []
     }
 
     objectColourSelector(){
         if (this.remainingColours.length === 0){
-          this.resetRemainingColours = this.usedColours
-          this.resetUsedColours
+          const replacementArray = this.getUsedColours
+          this.resetRemainingColours = replacementArray          
+          this.resetUsedColours()
         }
         const colour = this.getColour
         this.setUsedColours = colour
@@ -77,5 +90,17 @@ export const TimeoutClass = class {
     timeoutUpdate(increment: number){
         this.incrementTimeout = increment;
         return this.getTimeout;
+    }
+}
+
+//this returns an array containing the numbers 1 to 7 in either ascending or descending order
+//at random. Used by domino finish in landing page animation so that the Mexican wave colours
+//the elephant in one of two opposite directions at random
+export const sequenceRandomiser = () => {
+    const randomNumber = Math.floor(Math.random() * 2);
+    if (randomNumber === 0){
+      return [1,2,3,4,5,6,7];
+    } else {
+      return [7,6,5,4,3,2,1];
     }
 }
