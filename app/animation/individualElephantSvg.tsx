@@ -11,11 +11,11 @@ export default function IndividualElephantSvg(
   {
     sectionColours: ColorScheme,
     screenWidth: number,
-    sizeModifier: number
+    sizeModifier: number,
   }
 ){
 
-    const renderedWidth = screenWidth * sizeModifier;
+    const renderedWidth = screenWidth < 792 ? screenWidth * 2 * sizeModifier : screenWidth * sizeModifier;
 
     return (
   <svg className={`m-auto`} width={renderedWidth} height={renderedWidth} viewBox="0 0 900 900" fill="none" xmlns="http://www.w3.org/2000/svg">

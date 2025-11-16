@@ -62,11 +62,12 @@ const IndividualElephantContainer: React.FC<ElephantProps>= ({startWhite = true,
         section5: initialBackgroundColour,
         section6: initialBackgroundColour,
         section7: initialBackgroundColour
-       })
-
-     //sets screen width (note that the elephant svg component, called below, doesn't render until the
-      //screen width has been set)
+       })     
+    
      useEffect(() => {
+      if (!window){
+        return
+      }
       return setScreenWidth(window.innerWidth)
      }, [window.innerWidth])
 
@@ -141,18 +142,18 @@ const IndividualElephantContainer: React.FC<ElephantProps>= ({startWhite = true,
 
   //In the below, note how the actual elephant is only rendered once screenWidth has been calculated
   return (
-    <>
+    <>    
     {
       screenWidth ?
       <IndividualElephantSvg
         sectionColours={sectionColours}
         screenWidth={screenWidth}
-        sizeModifier={sizeModifier}
+        sizeModifier={sizeModifier}        
       ></IndividualElephantSvg>
       :
       null
 
-    }
+    }    
     </>
   )
 };
