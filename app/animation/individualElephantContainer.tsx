@@ -85,6 +85,14 @@ const IndividualElephantContainer: React.FC<ElephantProps>= ({startWhite = true,
       }));
     }
 
+    console.log('getTimeout')
+    console.log(timeoutInstance.getTimeout)
+    console.log(timeoutInstance.incrementTimeout = 50)
+    console.log('getTimeout')
+    console.log(timeoutInstance.getTimeout)
+    console.log(timeoutInstance.timeoutUpdate(60))
+    console.log('getTimeout')
+    console.log(timeoutInstance.getTimeout)
     //this handles the actual animation. It effects a mexican wave style swoosh of a new colour
     //for each section of the elephant, each new colour added 25 milliseconds after the previous
      const dominoFinish = useCallback(() => {
