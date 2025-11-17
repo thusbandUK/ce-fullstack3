@@ -2,8 +2,12 @@
 import HeaderDivs from "@/app/ui/dashboard/header";
 
 import SignUpForm from "@/app/ui/signUp";
-import IndividualElephantContainer from "@/app/animation/individualElephantContainer";
+import LeftHandColumn from "@/app/ui/dashboard/leftHandColumn";
+import RightHandColumn from "@/app/ui/dashboard/rightHandColumn";
+import BottomRow from "@/app/ui/dashboard/bottomRow";
 //import MailTest from "./mailTest";
+import dynamic from 'next/dynamic';
+const IndividualElephantContainer = dynamic(() => import('../../animation/individualElephantContainer'), { ssr: false });
 
 //import CombinedAnimation2 from "../animation/explosion";
 
@@ -23,15 +27,17 @@ export default async function About(){
 
      return (
       <>
-      <HeaderDivs h1Content='Welcome!'/>
-      
-      <IndividualElephantContainer 
-        startWhite={true}
-      />
-      <IndividualElephantContainer 
-        startWhite={false}
-        sizeModifier={0.3}
-      />
+      <HeaderDivs h1Content="Goodbye!"></HeaderDivs>
+          <BottomRow>
+            <LeftHandColumn>
+              <div className="m-auto">
+                <p>Sorry you are leaving. Hope you have found Chemistry Elephant useful. You know where we are if you need us again.</p>
+              </div>
+            </LeftHandColumn>
+            <RightHandColumn>
+              <IndividualElephantContainer />
+            </RightHandColumn>
+          </BottomRow>
             
         </>
 )
