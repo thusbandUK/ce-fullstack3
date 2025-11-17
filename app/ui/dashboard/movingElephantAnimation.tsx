@@ -15,7 +15,7 @@ variables. If it were to be updated in that way, I think a third, grandparent co
 developed, so that the child and grandchild would be rerendered on each update of the state, but this is
 sufficient for now
 */
-
+/*
 interface HomeProps {
     anchors: anchorsInterface;
 }
@@ -229,3 +229,4 @@ const MovingElephantAnimation: React.FC<HomeProps> = ({
 };
 
 export default MovingElephantAnimation;
+*/
