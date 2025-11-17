@@ -105,6 +105,8 @@ const IndividualElephantContainer: React.FC<ElephantProps>= ({startWhite = true,
         }, timeoutInstance.timeoutUpdate(25))
       })
 
+      console.log('current value timeoutInstance')
+      console.log(timeoutInstance.getTimeout)
       //this delays the transformation of the elephant into the second colour
       timeoutInstance.incrementTimeout = 2000;
 
