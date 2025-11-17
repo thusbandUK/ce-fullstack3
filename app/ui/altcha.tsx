@@ -22,8 +22,8 @@ that deals with the rest of the sign in process, validating email addresses and 
 interface AltchaProps {
   onStateChange?: (ev: Event | CustomEvent) => void
 }
-//added function, deleted => between ...ref) AND {...
-const Altcha = forwardRef<{ value: string | null }, AltchaProps>(function ({ onStateChange }, ref) {
+// eslint-disable-next-line react/display-name
+const Altcha = forwardRef<{ value: string | null }, AltchaProps>(({ onStateChange }, ref) => {
   const widgetRef = useRef<AltchaWidget & AltchaWidgetMethods & HTMLElement>(null)
   const [value, setValue] = useState<string | null>(null)  
 
