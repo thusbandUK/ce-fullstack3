@@ -82,8 +82,8 @@ export const TimeoutClass = class {
 
     //increments existing timeoutValue by the number passed
     set incrementTimeout(number: number){
-        const newValue = this.timeoutValue + number
-        this.timeoutValue = newValue;
+        const newValue = this.getTimeout + number
+        this.setTimeout = newValue;
     }
 
     //increments timeoutValue by the number passed AND returns the updated value
