@@ -67,6 +67,7 @@ export default async function Account({ searchParams }: { searchParams: { locati
                   :
                   <InitiateSignIn
                     location="/account"
+                    error={false}
                   />}
               </div>
               {
