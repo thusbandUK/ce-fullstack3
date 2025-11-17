@@ -25,6 +25,7 @@ export default async function Page(){
               <div className="m-5">
                 <InitiateSignIn
                   location={'account/delete/sent'}
+                  error={false}
                 />
               </div>
             </RightHandColumn>
