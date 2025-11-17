@@ -1,6 +1,6 @@
-import { auth } from '@/auth';
+import { auth } from '../../../../auth'
 import { redirect } from 'next/navigation';
-import SignUpNewsletter from '@/app/ui/signUpNewsletter';
+import SignUpNewsletter from '../../../ui/signUpNewsletter';
 
 export default async function ReceiveEmail({ searchParams }: { searchParams: { location: string } }){
 
@@ -11,7 +11,28 @@ export default async function ReceiveEmail({ searchParams }: { searchParams: { l
     }
 
     return (
-        <div>
+      <div>
+        <div className="w-full flex flex-col mx-auto grid grid-cols-6">
+          <div className="border-2 w-full flex flex-col border-black rounded-lg px-5 py-1 m-auto col-start-1 col-span-6">
+            <div className="spacer"></div>
+            <h1>Newsletter</h1>
+            <div className="spacer"></div>
+          </div>
+        </div>
+
+        <SignUpNewsletter
+          email={session.user.email}
+          location={searchParams.location ? searchParams.location : ''}
+          receivingNewsletter={session.user.receive_email}
+        ></SignUpNewsletter>
+      </div>
+    )
+}
+
+
+
+    /*
+    <div>
           <h1>Sign up for newsletters</h1>
           <SignUpNewsletter
             email={session.user.email}
@@ -20,5 +41,4 @@ export default async function ReceiveEmail({ searchParams }: { searchParams: { l
             receivingNewsletter={session.user.receive_email}
           ></SignUpNewsletter>
         </div>
-    )
-}
+    */

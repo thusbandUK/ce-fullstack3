@@ -1,8 +1,10 @@
 "use client"
 
 import React, { useState, useEffect, useCallback } from 'react';
+import { ColourManagementClass, sequenceRandomiser } from '../../animation/animationFunctions';
+import IndividualElephantSvg from '../../animation/individualElephantSvg';
 
-interface HomeProps {    
+interface HomeProps {
     sizing: any;
   }
 
@@ -16,10 +18,10 @@ interface ColorScheme {
   section7: string;
 }
 
-const CELogoAnimation: React.FC<HomeProps> = ({sizing}) => {
-     
-     const backgroundColour = "white";
+const CELogoAnimation: React.FC<HomeProps> = () => {
 
+     const backgroundColour = "white";
+     const colourManagementInstance = new ColourManagementClass;
      const [sectionColours, setSectionColours] = useState<ColorScheme>({
       section1: backgroundColour,
       section2: backgroundColour,
@@ -28,166 +30,159 @@ const CELogoAnimation: React.FC<HomeProps> = ({sizing}) => {
       section5: backgroundColour,
       section6: backgroundColour,
       section7: backgroundColour
-     }) 
+     })
+     const [ screenWidth, setScreenWidth ] = useState<number>(0)
 
-     const numberArray = [1,2,3,4,5,6,7];
-     
-     const sequenceRandomiser = (array: number[]) => {
-      const randomNumber = Math.floor(Math.random() * 2);
-      if (randomNumber === 0){
-        return array;
-      }
-      const reversedArray = [];
-      for (let x = array.length - 1; x >= 0; x--){
-        reversedArray.push(array[x]);
-      }
-      return reversedArray;
-     }
+     //updates state with the screen width. note, the elephant doesn't render until
+     //the screen width has been set
+     useEffect(() => {
+      setScreenWidth(window.innerWidth);
+     }, [])
+/* This is very important. It looks after various variables, object-oriented style. Notes on each
+ can be found embedded within*/
+const variableManager = {
+  //this effectively sets the time at which the first colour change called by dominoFinish occurs
+  //(the second phase, hence not zero)
+  timeout: 1800,
+  //this is used by flickeringAnimation to call specific times listed in timeoutArray below
+  timeoutIndex: 0,
+  //this dictates the times at which the tiles blink on and off in flickeringAnimation
+  //it's intended to mimic the flickering on of a neon strip light
+  timeoutArray: [0,500,700,600,800, 1200, 1350, 1200, 1350, 2500, 2700, 2600, 2800, 2700, 2900],
+  //this sets the final colour adopted by all seven slides of the elephant by the end of the animation sequence
+  finalColour: colourManagementInstance.objectColourSelector(),
+  //this is used by dominoFinish, effectively changing the direction of the "Mexican wave" that changes
+  //all the tiles of the elephant to the final colour
+  randomSequence: sequenceRandomiser(),
+  //this is used by the recursive flickeringAnimation function. As the function loops, it chooses four
+  //numbers of random (popping them from the array with each selection) to blink on and off before
+  //the cycle is terminated
+  numberArray: [1,2,3,4,5,6,7],
+  get getTimeout(){
+    return this.timeout;
+  },
+  get getTimeoutIndex(){
+    return this.timeoutIndex
+  },
+  get getTimeoutArray(){
+    return this.timeoutArray
+  },
+  get getFinalColour(){
+    return this.finalColour
+  },
+  get getRandomSequence(){
+    return this.randomSequence
+  },
+  get getNumberArray(){
+    return this.numberArray
+  },
+  set setTimeout(number: number){
+    this.timeout = number;
+  },
+  set incrementTimeout(number: number){
+    this.timeout = this.timeout + number;
+  },
+  set setTimeoutIndex(number: number){
+    this.timeoutIndex = number;
+  },
+  set incrementTimeoutIndex(number: number){
+    this.timeoutIndex = this.timeoutIndex + number
+  },
+  //both the below methods replace the previous logic, which used let variables with a 
+  //var = var + increment approach, automatically incrementing the running total while
+  //also passing the number to the setTimeout function
+  incrementAndReturnTimeout(number: number){
+    this.incrementTimeout = number
+    return this.timeout
+  },
+  incrementAndReturnTimeoutIndex(number: number){
+    this.incrementTimeoutIndex = number
+    return this.timeoutIndex
+  },
+  //see note on numberArray above
+  randomSelectionFromNumberArray(){
+    const randomPosition = Math.floor(Math.random() * this.getNumberArray.length);
+    return this.getNumberArray.splice(randomPosition,1)[0];
+  }
+}
 
-     const dominoArray = [7,6,5,4,3,2,1];
-     const randomisedDominoArray = sequenceRandomiser(dominoArray)
-
-const timeout = 150;
-let timeout2 = 1800;
-let timeoutIndex = 0;
-const timeoutArray = [0,500,700,600,800, 1200, 1350, 1200, 1350, 2500, 2700, 2600, 2800, 2700, 2900]
-
+//called from within flickeringAnimation and dominoFinish, it just updates the colour
+//of one of the numbered panels (1 to 7) of the elephant
 const updateState = (section: number, color: string) => {
   setSectionColours(prevState => ({
     ...prevState,
     [`section${section}`]: color, // Updating key1's value
   }));
-
 }
 
-let finalColor = "";
+/*
+flickeringAnimation causes two pairs of slides each to blink on and off with different
+colours randomly selected from the four colours in the theme.
+It's a recursive function which alters various different values in the above object variableManager,
+including timeoutIndex, which is incremented by 1 twice for each blinking on and off of a panel, so
+that the recursive function is stopped after four panels have blinked on and off
+*/
 
-//so you give printColorChoiceAndSection two parameters, array and string - "blinks", "dominoes"
-//blinks you pass with numberArray
-//dominoes you pass with numberArray2 (which is also [1,2,3,4,5,6,7])
-//you don't pass either of them an array
-//dominoes on the first pass if the array is [] it randomly generates the array either 1 up or 7 down
-//then you get the ripple down domino effect
-//as blinks consumes the top array, it creates the second array but adds the numbers in numerical order
-
-const printColorChoiceAndSection = useCallback(() => {
-  if (timeoutIndex >=8){
+const flickeringAnimation = useCallback(() => {
+  
+  if (variableManager.getTimeoutIndex >= 8){
     return
   }
-  
-  if (numberArray.length === 0){
+  if (variableManager.getNumberArray.length === 0){
     return}
-  
+
     const selections = {
         section: 0,
         color: ""
     }
-    
-    const randomPosition = Math.floor(Math.random() * numberArray.length);
-    selections.section = numberArray.splice(randomPosition,1)[0];
-    
-    const colors = ['#f28972', '#F2C48D', '#D98FBF', '#8268A6'];
-    
-    const randomColorNumber = Math.floor(Math.random() * 4);
-    selections.color = colors[randomColorNumber];
-    finalColor === "" ? finalColor = selections.color : null;
-    
+
+    selections.section = variableManager.randomSelectionFromNumberArray();
+
+    selections.color = colourManagementInstance.objectColourSelector();
+
     setTimeout(() => {
       return updateState(selections.section, selections.color);
-    }, timeoutArray[timeoutIndex = timeoutIndex + 1])
+    }, variableManager.getTimeoutArray[variableManager.incrementAndReturnTimeoutIndex(1)])
 
     setTimeout(() => {
       return updateState(selections.section, backgroundColour);
-    }, timeoutArray[timeoutIndex = timeoutIndex + 1])
+  }, variableManager.getTimeoutArray[variableManager.incrementAndReturnTimeoutIndex(1)])
 
-    printColorChoiceAndSection()
+    flickeringAnimation()
 }, [])
-
-const dominoFinish = useCallback(() => {
   
-  if (randomisedDominoArray.length === 0){
-    return
-  }
-  finalColor === "pink";
+  //this does the Mexican wave change of colour of all seven tiles into the final colour (unlike
+    //in individualElephant, it only does that in one direction)
+    //for each section of the elephant, each new colour added 25 milliseconds after the previous
+    //the colour is selected at random when the variablesManager object is instantiated
+    const dominoFinish = useCallback(() => {
+      variableManager.getRandomSequence.forEach((x) => {
+        setTimeout(() => {
+          return updateState(x, variableManager.getFinalColour)
+        }, variableManager.incrementAndReturnTimeout(25)
+      )})
+     }, [])
 
-  const selections: any = {
-    section: 0,
-    color: ""  
-  }
-
-  selections.section = randomisedDominoArray.pop();
-
-  setTimeout(() => {
-    return updateState(selections.section, finalColor)
-  }, timeout2 = timeout2 + 25)
-
-  dominoFinish()
-
-
-  }, [])
-
-  let screenWidth = 900;
+     //triggers animation sequence
      useEffect(() => {
-      screenWidth = window.innerWidth;
-      printColorChoiceAndSection();
+      flickeringAnimation();
       dominoFinish();
-      
-     }, [dominoFinish, printColorChoiceAndSection])
+     }, [dominoFinish, flickeringAnimation])
 
-  return (<svg className="m-auto" width={0.3 * screenWidth} height={0.3 * screenWidth} viewBox="0 0 900 900" fill="none" xmlns="http://www.w3.org/2000/svg">
-    {/*<rect
-      width={sizing.width}
-      height={sizing.height}
-      rx="39.1642"
-      fill={backgroundColour}
-      style={{ fillOpacity: 1 }}
-    />*/}
-    <g filter="url(#filter0_d_7400_5)">
-      <path
-        d="M100 551.167C100 540.122 108.954 531.167 120 531.167H345.707C356.753 531.167 365.707 540.122 365.707 551.167V697.162C365.707 708.208 356.752 717.162 345.707 717.162H120C108.954 717.162 100 708.208 100 697.162V551.167Z"
-        fill={sectionColours.section1}
-        style={{ fillOpacity: 1 }}
-      />
-      <path
-        d="M384.948 551.167C384.948 540.122 393.902 531.167 404.948 531.167H630.654C641.7 531.167 650.654 540.122 650.654 551.167V697.162C650.654 708.208 641.7 717.162 630.654 717.162H404.948C393.902 717.162 384.948 708.208 384.948 697.162V551.167Z"
-        fill={sectionColours.section2}
-        style={{ fillOpacity: 1 }}
-      />
-      <ellipse cx="637.369" cy="352.503" rx="20.6152" ry="21.0733" fill="#202938" style={{ fill: sectionColours.section7, fillOpacity: 1 }} />
-      <path
-        d="M668.979 554.99C668.979 673.801 737.741 710.602 781.662 716.237C791.978 717.561 800 708.796 800 698.394V352.346C800 341.3 791.046 332.346 780 332.346H688.979C677.933 332.346 668.979 341.259 668.979 352.304V554.99Z"
-        fill={sectionColours.section3}
-        style={{ fillOpacity: 1 }}
-      />
-      <path
-        d="M638.295 183C756.847 183 793.57 251.758 799.195 295.679C800.516 305.998 791.751 314.021 781.348 314.021L404.948 314.021C393.902 314.021 384.948 305.067 384.948 294.021L384.948 203C384.948 191.954 393.853 183 404.899 183L638.295 183Z"
-        fill={sectionColours.section4}
-        style={{ fillOpacity: 1 }}
-      />
-      <path
-        d="M254.821 329.597C139.823 329.597 105.246 442.31 100.574 495.389C99.6621 505.752 108.239 513.759 118.642 513.759L345.707 513.759C356.752 513.759 365.707 504.805 365.707 493.759L365.707 349.597C365.707 338.551 356.812 329.597 345.766 329.597L254.821 329.597Z"
-        fill={sectionColours.section5}
-        style={{ fillOpacity: 1 }}
-      />
-      <path
-        d="M545.773 514.675C425.251 514.675 389.282 402.61 384.585 348.871C383.68 338.506 392.283 330.513 402.687 330.513L585.759 330.513C596.805 330.513 605.759 339.467 605.759 350.513L605.759 494.675C605.759 505.721 596.807 514.675 585.761 514.675L545.773 514.675Z"
-        fill={sectionColours.section6}
-        style={{ fillOpacity: 1 }}
-      />
-    </g>
-    <defs>
-      <filter id="filter0_d_7400_5" x="93" y="177" width="720" height="554.162" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
-        <feFlood floodOpacity="0" result="BackgroundImageFix" />
-        <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha" />
-        <feOffset dx="3" dy="4" />
-        <feGaussianBlur stdDeviation="5" />
-        <feComposite in2="hardAlpha" operator="out" />
-        <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.16 0" />
-        <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_7400_5" />
-        <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_7400_5" result="shape" />
-      </filter>
-    </defs>
-  </svg>)
+     return (
+      <>
+        { 
+          screenWidth ? 
+            <IndividualElephantSvg
+              sectionColours={sectionColours}
+              screenWidth={screenWidth}
+              sizeModifier={0.3}
+            />
+          :
+          null
+        }
+      </>
+     )
 };
 
 export default CELogoAnimation;

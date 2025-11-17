@@ -12,12 +12,15 @@
 # mock data test content
 /app/flashcards/mock/page.tsx
 /app/lib/mockFeedbackData.ts
+/app/lib/mockDatabase.ts
 /app/lib/old-flashcard-seed-data.json
 /app/ui/dashboard/writtenSummaryMock.tsx
 /app/ui/dashboard/mcqSummaryMock.tsx
 /app/(overview)/flashcards/mock/
 /app/lib/mockDatabase.ts
 __tests__/ManualAndLinks.txt
+/app/ui/updateUsernameCopy.tsx
+/app/ui/updateDeleteRequestCopy.tsx
 
 # db init content
 /app/seed/initiation.sql
@@ -36,6 +39,7 @@ __tests__/ManualAndLinks.txt
 
 # testing
 /coverage
+/__tests__/ManualAndLinks.txt
 
 # next.js
 /.next/

@@ -3,7 +3,6 @@
 import { sql } from '@vercel/postgres';
 import { z } from 'zod';
 import { FlashcardData, ExamboardData, TopicData, QuestionsData, UserData } from './definitions';
-import { queryMaker, questionSetSimplifiedArray, randomSelectionOfFifteen } from './functions';
 import { UserEmailSchema } from './schema';
 import { redirect } from 'next/navigation'
 

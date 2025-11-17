@@ -1,10 +1,11 @@
 'use client';
 
-//import Link from 'next/link';
-import { Button } from '@/app/ui/button';
-import { State, signUpUser } from '@/app/lib/actions';
-//import { useActionState } from 'react';
+import ArrowCommand from './dashboard/arrowCommand';
+import { State, signUpUser } from '../lib/actions';
 import { useFormState } from 'react-dom';
+import BottomRow from './dashboard/bottomRow';
+import LeftHandColumn from './dashboard/leftHandColumn';
+import RightHandColumn from './dashboard/rightHandColumn';
 
 export default function SignUpForm({
   username,
@@ -15,67 +16,69 @@ export default function SignUpForm({
   email: string;
   location: string | null;
 }) {
-  //const initialState: State = { message: null, errors: {} };
+
   const initialState: State = { message: null, errors: {username: [], email: []}};
   const signUpUserWithEmail = signUpUser.bind(null, email, location);
   const [state, formAction] = useFormState(signUpUserWithEmail, initialState);
-  //const [state, formAction] = useFormState(email, signUpUser, initialState)
-
-  //const initialState: State = { message: null, errors: {} };
-  //const [state, formAction] = useActionState(createInvoice, initialState);
-  
 
   return (
     <form action={formAction}>
-      
-      <div className="rounded-md bg-gray-50 p-4 md:p-6">
-        {/* Username */}
-        <div className="mb-4">
-          <label htmlFor="username">
-            Choose username
+      <BottomRow>
+        <LeftHandColumn>
+          <h2>Choose username</h2>
+          <p className="mt-3">Looks like this is your first time signing in. Please enter a username below.</p>
+          <label htmlFor="username" className="mt-3">
+            
           </label>
-          <div className="relative">
+          <div className="relative mt-3">
             <input
               id="username"
-              name="username"              
-              defaultValue={username}              
-            >              
-            </input>            
+              name="username"
+              defaultValue={username}
+              className="border border-black rounded-sm global-input-width"
+            >
+            </input>
           </div>
           <div id="username-error" aria-live="polite" aria-atomic="true">
-              {state.errors?.username &&
+            {state.errors?.username &&
               state.errors.username.map((error: any) => (
                 <p className="mt-2 text-sm text-red-500" key={error}>
                   {error}
                 </p>
-              ))}
+              ))
+            }
+          </div>            
+          <div className="mb-4">
+            <h2 className="mt-3">Newsletter</h2>
+            <div className="mt-3">
+              <label
+                htmlFor="mailTick"
+              >
+                <p className="inline">
+                  Tick if you are happy for Chemistry Elephant to send you emails about special offers and new additions to the website
+                </p>
+                <input
+                  id="mailTick"
+                  name="mailTick"
+                  type="checkbox"
+                  className="mx-3"
+                ></input>
+              </label>
             </div>
-        </div>
-
-        {/* Email */}
-        <div className="mb-4">
-          <label>
-            Email
-          </label>
-          <div className="relative">
-            <p>{email}</p>           
           </div>
-          <label
-            htmlFor="mailTick"
-          >Tick if you are happy for Chemistry Elephant to send you emails about special offers and new additions to the website</label>
-          <input
-            id="mailTick"
-            name="mailTick"
-            type="checkbox"
-          ></input>
-        </div>
-        
-      </div>
-      <div className="mt-6 flex justify-end gap-4">
-        
-        <Button type="submit">Sign up</Button>
-      </div>
-      
+        </LeftHandColumn>
+        <RightHandColumn>
+          <div className="m-5">
+            <button type="submit">
+              <ArrowCommand
+                command={"CONFIRM"}
+                borderGray={false}
+                disabled={false}
+              />
+            </button>
+          </div>
+        </RightHandColumn>
+      </BottomRow>
     </form>
   );
 }

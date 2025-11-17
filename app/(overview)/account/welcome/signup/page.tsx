@@ -2,6 +2,7 @@
 import { auth } from '@/auth';
 import { redirect } from 'next/navigation';
 import SignUpForm from '@/app/ui/signUp';
+import HeaderDivs from '@/app/ui/dashboard/header';
 
 export default async function Page({ searchParams }: { searchParams: { location: string, callbackUrl: string | null } }) {
 
@@ -14,13 +15,12 @@ export default async function Page({ searchParams }: { searchParams: { location:
 
     return (
       <div>
-        <p>Welcome!</p>
-            <p>Looks like this is your first time signing in, welcome, please enter your details below...</p>
+        <HeaderDivs h1Content='Welcome!'/>
             <SignUpForm
               username={''}
               email={session.user?.email}
               location={searchParams.location}
-    />
+            />
       </div>
     )
 }

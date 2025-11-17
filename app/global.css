@@ -23,6 +23,26 @@ textarea {
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --altcha-max-width: 100%;
+}
+
+/*For input boxes on forms. Technicall*/
+
+.global-input-width {
+  width: 100%;
+  height: 2rem;
+}
+
+@media screen and (min-width: 768px){
+  .global-input-width {
+    width: 50%;
+  }
+
+  .altcha {
+    --altcha-max-width: 50%;
+  }
+
+  
 }
 
 /*Animation loader*/
@@ -100,7 +120,8 @@ h7 {
 }
 
 p {
-  font-size: 0.75rem;
+  /*font-size: 0.75rem;*/
+  font-size: 1.125rem;
 }
 
 @media screen and (min-width: 768px){

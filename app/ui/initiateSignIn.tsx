@@ -1,12 +1,15 @@
-import { Button } from './button';
 import { signIn } from "@/auth";
 import { locationParser } from '../lib/functions';
+import ArrowCommand from './dashboard/arrowCommand';
+import BottomRow from './dashboard/bottomRow';
+import LeftHandColumn from './dashboard/leftHandColumn';
+import RightHandColumn from './dashboard/rightHandColumn';
 
-export function SignIn({
+export function InitiateSignIn({
   location,
   provider,
-  ...props
-}: { location: string | null, provider?: string } & React.ComponentPropsWithRef<typeof Button>) {
+  error
+}: { location: string | null, provider?: string, error: boolean }) {
   
   /*This function effectively renders a button (on the login page), which directs the user to the 
   signin page
@@ -54,7 +57,29 @@ export function SignIn({
         await signIn(provider, { redirectTo: whereToRedirect});
       }}
     >
-      <Button {...props}>Sign In</Button>
+      <BottomRow>
+        <LeftHandColumn>
+          <div className="spacer"></div>
+          {
+            error ?
+            <p>Looks like something went wrong! Click sign in to try again.</p>
+            :
+            <p>Click sign in to login to Chemistry Elephant</p>
+          }
+          <div className="spacer"></div>
+        </LeftHandColumn>
+        <RightHandColumn>
+          <div className="m-5">
+            <button type="submit">
+              <ArrowCommand
+                command="SIGN IN"
+                borderGray={false}
+                disabled={false}
+              />
+            </button>
+          </div>
+        </RightHandColumn>
+      </BottomRow>
     </form>
   )
 }

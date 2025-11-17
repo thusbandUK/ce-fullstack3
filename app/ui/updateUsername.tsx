@@ -1,10 +1,8 @@
 'use client';
 
-//import Link from 'next/link';
-import { Button } from '@/app/ui/button';
-import { State, updateUser } from '@/app/lib/actions';
-//import { useActionState } from 'react';
+import { State, updateUser } from '../lib/actions';
 import { useFormState } from 'react-dom';
+import ArrowCommand from './dashboard/arrowCommand';
 
 export default function UpdateUsername({
   username,
@@ -13,33 +11,34 @@ export default function UpdateUsername({
   username: string;
   email: string;  
 }) {
-  //const initialState: State = { message: null, errors: {} };
+  
   const initialState: State = { message: null, errors: {username: [], email: []}};
   const updateUserWithNewName = updateUser.bind(null, email);
   const [state, formAction] = useFormState(updateUserWithNewName, initialState);
-  //const [state, formAction] = useFormState(email, signUpUser, initialState)
-
-  //const initialState: State = { message: null, errors: {} };
-  //const [state, formAction] = useActionState(createInvoice, initialState);
   
-
   return (
-    <form action={formAction}>
+    <form action={formAction} role="form">
+      <div className="w-full flex flex-col pb-4 mx-auto grid grid-cols-6">
+      <div className="col-start-1 col-span-6 md:col-span-4 w-full border-2 border-black rounded-lg p-5">{/*COL 1 */}
       
-      <div className="rounded-md bg-gray-50 p-4 md:p-6">
         {/* Username */}
         <div className="mb-4">
           <label htmlFor="username">
-            Choose username
+            Enter a new username and click update
           </label>
+          <div className="spacer"></div>
           <div className="relative">
             <input
               id="username"
               name="username"              
-              defaultValue={username}              
-            >              
-            </input>            
+              defaultValue={username}
+              className="border border-black rounded-sm global-input-width"
+              minLength={5}
+              maxLength={20}
+            >
+            </input>
           </div>
+
           <div id="username-error" aria-live="polite" aria-atomic="true">
               {state.errors?.username &&
               state.errors.username.map((error: any) => (
@@ -50,31 +49,20 @@ export default function UpdateUsername({
             </div>
         </div>
 
-        {/* Email */}
-        <div className="mb-4">
-          <label>
-            Email
-          </label>
-          <div className="relative">
-            <p>{email}</p>           
-          </div>
-          {/**
-          <label
-            htmlFor="mailTick"
-          >Tick if you are happy for Chemistry Elephant to send you emails about special offers and new additions to the website</label>
-          <input
-            id="mailTick"
-            name="mailTick"
-            type="checkbox"
-          ></input> */}
+      </div>{/*COL 1 ENDS */}
+
+      <div className="col-start-1 md:col-start-5 col-span-6 md:col-span-2 border-2 border-black rounded-lg flex flex-col justify-end">{/*COL 2*/}
+      <div className="m-5">
+        <button type="submit">
+          <ArrowCommand
+            borderGray={false}
+            command={"UPDATE"}
+            disabled={false}
+          />
+        </button>
         </div>
-        
+      </div>{/*COL 2 ENDS*/}
       </div>
-      <div className="mt-6 flex justify-end gap-4">
-        
-        <Button type="submit">Update username</Button>
-      </div>
-      
     </form>
   );
 }

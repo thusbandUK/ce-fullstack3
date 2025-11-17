@@ -1,78 +1,78 @@
 'use client';
 
-import { Button } from '@/app/ui/button';
 import { StateSignUpNewsletter, signUpNewsletter } from '@/app/lib/actions';
 import React, { useState } from 'react';
 import { useFormState } from 'react-dom';
+import ArrowCommand from './dashboard/arrowCommand';
+import clsx from 'clsx';
 
-export default function SignUpNewsletter({
-  username,
+export default function SignUpNewsletter({  
   email,
   location,
   receivingNewsletter,
 }: {
-  username: string;
   email: string;
   location: string | null;
   receivingNewsletter: boolean;
-}) {  
-  const initialState: StateSignUpNewsletter = { message: null, errors: {mailTick: [], email: []}};  
+}) {
+  const initialState: StateSignUpNewsletter = { message: null, errors: {mailTick: [], email: []}};
   const signUpUserWithEmail = signUpNewsletter.bind(null, email, location);
-  const [state, formAction] = useFormState(signUpUserWithEmail, initialState);  
-  const [checked, setChecked] = useState(receivingNewsletter);  
-  
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {    
+  const [state, formAction] = useFormState(signUpUserWithEmail, initialState);
+  const [checked, setChecked] = useState(receivingNewsletter);
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     return setChecked(event.currentTarget.checked);
   }
 
   return (
     <form action={formAction}>
-      
-      <div className="rounded-md bg-gray-50 p-4 md:p-6">
+      <div className="w-full flex flex-col pb-4 mx-auto grid grid-cols-6">
+        <div className="col-start-1 col-span-6 md:col-span-4 w-full border-2 border-black rounded-lg p-5">{/*COL 1 */}
+          <div className="rounded-md p-4 md:p-6">
 
-        {/* Email */}
-        <div className="mb-4">
-          <label>
-            Username:
-          </label>
-          <div className="relative">
-            <p>{username}</p>           
+            {/* Message about current subscription status with checkbox to opt in / out */}
+            <div className="mb-4">
+              <label
+                htmlFor="mailTick"
+              >
+                { receivingNewsletter ?
+                  "You are already signed up for the newsletter, so if you want to keep receiving emails about special offers and new content then you do not to do anything. If you want to unsubscribe, untick the box and press unsubscribe."
+                  :
+                  "You are not currently signed up for the newsletter. If you want to receive emails about special offers and new content, tick the box and press subscribe."
+                }
+              </label>
+              <input
+                id="mailTick"
+                name="mailTick"
+                type="checkbox"
+                defaultChecked={checked}
+                onChange={handleChange}
+              ></input>
+            </div>
           </div>
-          <label
-            htmlFor="mailTick"
+        </div>{/*COL 1 ENDS */}
+
+        <div className="col-start-1 md:col-start-5 col-span-6 md:col-span-2 border-2 border-black rounded-lg flex flex-col justify-end">{/*COL 2*/}
+          <div className={clsx("m-5",
+              {
+                'text-black': checked!==receivingNewsletter,
+                'text-slate-400': checked===receivingNewsletter,
+              }
+            )}
           >
-            { receivingNewsletter ? 
-          "You are already signed up for the newsletter, so if you want to keep receiving emails about special offers and new content then you do not to do anything. If you want to unsubscribe, untick the box and press unsubscribe."  
-          :
-          "You are not currently signed up for the news latter. If you want to receive emails about special offers and new content, tick the box and press subscribe."
-          }
-            
-
-
-          </label>
-          <input
-            id="mailTick"
-            name="mailTick"
-            type="checkbox"
-            defaultChecked={checked}
-            onChange={handleChange}
-          ></input>
-        </div>
-        
+            <button
+              type="submit"
+              disabled={checked===receivingNewsletter}
+            >
+              <ArrowCommand
+                borderGray={checked===receivingNewsletter}
+                command={"UPDATE"}
+                disabled={checked===receivingNewsletter}
+              />
+            </button>
+          </div>
+        </div>{/*COL 2 ENDS*/}
       </div>
-      <div className="mt-6 flex justify-end gap-4">
-        
-        <Button 
-          type="submit"
-          className="button-can-disabled"
-          id="button-disabled-id"
-          disabled={checked===receivingNewsletter}          
-        >
-          { receivingNewsletter ? "Unsubscribe" : "Subscribe"}
-          
-        </Button>
-      </div>
-      
     </form>
   );
 }

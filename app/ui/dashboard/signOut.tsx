@@ -19,6 +19,7 @@ export default async function SignOut () {
                 <ArrowCommand
                   borderGray={false}
                   command={"SELECT"}
+                  disabled={false}
                 ></ArrowCommand>
               </button>
             </form>

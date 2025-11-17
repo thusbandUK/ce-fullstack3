@@ -53,6 +53,7 @@ export default function IndividualCardCodeForm() {
           <ArrowCommand
             command="SUBMIT CODE"
             borderGray={false}
+            disabled={false}
           ></ArrowCommand>                
         </button>
       </div>

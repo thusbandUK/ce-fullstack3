@@ -48,6 +48,7 @@ export default function MenuItemRedirect(
             <ArrowCommand
                 command={arrowCommand}
                 borderGray={false}
+                disabled={false}
               >                  
             </ArrowCommand>
           </button>

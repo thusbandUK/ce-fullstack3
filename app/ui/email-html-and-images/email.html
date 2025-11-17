@@ -1,0 +1,267 @@
+<!--note, lots of neatening up to do, but the thrust of it is sound-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My HTML Template</title>
+  <style>
+    /* http://meyerweb.com/eric/tools/css/reset/ 
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	/*border-collapse: collapse;*/
+	border-spacing: 0;
+}
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      background-color: #f4f4f4;
+    }
+    header {
+      background: #333;
+      color: #fff;
+      padding: 1rem;
+      text-align: center;
+    }
+    nav {
+      background: #555;
+      display: flex;
+      justify-content: center;
+    }
+    nav a {
+      color: white;
+      padding: 1rem;
+      text-decoration: none;
+    }
+    nav a:hover {
+      background: #444;
+    }
+    main {
+      padding: 2rem;
+      background: white;
+      max-width: 800px;
+      margin: 2rem auto;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    footer {
+      background: #333;
+      color: white;
+      text-align: center;
+      padding: 1rem;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+    }
+
+    h1 {
+  font-size: 1.75rem;}
+
+h2 {
+  font-size: 1.5rem;
+}
+
+h3 {
+  font-size: 1rem;
+}
+
+h4 {
+  font-size: 1rem;
+}
+
+h5 {
+  font-size: 0.75rem;
+}
+
+h6 {
+  font-size: 1.2rem;
+}
+
+h7 {
+  font-size: 2rem;
+}
+
+p {
+  /*font-size: 0.75rem;*/
+  font-size: 1.125rem;
+}
+
+@media screen and (min-width: 768px){
+  h1 {
+    font-size: 3.75rem;}
+  
+  h2 {
+    font-size: 3.25rem;
+  }
+  
+  h3 {
+    font-size: 3rem;
+  }
+  
+  h4 {
+    font-size: 3rem;
+  }
+  
+  h5 {
+    font-size: 2.75rem;
+  }
+  
+  h6 {
+    font-size: 2.5rem;
+  }
+  
+  h7 {
+    font-size: 2rem;
+  }
+  
+  p {
+    font-size: 1.5rem;
+  }
+}
+
+.second-row-cell {
+    border: 1px solid black;
+    /*width: calc(100% / 3)*/
+}
+
+.second-row-cell-1 {
+    width: 30%;
+}
+
+.second-row-cell-2 {
+    width: 70%;
+}
+
+.second-row-cell-3 {
+    min-width: 45%;
+}
+
+
+
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Welcome to My Website</h1>
+  </header>
+  <nav>
+    <a href="#">Home</a>
+    <a href="#">About</a>
+    <a href="#">Contact</a>
+  </nav>
+  <main>
+    <table style="margin: auto; width: 100%;">
+        <tr>
+          <td style="border: solid black 1px; border-radius: 1.75rem;">
+            <h1 style="font-size: 1.75rem; padding: 1.75rem; text-align: center;">Chemistry Elephant</h1>
+          </td>
+        </tr>
+        
+      </table>
+      <table style="margin: auto; width: 100%;">
+        <tr>
+            
+            <td  style="width: 100%; border: 1px solid black; padding: 1rem; border-radius: 1.25rem; vertical-align: middle; text-align: center;">
+              <h2>Delete account</h2>
+              
+            </td>
+            <!--<td class="second-row-cell second-row-cell-3"></td>
+            
+            <td style="width: 30%; border: 1px solid black; border-radius: 1.75rem; position: relative;">
+                <div style="margin: auto; position: absolute; width: 80%;  left: 50%; top: 50%; transform: translate(-50%, -50%);">
+            <p>centred?</p>  
+              <div style="width: inherit;">
+                    <h2>Delete account</h2>
+                    <h1 style="font-size: 1.75rem; padding: 1.75rem; text-align: center;">Chemistry Elephant</h1>
+                </div>
+            -->
+        </tr>
+      </table>
+      <table style="margin: auto; width: 100%;">
+        <tr>
+          <td style="border: solid black 1px; border-radius: 1.25rem;">
+            <p style="padding: 1.75rem; text-align: center;">You have been sent this email because you opted to delete your account with Chemistry Elephant. To complete the process, click confirm below.</p>
+            
+          </td>
+        </tr>
+        
+      </table>
+      <table>
+        <tr>
+          <td style="width: 50%; border: 1px solid black; border-radius: 1.25rem; vertical-align: middle; text-align: center;">
+            <div style="width: 80%; margin: 0% auto; padding-top: 5%;">
+                <img src="./pink-elephant-transparent-background.png" style="width: 100%; height: auto;">
+
+            </div>
+          </td>
+          <td style="width: 50%; border: 1px solid black; border-radius: 1.25rem; padding: 5%; vertical-align: bottom;">
+            <a href="#" style="cursor: pointer; text-decoration: none;">
+            <table>
+              <tr>
+                <td style="width: 30%;">
+
+                  <div style="border: 1px solid black; border-radius: 1.25rem; padding: 15%; padding-top: 25%; ">
+                    <img src="./right-arrow.png" style="width: 100%; height: auto;">
+                    </div>
+                </td>
+                <td style="vertical-align: middle; padding-left: 7.5%; color: black;">
+                  CONFIRM
+                </td>
+              </tr>
+            </table>
+          </a>
+
+          </td>
+        </tr>
+      </table>
+      
+  </main>
+  <footer>
+    &copy; 2025 My Website
+  </footer>
+</body>
+</html>
