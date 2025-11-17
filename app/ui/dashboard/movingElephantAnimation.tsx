@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import MovingElephantSVG from './movingElephantSVG';
-import { anchorsInterface } from '@/app/page';
+//import { anchorsInterface } from '@/app/page';
 
 /*
 This is an arguably slightly convoluted module, which animates the transfer of an elephant from one
