@@ -128,7 +128,7 @@ const IndividualElephantContainer: React.FC<ElephantProps>= ({startWhite = true,
       //another delay
       timeoutInstance.incrementTimeout = 2000;
 
-     })
+     }, [])
 //, [colourManagementInstance, startWhite, timeoutInstance]
      //this calls dominoFinish, initiating the animation
      useEffect(() => {
@@ -142,13 +142,15 @@ const IndividualElephantContainer: React.FC<ElephantProps>= ({startWhite = true,
       const intervalRoutine = setInterval(() => {
         dominoFinish()
         timeoutInstance.setTimeout = 2500
+        console.log('timeout val from w/in interval function')
+        console.log(timeoutInstance.getTimeout)
         //see notes on terminating interval above
         if (++maxInterval > 1000){
           window.clearInterval(intervalRoutine)
         }
       }, 1)
 
-     })
+     }, [])
      //, [dominoFinish, timeoutInstance]
 
   //In the below, note how the actual elephant is only rendered once screenWidth has been calculated
