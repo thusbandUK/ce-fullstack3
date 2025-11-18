@@ -96,6 +96,7 @@ const IndividualElephantContainer: React.FC<ElephantProps>= ({startWhite = true,
     //this handles the actual animation. It effects a mexican wave style swoosh of a new colour
     //for each section of the elephant, each new colour added 25 milliseconds after the previous
      const dominoFinish = useCallback(() => {
+     // const dominoFinish = () => {
 
       //array of numbers of the different sections of the elephant for the animation logic to loop
       //over
@@ -129,6 +130,7 @@ const IndividualElephantContainer: React.FC<ElephantProps>= ({startWhite = true,
       timeoutInstance.incrementTimeout = 2000;
 
      }, [])
+    //}
 //, [colourManagementInstance, startWhite, timeoutInstance]
      //this calls dominoFinish, initiating the animation
      useEffect(() => {
@@ -150,7 +152,7 @@ const IndividualElephantContainer: React.FC<ElephantProps>= ({startWhite = true,
         }
       }, 1)
 
-     }, [])
+     }, [dominoFinish])
      //, [dominoFinish, timeoutInstance]
 
   //In the below, note how the actual elephant is only rendered once screenWidth has been calculated
