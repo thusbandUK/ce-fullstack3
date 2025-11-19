@@ -74,7 +74,7 @@ const IndividualElephantContainer: React.FC<ElephantProps>= ({startWhite = true,
      //resets timeoutInstance to 25 on first render only
      useEffect(() => {
       timeoutInstance.setTimeout = 25;
-     }, [])
+     }, [timeoutInstance])
 
      //this updates the colour of one of the seven individual sections of the elephant,
      //all of which are stored in state
