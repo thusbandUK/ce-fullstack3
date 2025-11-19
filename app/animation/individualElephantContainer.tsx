@@ -72,9 +72,9 @@ const IndividualElephantContainer: React.FC<ElephantProps>= ({startWhite = true,
      }, [window.innerWidth])
 
      //resets timeoutInstance to 25 on first render only
-     //useEffect(() => {
-      //timeoutInstance.setTimeout = 25;
-     //}, [])
+     useEffect(() => {
+      timeoutInstance.setTimeout = 25;
+     }, [])
 
      //this updates the colour of one of the seven individual sections of the elephant,
      //all of which are stored in state
@@ -85,14 +85,9 @@ const IndividualElephantContainer: React.FC<ElephantProps>= ({startWhite = true,
       }));
     }
 
-    //console.log('getTimeout')
-    //console.log(timeoutInstance.getTimeout)
-    //console.log(timeoutInstance.incrementTimeout = 50)
-    //console.log('getTimeout')
-    //console.log(timeoutInstance.getTimeout)
-    //console.log(timeoutInstance.timeoutUpdate(60))
-    //console.log('getTimeout')
-    //console.log(timeoutInstance.getTimeout)
+    //let timeout = 25;
+
+
     //this handles the actual animation. It effects a mexican wave style swoosh of a new colour
     //for each section of the elephant, each new colour added 25 milliseconds after the previous
      const dominoFinish = useCallback(() => {
@@ -112,12 +107,14 @@ const IndividualElephantContainer: React.FC<ElephantProps>= ({startWhite = true,
         setTimeout(() => {
           return updateState(x, firstColour)
         }, timeoutInstance.timeoutUpdate(25))
+        //}, timeout = timeout + 25;
       })
 
       console.log('current value timeoutInstance')
       console.log(timeoutInstance.getTimeout)
       //this delays the transformation of the elephant into the second colour
       timeoutInstance.incrementTimeout = 2000;
+      //timeout = timeout + 2000
 
       //this implements the second mexican wave of colour, in the opposite direction to the first
       for (let y = arrayToConsume.length; y > 0; y--){
@@ -128,6 +125,7 @@ const IndividualElephantContainer: React.FC<ElephantProps>= ({startWhite = true,
 
       //another delay
       timeoutInstance.incrementTimeout = 2000;
+      //timeout = timeout + 2000
 
      }, [])
     //}
@@ -143,7 +141,8 @@ const IndividualElephantContainer: React.FC<ElephantProps>= ({startWhite = true,
       let maxInterval = 0;
       const intervalRoutine = setInterval(() => {
         dominoFinish()
-        timeoutInstance.setTimeout = 2500
+        //timeoutInstance.setTimeout = 2500
+        //timeout
         console.log('timeout val from w/in interval function')
         console.log(timeoutInstance.getTimeout)
         //see notes on terminating interval above
@@ -152,7 +151,7 @@ const IndividualElephantContainer: React.FC<ElephantProps>= ({startWhite = true,
         }
       }, 1)
 
-     }, [dominoFinish])
+     }, [])
      //, [dominoFinish, timeoutInstance]
 
   //In the below, note how the actual elephant is only rendered once screenWidth has been calculated
