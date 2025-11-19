@@ -68,8 +68,8 @@ const IndividualElephantContainer: React.FC<ElephantProps>= ({startWhite = true,
       if (!window){
         return
       }
-      return setScreenWidth(window.innerWidth)
-     }, [window.innerWidth])
+      return setScreenWidth(window.innerWidth)     
+    })
 
      //resets timeoutInstance to 25 on first render only
      useEffect(() => {
