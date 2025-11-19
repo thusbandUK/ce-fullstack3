@@ -42,6 +42,7 @@ export default function Home() {
               So how difficult is A-level chemistry? Easier now you&#39;ve found Chemistry Elephant. Check out the flashcards section, where you can practice multiple choice questions while memorising core content. Coming soon: a blog with hints and tips for chemistry success and online courses. Sign up for our 
               <Link
                 href='/account/receive-email?location=/'
+                className="font-bold hover:underline active:text-red"
               > newsletter </Link> 
               to be the first to hear about new content.            
             </p>
