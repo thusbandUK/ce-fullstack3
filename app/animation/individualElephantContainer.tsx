@@ -127,7 +127,7 @@ const IndividualElephantContainer: React.FC<ElephantProps>= ({startWhite = true,
       timeoutInstance.incrementTimeout = 2000;
       //timeout = timeout + 2000
 
-     }, [])
+     }, [colourManagementInstance, startWhite, timeoutInstance])
     //}
 //, [colourManagementInstance, startWhite, timeoutInstance]
      //this calls dominoFinish, initiating the animation
