@@ -1,108 +1,133 @@
-import "next-auth/jwt"
 import NextAuth from "next-auth";
-import GoogleProvider from "next-auth/providers/google";
-
-import Apple from "next-auth/providers/apple"
-// import Atlassian from "next-auth/providers/atlassian"
-import Auth0 from "next-auth/providers/auth0"
-import AzureB2C from "next-auth/providers/azure-ad-b2c"
-import BankIDNorway from "next-auth/providers/bankid-no"
-import BoxyHQSAML from "next-auth/providers/boxyhq-saml"
-import Cognito from "next-auth/providers/cognito"
-import Coinbase from "next-auth/providers/coinbase"
-import Discord from "next-auth/providers/discord"
-import Dropbox from "next-auth/providers/dropbox"
-import Facebook from "next-auth/providers/facebook"
-import GitHub from "next-auth/providers/github"
-import GitLab from "next-auth/providers/gitlab"
-import Google from "next-auth/providers/google"
-import Hubspot from "next-auth/providers/hubspot"
-import Keycloak from "next-auth/providers/keycloak"
-import LinkedIn from "next-auth/providers/linkedin"
-import MicrosoftEntraId from "next-auth/providers/microsoft-entra-id"
-import Netlify from "next-auth/providers/netlify"
-import Okta from "next-auth/providers/okta"
-import Passage from "next-auth/providers/passage"
-import Passkey from "next-auth/providers/passkey"
-import Pinterest from "next-auth/providers/pinterest"
-import Reddit from "next-auth/providers/reddit"
-import Slack from "next-auth/providers/slack"
-import Salesforce from "next-auth/providers/salesforce"
-import Spotify from "next-auth/providers/spotify"
-import Twitch from "next-auth/providers/twitch"
-import Twitter from "next-auth/providers/twitter"
-import Vipps from "next-auth/providers/vipps"
-import WorkOS from "next-auth/providers/workos"
-import Zoom from "next-auth/providers/zoom"
+import authConfig from "./authConfig";
+import Nodemailer from "next-auth/providers/nodemailer";
+import nodemailer from 'nodemailer';
 import PostgresAdapter from "@auth/pg-adapter";
 import { Pool } from "@neondatabase/serverless";
-import { createStorage } from "unstorage"
-import memoryDriver from "unstorage/drivers/memory"
-import vercelKVDriver from "unstorage/drivers/vercel-kv"
-import { UnstorageAdapter } from "@auth/unstorage-adapter"
+import { customMailHtml, customEmailText } from "./authCustomEmail";
+import type { Provider } from "next-auth/providers";
+import { cleanUpUrl } from "./app/lib/authFunctions";
 
-const storage = createStorage({
-  driver: process.env.VERCEL
-    ? vercelKVDriver({
-        url: process.env.AUTH_KV_REST_API_URL,
-        token: process.env.AUTH_KV_REST_API_TOKEN,
-        env: false,
-      })
-    : memoryDriver(),
-})
 
-export const { handlers, auth, signIn, signOut } = NextAuth({
-  debug: !!process.env.AUTH_DEBUG,
-  theme: { logo: "https://authjs.dev/img/logo-sm.png" },
-  adapter: UnstorageAdapter(storage),
-  providers: [    
-    Google,   
-    Reddit,
-  ],
-  basePath: "/auth",
-  session: { strategy: "jwt" },
-  callbacks: {
-    authorized({ request, auth }) {
-      const { pathname } = request.nextUrl
-      if (pathname === "/middleware-example") return !!auth
-      return true
-    },
-    jwt({ token, trigger, session, account }) {
-      if (trigger === "update") token.name = session.user.name
-      if (account?.provider === "keycloak") {
-        return { ...token, accessToken: account.access_token }
-      }
-      return token
-    },
-    async session({ session, token }) {
-      if (token?.accessToken) session.accessToken = token.accessToken
-
-      return session
-    },
-  },
-  experimental: { enableWebAuthn: true },
-})
-
-declare module "next-auth" {
-  interface Session {
-    accessToken?: string
-  }
-}
-
-declare module "next-auth/jwt" {
-  interface JWT {
-    accessToken?: string
-  }
-}
 /*
-export const authOptions = {
+custom sign in page docs
+https://authjs.dev/guides/pages/signin
 
-providers: [
-    GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET
-    })
-  ],
-}
+custom auth email docs, note this requires sendVerificationRequest in below providers expression
+note also that the function needed modifying to clean up the url, see note below
+https://next-auth.js.org/providers/email#customizing-emails
+*/
 
-export default NextAuth(authOptions)*/
+const providers: Provider[] = [
+  Nodemailer({
+      server: {
+          host: process.env.EMAIL_SERVER_HOST,
+          port: Number(process.env.EMAIL_SERVER_PORT),
+          auth: {
+              user: process.env.EMAIL_SERVER_USER,
+              pass: process.env.EMAIL_SERVER_PASSWORD,
+          },
+      },
+      from: process.env.EMAIL_FROM,
+      async sendVerificationRequest({
+        identifier: email,
+        url,
+        provider: { server, from },        
+      }) {        
+        const { host } = new URL(url);
+
+        //vital! this addresses the nextauth callbackUrl bug, which passes what should be the entire
+        //url as the callbackUrl, which then has its own callbackUrl
+        const encodedUpdatedCompleteUrl = cleanUpUrl(url);
+
+        const transport = nodemailer.createTransport(server);
+        await transport.sendMail({
+          to: email,
+          from,
+          subject: `Sign in to ${host}`,
+          text: customEmailText({ encodedUpdatedCompleteUrl, host }),
+          html: customMailHtml({ encodedUpdatedCompleteUrl, host }),
+        });
+      },
+  }),
+
+]
+
+/*
+This maps the providers expression above, which can then be passed to the custom sign in page
+*/
+export const providerMap = providers
+  .map((provider) => {
+    if (typeof provider === "function") {
+      const providerData = provider()
+      return { id: providerData.id, name: providerData.name }
+    } else {
+      return { id: provider.id, name: provider.name }
+    }
+  })
+
+//Nextauth docs say *don't* declare pool variable here (outside handlers expression)
+//https://authjs.dev/getting-started/adapters/neon
+//Also important (see note in session callback below) is manually to disconnect the session where necessary
+
+/*
+Notice the pages option in the below expression, which is where you set the paths to custom auth pages,
+such as signin etc. 
+Important points: the path is [app]/auth/[given page], eg: [app]/auth/signin, compared to the 
+non-custom set up which would be [app]/api/auth/[given page], eg: [app]/api/auth/signin
+
+The non-custom set up is still present in the app, so could probably be deleted
+
+Moreover, although it wasn't specified in the docs, if you use the custom pages option, you still 
+need to import / define the handlers that used to be in [app]/api/auth/[...nextauth].route.ts
+but now are (also) in [app]/account/auth/[...nextauth].route.ts
+*/
+
+export const {handlers, signIn, signOut, auth} = NextAuth(() => {
+    //declare pool variable here inside function
+
+    //this is the currently (25-9-25) recommended method in neon / next docs https://neon.com/docs/guides/nextjs
+    const pool = new Pool({ connectionString: process.env.DATABASE_URL })
+
+    return {...authConfig,
+      adapter: PostgresAdapter(pool),
+      callbacks: {
+        //see: https://next-auth.js.org/configuration/callbacks
+        //also see: https://www.npmjs.com/package/@neondatabase/serverless
+        //explaining how pool needs to be manually disconnected
+        async session({ session }) {
+
+          const client = await pool.connect();
+
+          
+
+          try {
+
+            return session
+            //return fakeSession;
+
+          } catch (e){
+            await client.query('ROLLBACK');
+            throw e;
+
+          } finally {
+            client.release();
+            //this is where the pool connection is manually disconnect. It only seems to be necessary
+            //in the session callback here and in the middleware
+            await pool.end();
+
+          }
+        },
+      },
+    providers,
+    //https://next-auth.js.org/configuration/options#pages
+    pages: {
+      signIn: '/account/auth/signin',
+      verifyRequest: '/account/auth/verify-request',
+    },
+  }
+	// other options...
+})
+
+//checkout: https://github.com/nextauthjs/next-auth/issues/8357
+//and: https://authjs.dev/getting-started/adapters/pg?framework=next-js (this has the sql to set up the session db tables)

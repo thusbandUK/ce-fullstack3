@@ -3,12 +3,16 @@ import FlashcardPresentation from "@/app/ui/dashboard/flashcards";
 import { CardSkeleton } from "@/app/ui/dashboard/skeletons"; 
 import { Suspense } from 'react';
 import { auth } from "@/auth";
+import { fakeSession } from "@/app/upgradeFiles/miscObjectsAndFunctions";
 
-export default async function Page({ params }: { params: { examboard_id: string } }) {    
+export default async function Page({ params }: { params: Promise<{ examboard_id: string }>}) {    
 
-    const session: any = await auth();
+    //const session: any = await auth();
+    const session: any = fakeSession;
 
-    const allFlashcardsData = await fetchRandomSetOfFlashcards(params.examboard_id) 
+    const { examboard_id } = await params;
+
+    const allFlashcardsData = await fetchRandomSetOfFlashcards(examboard_id) 
 //
 //style={{height: '84vh'}}
 return (

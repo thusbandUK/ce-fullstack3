@@ -20,12 +20,12 @@
     "bcrypt": "^5.1.1",
     "clsx": "^2.1.1",
     "isomorphic-dompurify": "^2.28.0",
-    "next": "14.2.9",
+    "next": "16.0.3",
     "next-auth": "5.0.0-beta.21",
     "nodemailer": "^6.10.1",
     "pg": "^8.16.3",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
+    "react": "19.2.0",
+    "react-dom": "19.2.0",
     "react-spring": "^9.7.5",
     "vite-tsconfig-paths": "^5.1.4",
     "zod": "^3.25.76"
@@ -37,17 +37,23 @@
     "@types/bcrypt": "^5.0.2",
     "@types/node": "^20.19.17",
     "@types/nodemailer": "^6.4.19",
-    "@types/react": "^18.3.24",
-    "@types/react-dom": "^18.3.7",
+    "@types/react": "19.2.0",
+    "@types/react-dom": "19.2.3",
     "@vitejs/plugin-react": "^5.0.4",
     "@vitest/browser": "^4.0.3",
     "daisyui": "^4.12.24",
     "eslint": "^8.57.1",
-    "eslint-config-next": "14.2.9",
+    "eslint-config-next": "16.0.3",
     "jsdom": "^27.0.1",
     "postcss": "^8.5.6",
     "tailwindcss": "^3.4.17",
     "typescript": "^5.9.2",
     "vitest": "^3.2.4"
+  },
+  "pnpm": {
+    "overrides": {
+      "@types/react": "19.2.6",
+      "@types/react-dom": "19.2.3"
+    }
   }
 }

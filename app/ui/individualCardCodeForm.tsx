@@ -1,6 +1,7 @@
 'use client';
 
 import { useFormState } from 'react-dom';
+import { useActionState } from 'react';
 import { fetchIndividualFlashcardByCodeInternal } from '../lib/data';
 import { CodeState } from '../lib/data';
 import ArrowCommand from './dashboard/arrowCommand';
@@ -19,7 +20,7 @@ export default function IndividualCardCodeForm() {
 
   const initialState: CodeState = { message: null, errors: {code: []}};
   const bindCodeFetchIndividualFlashcardByCode = fetchIndividualFlashcardByCodeInternal.bind(null);
-  const [state, formAction] = useFormState(bindCodeFetchIndividualFlashcardByCode, initialState);
+  const [state, formAction] = useActionState(bindCodeFetchIndividualFlashcardByCode, initialState);
 
   return (
     <form action={formAction}>      

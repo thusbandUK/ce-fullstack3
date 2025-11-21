@@ -199,7 +199,7 @@ export async function fetchIndividualFlashcardByCodeInternal(prevState: CodeStat
 
 
 export async function fetchComplementaryTopic(examboardId: string) {
-  
+    
   //sanitises the argument passed to examboardId parameter 
   const validatedExamboardId = ExamboardSchema.safeParse({
     examboard_id: examboardId,

@@ -6,19 +6,25 @@ import MenuItem from '../../../../../app/ui/dashboard/menuItem'
 import { auth } from '../../../../../auth';
 import { Suspense } from "react";
 import { CardSkeleton, TopicsSkeleton } from "../../../../../app/ui/dashboard/skeletons";
+import { fakeSession } from '../../../../upgradeFiles/miscObjectsAndFunctions';
 
-export default async function Page({ params }: { params: { examboard_id: string } }) {
+export default async function Page({ params }: { params: Promise<{ examboard_id: string } >}) {
   
-    const session: any = await auth();
+    //const session: any = await auth();
+    const session: any = fakeSession;
+    //const session = null
     
-    const topics = await fetchTopics(params.examboard_id);
+    const {examboard_id} = await params;
+
+
+    const topics = await fetchTopics(examboard_id);
 
     const modalContent: ModalContent = 
     {
       heading: 'Sign in!',
       content: 'You must be signed in to access this content',
       link: {
-        url: `/account/login?location=/flashcards/${params.examboard_id}/topic`,
+        url: `/account/login?location=/flashcards/${examboard_id}/topic`,
         text: 'Sign in or sign up'
       }
     }
@@ -36,7 +42,7 @@ export default async function Page({ params }: { params: { examboard_id: string 
             <MenuItem
               heading={'Random'}
               content={'A random selection of 15 flashcards from the whole of A-level chemistry'}
-              link={`/flashcards/${params.examboard_id}/topic/all/set`}              
+              link={`/flashcards/${examboard_id}/topic/all/set`}              
               modalContent={null}
               identifier={null}              
               logInterest={null}

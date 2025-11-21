@@ -1,12 +1,16 @@
 import FlashcardPresentation from "@/app/ui/dashboard/flashcards";
 import { fetchIndividualFlashcardByCode } from "@/app/lib/data";
 import { auth } from "@/auth";
+import { fakeSession } from "../../../../../upgradeFiles/miscObjectsAndFunctions";
 
-    export default async function Page({ params }: { params: { flashcard_code: string } }) {    
+export default async function Page({ params }: { params: Promise<{ flashcard_code: string }>}) {    
 
-    const allFlashcardsData = await fetchIndividualFlashcardByCode(params.flashcard_code);
+    const { flashcard_code } = await params;
+    
+    const allFlashcardsData = await fetchIndividualFlashcardByCode(flashcard_code);
 
-    const session: any = await auth();
+    //const session: any = await auth();
+    const session = fakeSession;
 
     /*
     So, I would like this to go straight into the multiple choice question, one option for which

@@ -2,9 +2,12 @@ import NavLinks from "./nav-links";
 import { auth } from '../../../auth'
 import ChemistryElephantLogo from "./chemistryElephantLogo";
 import TextEnlargeContainer from "./textEnlargeContainer";
+import { fakeSession } from "../../upgradeFiles/miscObjectsAndFunctions";
 
 export default async function Navbar(){
-    const session: any = await auth();
+    //const session: any = await auth();
+    const session = fakeSession;
+
 
     return(  
         <div className="navbar items-start">

@@ -2,7 +2,9 @@ import Link from "next/link";
 import Navbar from "./ui/dashboard/navbar";
 
 import dynamic from 'next/dynamic';
-const IndividualElephantContainer = dynamic(() => import('./animation/individualElephantContainer'), { ssr: false });
+//const IndividualElephantContainer = dynamic(() => import('./animation/individualElephantContainer'), { ssr: false });
+
+import IndividualElephantContainer from "./animation/individualElephantContainer";
 
 export default function Home() {  
 

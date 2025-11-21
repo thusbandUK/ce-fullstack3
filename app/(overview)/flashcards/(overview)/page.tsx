@@ -44,7 +44,7 @@ export default async function Page() {
                 link={`/flashcards/${x.id}/topic`}                
                 modalContent={!x.has_flashcards ? modalContent : null}
                 identifier={x.id}                
-                logInterest={handleLogInterest}
+                logInterest={null}
                 arrowCommand={x.has_flashcards ? 'SELECT' : 'INQUIRE'}
               >              
               </MenuItem>
@@ -60,5 +60,8 @@ export default async function Page() {
 }
 
 /*
+
+logInterest={handleLogInterest}
+
 <Suspense key={x.id} fallback={<CardSkeleton />}></Suspense>
 */
