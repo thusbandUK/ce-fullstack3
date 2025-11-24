@@ -1,4 +1,8 @@
-import { signIn } from "@/auth";
+//import { signIn } from "@/auth";
+import { authClient } from '../../auth-client';
+import { betterAuthSignIn } from '../lib/actions';
+import { auth } from '../../auth';
+
 import { locationParser } from '../lib/functions';
 import ArrowCommand from './dashboard/arrowCommand';
 import BottomRow from './dashboard/bottomRow';
@@ -50,11 +54,21 @@ export function InitiateSignIn({
   const parsedLocation = locationParser(location);
   const whereToRedirect = parsedLocation.length === 0 ? '/account' : '/account?location=' + parsedLocation;
 
+  
   return (
     <form
       action={async () => {
         "use server"        
-        await signIn(provider, { redirectTo: whereToRedirect});
+        //await signIn(provider, { redirectTo: whereToRedirect});
+        await betterAuthSignIn()
+        //const data = await authClient.signIn.social({
+          //provider: "google",
+       // });
+
+        //const { redirect, url } = await authClient.signIn.social({
+          //provider: "google",
+          //disableRedirect: false,
+        //});
       }}
     >
       <BottomRow>

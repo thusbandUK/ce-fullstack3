@@ -4,12 +4,14 @@ import { z } from 'zod';
 import { sql } from '@vercel/postgres';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
-import { signIn } from '../../auth';
+//import { signIn } from '../../auth';
 import { UserEmailSchema } from './schema';
 import { UserDetails } from './definitions';
 import { locationParser } from './functions';
-import { isRedirectError } from "next/dist/client/components/redirect";
+//import { isRedirectError } from "next/dist/client/components/redirect";
 import { verifySolution } from 'altcha-lib';
+import { authClient } from '../../auth-client';
+
 
 const FormSchema = z.object({
   username: z.coerce.string({invalid_type_error: "Username can only contain letters and numbers",}).regex(/^[a-zA-Z0-9]+$/, { message: "Username can only contain letters and numbers" }).max(20).min(5),
@@ -64,6 +66,36 @@ export type StateExecuteSignIn = {
   };
 }
 
+import { auth } from '../../auth';
+
+export async function betterAuthSignIn(){
+  console.log('betterAuthSignIn called')
+
+  let url = "";
+
+  try {
+
+   // const signInResult = await authClient.signIn.social({     
+     // provider: "google",     
+ // });
+
+  const signInResult = await auth.api.signInSocial({
+    body: {
+      provider: "google", // or any other provider id,
+      disableRedirect: false
+    },
+  });
+  console.log('betterAuthSignIn got past social sign in call')
+  console.log(signInResult)
+  url = String(signInResult.url)
+
+
+  } catch (error){
+    console.log(error)
+
+  }
+  redirect(url);
+}
 
 /*
 executeSignInFunction is the one that actually logs in the user. They submit their email address, and

@@ -1,4 +1,4 @@
-import { signOut } from '@/auth';
+//import { signOut } from '@/auth';
 import ArrowCommand from './arrowCommand';
 
 export default async function SignOut () {
@@ -12,7 +12,7 @@ export default async function SignOut () {
             <form
               action={async () => {
                 'use server';
-                await signOut();
+                //await signOut();
               }}
             >
               <button>

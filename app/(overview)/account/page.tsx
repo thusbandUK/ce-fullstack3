@@ -1,17 +1,28 @@
 import SignOut from "@/app/ui/dashboard/signOut";
 import { InitiateSignIn } from "@/app/ui/initiateSignIn";
-import { auth } from '@/auth';
+//import { auth } from '@/auth';
 import { redirect } from 'next/navigation';
 import MenuItem from '../../ui/dashboard/menuItem';
+import { auth } from "../../../auth"; // path to your Better Auth server instance
+import { headers } from "next/headers";
+
+
 
 export default async function Account({ searchParams }: { searchParams: { location: string } }){
   
-    const session: any = await auth();
+    //const session: any = await auth();
 
-    if (!session){
-      redirect(`/account/login`);
-    }
+    const session = await auth.api.getSession({
+      headers: await headers() // you need to pass the headers object.
+  })
 
+  console.log(session)
+
+    //const session = null
+    //if (!session){
+     // redirect(`/account/login`);
+    //}
+/*
     if (!session.user.name){
       if (!searchParams.location){
         redirect('/account/welcome/signup');
@@ -19,12 +30,13 @@ export default async function Account({ searchParams }: { searchParams: { locati
         redirect(`/account/welcome/signup?location=${searchParams.location}`);
       }
     }
-
+*/
+/*
     if (session){
       if (searchParams.location){
         redirect(searchParams.location)
       }
-    }
+    }*/
 
     type MenuContentTypeType = {
       heading: string;
