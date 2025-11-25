@@ -1,19 +1,25 @@
 "use server"
 
-import { auth } from '@/auth';
+//import { auth } from '@/auth';
 import DeleteRequest from '@/app/ui/deleteRequest';
 import { checkExisting } from '@/app/lib/deleteAccount';
 import { redirect } from 'next/navigation';
+import { auth } from "../../../../auth"; // path to your Better Auth server instance
+import { headers } from "next/headers";
+
 
 const Delete = async () => {
 
-    const session: any = await auth();
+  const session = await auth.api.getSession({
+    headers: await headers() // you need to pass the headers object.
+})
+  //  const session: any = await auth();
 
-    if (!session){
-        redirect(`/login`);
-    }
+   // if (!session){
+      //  redirect(`/login`);
+   // }
 
-    await checkExisting(session.user.email);
+    //await checkExisting(session.user.email);
 
     return (
         <>

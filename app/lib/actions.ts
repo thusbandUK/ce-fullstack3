@@ -68,6 +68,7 @@ export type StateExecuteSignIn = {
 
 import { auth } from '../../auth';
 
+
 export async function betterAuthSignIn(){
   console.log('betterAuthSignIn called')
 
@@ -95,6 +96,51 @@ export async function betterAuthSignIn(){
 
   }
   redirect(url);
+}
+
+import { headers } from "next/headers";
+
+export const betterAuthSignOut = async () => {
+
+  try {
+
+    //const data = await authClient.signOut();
+    //console.log('data when sign out called')
+    //console.log(data)
+    const { success } = await auth.api.signOut({
+      headers: await headers(),
+    })
+
+    console.log(success)
+    
+
+  } catch (error){
+    console.log(error)
+
+  }
+
+}
+
+export const betterAuthDeleteUser = async() => {
+
+  try {
+
+    //const data = await authClient.deleteUser(//{
+      //headers: await headers(),
+    //}
+  //)
+
+  const { success } = await auth.api.deleteUser({
+    body: {
+      callbackURL: '/account'
+    },
+    headers: await headers()
+  })
+  console.log(success)
+
+  } catch (error){
+    console.log(error)
+  }
 }
 
 /*

@@ -1,5 +1,7 @@
 //import { signOut } from '@/auth';
 import ArrowCommand from './arrowCommand';
+import { authClient } from '../../../auth-client';
+import { betterAuthSignOut } from '../../lib/actions';
 
 export default async function SignOut () {
     return (
@@ -13,6 +15,8 @@ export default async function SignOut () {
               action={async () => {
                 'use server';
                 //await signOut();
+                //await authClient.signOut();
+                await betterAuthSignOut()
               }}
             >
               <button>

@@ -35,3 +35,20 @@ export const cleanUpUrl = (url: string) => {
         return cleanedUpUrl;        
         
 }
+
+const alphabet = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"]
+
+export const cipher = (email: string) => {
+    const regex = /^[A-Za-z]$/;
+    let encryptedEmail = [];    
+    for (let x = 0; x < email.length; x++){
+        if (regex.test(email[x])){
+            const index = alphabet.indexOf(email[x].toLowerCase())
+            const newLetter = alphabet[index + 1]
+            encryptedEmail.push(newLetter)
+        } else {
+            encryptedEmail.push(email[x])
+        }
+    }    
+    return encryptedEmail.join("")
+}
