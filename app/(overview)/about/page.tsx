@@ -7,7 +7,8 @@ import RightHandColumn from "@/app/ui/dashboard/rightHandColumn";
 import BottomRow from "@/app/ui/dashboard/bottomRow";
 //import MailTest from "./mailTest";
 import dynamic from 'next/dynamic';
-const IndividualElephantContainer = dynamic(() => import('../../animation/individualElephantContainer'), { ssr: false });
+//const IndividualElephantContainer = dynamic(() => import('../../animation/individualElephantContainer'), { ssr: false });
+import { encryptionExperiment } from "@/app/lib/encryption";
 
 //import CombinedAnimation2 from "../animation/explosion";
 
@@ -21,7 +22,7 @@ export default async function About(){
       //redirect(`/account/login`);
     //}
 
-    
+    encryptionExperiment('hello here is a message to encrypt and decrypt');
     
     
 
@@ -35,7 +36,8 @@ export default async function About(){
               </div>
             </LeftHandColumn>
             <RightHandColumn>
-              <IndividualElephantContainer />
+              <p>Hello!</p>
+              
             </RightHandColumn>
           </BottomRow>
             
@@ -44,6 +46,8 @@ export default async function About(){
 }
 
 /*
+<IndividualElephantContainer />
+
 <div  className="md:grid md:grid-cols-6 gap-0 w-full items-center justify-center rounded-lg">
               <div className="col-start-1 col-span-6 md:col-span-4 w-full flex flex-col border border-black rounded-lg p-5">
           <p>{message}</p>

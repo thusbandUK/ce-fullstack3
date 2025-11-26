@@ -47,7 +47,11 @@ export default function SignUpForm({
                 </p>
               ))
             }
-          </div>            
+          </div>
+          <div className="mb-4">
+            <h2>Email</h2>
+            <p>{email}</p>
+          </div>
           <div className="mb-4">
             <h2 className="mt-3">Newsletter</h2>
             <div className="mt-3">

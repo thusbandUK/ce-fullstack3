@@ -83,11 +83,12 @@ export async function betterAuthSignIn(){
   const signInResult = await auth.api.signInSocial({
     body: {
       provider: "google", // or any other provider id,
-      disableRedirect: false
+      disableRedirect: false,
+      newUserCallbackURL: "/account/welcome/signup"
     },
   });
-  console.log('betterAuthSignIn got past social sign in call')
-  console.log(signInResult)
+  //console.log('betterAuthSignIn got past social sign in call')
+  //console.log(signInResult)
   url = String(signInResult.url)
 
 
