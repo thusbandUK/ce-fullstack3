@@ -8,7 +8,7 @@ import BottomRow from "@/app/ui/dashboard/bottomRow";
 //import MailTest from "./mailTest";
 import dynamic from 'next/dynamic';
 //const IndividualElephantContainer = dynamic(() => import('../../animation/individualElephantContainer'), { ssr: false });
-import { encryptionExperiment } from "@/app/lib/encryption";
+import { encryptionExperiment, testingStringKeys, testDriveStringKeys, hashEmail, testHashEmail, encryptAndDecryptIvStringConversion, testHashedEmailAgainstDatabase, testWrappedKeysDatabase } from "@/app/lib/encryption";
 
 //import CombinedAnimation2 from "../animation/explosion";
 
@@ -22,7 +22,17 @@ export default async function About(){
       //redirect(`/account/login`);
     //}
 
-    encryptionExperiment('hello here is a message to encrypt and decrypt');
+    //encryptionExperiment('tammihusband@gmail.com');
+
+    //testingStringKeys()
+
+    //testDriveStringKeys('thsciencetutor@gmail.com')
+
+    //hashEmail('thsciencetutor@gmail.com')
+    //testHashEmail('thsciencetutor@gmail.com')
+    //encryptAndDecryptIvStringConversion('thsciencetutor@gmail.com')
+    //testHashedEmailAgainstDatabase('thsciencetutor@gmail.com')
+    //testWrappedKeysDatabase('thsciencetutor@gmail.com')
     
     
 
