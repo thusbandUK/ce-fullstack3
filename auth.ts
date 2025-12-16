@@ -10,32 +10,44 @@ import { nextCookies } from "better-auth/next-js";
 import { APIError } from "better-auth/api";
 import { cipher } from "./app/lib/authFunctions";
 import { encryptionData } from "./encryptionPlugIn"; 
-
+import { testWrappedKeysDatabase } from "./app/lib/encryption";
+import { username } from "better-auth/plugins";
+import { usernameClient } from "better-auth/client/plugins";
+import { encryptUserData } from "./app/lib/encryption";
+import { inferAdditionalFields } from "better-auth/client/plugins";
 
 export const auth = betterAuth({
     database: new Pool({ connectionString: process.env.DATABASE_URL }),
     databaseHooks: {
       user: {
         additionalFields: {
-          encryptedEmail: {
+          encryptionDataId: {
             type: "string",
-            required: false
+            required: true
           }
         },
         create: {
           before: async (user, ctx) => {
-            // Modify the user object before it is created           
+            // Modify the user object before it is created
+            //const encryptedData = await FUNCTIONNAME(user.name, user.email, user.image)
+            //const encryptedEmail = await testWrappedKeysDatabase(user.email)
+            const {encryptedData, encryptionDataId} = await encryptUserData({name: user.name, email: user.email, image: user.image ? user.image : ""})
+            //console.log('encryptionDataId', encryptionDataId)
             return {
               data: {
                 // Ensure to return Better-Auth named fields, not the original field names in your database.
                 ...user,
-                //email: cipher(user.email),
+                email: encryptedData.email,
+                name: encryptedData.name,
+                image: encryptedData.image,
+                encryptionDataId: encryptionDataId,
+                encryptedEmail: "hello"
               },
             };
           },
-          //after: async (user) => {
+          after: async (user) => {
             //perform additional actions, like creating a stripe customer
-          //},
+          },
         },
         deleteUser: {
           enabled: true,
@@ -59,6 +71,9 @@ export const auth = betterAuth({
       }
     },
   },
+  //emailAndPassword: { 
+    //enabled: true, 
+  //}, 
     
     socialProviders: { 
         //github: { 
@@ -75,12 +90,25 @@ export const auth = betterAuth({
             newUserCallbackURL: "/account/welcome/signup",
             /*mapProfileToUser: (profile) => {
               //console.log('mapProfileToUser called and profile...')
-              //console.log(profile)
+              console.log(profile)
               return {
-                encryptedEmail: cipher(profile.email),                
+                encryptionDataId: 'will this work',                
               };
             }*/
         },  
       },
-      plugins: [nextCookies(), encryptionData()]//make sure last item in 'array' 
+      plugins: [        
+        encryptionData(),
+        nextCookies(),
+        inferAdditionalFields({
+          user: {
+            encryptionDataId: {
+              type: 'string',
+              required: true
+            }
+          }
+        })
+      ]//make sure last item in 'array' 
 })
+
+//encryptionData(), , username(), usernameClient()
