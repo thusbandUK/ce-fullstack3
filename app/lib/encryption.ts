@@ -17,7 +17,7 @@ async function generateAesKey(length = 256) {
    the same iv must be supplied for decryption
  */
 
-async function aesEncrypt(plaintext) {
+async function aesEncrypt(plaintext: string) {
   const ec = new TextEncoder();
   const key = await generateAesKey();
   const iv = crypto.getRandomValues(new Uint8Array(16));
@@ -36,7 +36,7 @@ async function aesEncrypt(plaintext) {
 
 /* This takes care of the symmetric decryption
  */
-async function aesDecrypt(ciphertext, key, iv) {
+async function aesDecrypt(ciphertext: ArrayBuffer, key: CryptoKey, iv: Uint8Array) {
   const dec = new TextDecoder();
   const plaintext = await crypto.subtle.decrypt({
     name: 'AES-CBC',
@@ -45,6 +45,16 @@ async function aesDecrypt(ciphertext, key, iv) {
 
   return dec.decode(plaintext);
 }
+/*
+export const encryptionExperiment2 = async(email: string) => {
+
+  const encryptedData = await aesEncrypt(email)
+  const {ciphertext, key, iv} = encryptedData;
+  const decryptedData = await aesDecrypt(ciphertext, key, iv)
+  console.log(decryptedData)
+  return decryptedData;
+}
+*/
 
 /* As is stands, this is a proof of concept showing that you can store the iv as a string in the database
 then use it in decryption have retrieved it
@@ -52,7 +62,7 @@ then use it in decryption have retrieved it
 export const encryptAndDecryptIvStringConversion = async(message: string) => {
   try {
     //print the initial message passed
-  console.log(message)
+  //console.log(message)
 
   //symmetrically encrypt with randomly generated key
   const encryptedMessage = await aesEncrypt(message);
@@ -86,9 +96,9 @@ export const encryptAndDecryptIvStringConversion = async(message: string) => {
   
   //decrypt message and log
   const decryptedMessage = await aesDecrypt(ciphertext, key, rebufferisedFetchedIv)
-  console.log('decryptedMessage', decryptedMessage)
+  //console.log('decryptedMessage', decryptedMessage)
 } catch (error){
-  console.log(error)  
+  //console.log(error)  
 }
 
   return
@@ -96,15 +106,18 @@ export const encryptAndDecryptIvStringConversion = async(message: string) => {
 }
 
 /*This turns as array buffer into a string*/
-function ab2str(buf) {
-  return String.fromCharCode.apply(null, new Uint8Array(buf));
+function ab2str(buf: ArrayBuffer) {
+  //console.log('ab2str called')
+  return String.fromCharCode.apply(null, Array.from<number>(new Uint8Array(buf)));
+  //return String.fromCharCode.apply(null, new Uint8Array(buf));
+  //Array.from<number>(new Uint8Array(license))
 }
 
 /* Adapted from MDN docs export function in encryptionOffcuts, exportCryptoKey2
 This can only export a public key as note the "spki" format, where the private key
 requires pkcs8 format. It exports as a base64-encoded string, so that it can easily be stored as env var
  */
-async function exportCryptoKey(key) {
+async function exportCryptoKey(key: CryptoKey) {
   
   const exported = await subtle.exportKey("spki", key);
   
@@ -122,7 +135,7 @@ key as a string is an easier format to store in env variables
 NOTE: this is specifically for the public key, based on the use cases, the private key will need
 uses: decrypt and unwrap
  */
-function importRsaPublicKey(keyAsString) {
+function importRsaPublicKey(keyAsString: string) {
 
   // base64 decode the string to get the binary data
   const binaryDerString = atob(keyAsString);
@@ -156,7 +169,7 @@ function str2ab(str: string) {
 Exports base64-encoded private key (*not* pem format)
 note key differences from public key logic, it's pkcs8 format, NOT spki
 */
-async function exportPrivateCryptoKeyMdn(key) {
+async function exportPrivateCryptoKeyMdn(key: CryptoKey) {
   
   const exported = await subtle.exportKey("pkcs8", key);
   
@@ -220,7 +233,7 @@ options, like the "raw" format, uses (encrypt, decrypt) which are all configured
 should be to interact with all the other functions in this module
  */
 
-export const unwrapKey = async(wrappedKey, unwrappingKey) => {
+export const unwrapKey = async(wrappedKey: ArrayBuffer, unwrappingKey: CryptoKey) => {
   
   let unwrappedKey = await subtle.unwrapKey(
     "raw", // import format
@@ -322,7 +335,7 @@ export const encryptionExperiment = async(message: string) => {
         console.log('wrapperDecryptedData', wrapperDecryptedData)
         console.log('wrapperImportedDecryptedData', wrapperImportedDecryptedData)
         console.log('wrapperDecryptedDataFromImportedPrivateKey', wrapperDecryptedDataFromImportedPrivateKey)
-        
+        return wrapperDecryptedDataFromImportedPrivateKey;
 
     } catch (error){
         throw new Error;
@@ -330,7 +343,7 @@ export const encryptionExperiment = async(message: string) => {
     }
 }
 
-export const testWrappedKeysDatabase = async(message) => {
+export const testWrappedKeysDatabase = async(message: string) => {
 
   console.log('message passed to function')
   console.log(message)
@@ -346,6 +359,10 @@ export const testWrappedKeysDatabase = async(message) => {
         //entracts components from encrypted data
         const { ciphertext, key, iv } = encryptedData;
         
+        //returns if no publicKey
+        if (publicKey === undefined){
+          return
+        }
         //imports public key
         const importedPublicKey = await importRsaPublicKey(publicKey)        
 
@@ -388,6 +405,10 @@ export const testWrappedKeysDatabase = async(message) => {
         //transforms retrieved stringified wrapped key back into a buffer
         const bufferisedRetrievedWrappedKey = Buffer.from(retrievedStringifiedWrappedKey, 'hex')
 
+        //returns if no privateKey
+        if (privateKey === undefined){
+          return
+        }
         //import private key
         const mdnImportedPrivateKey = await importPrivateRsaKeyMdn(privateKey)
         
@@ -503,7 +524,7 @@ export const testHashEmail = async(email: string) => {
   console.log(require('crypto').timingSafeEqual(thirdHash, fourthHash))
 }
 
-export const testDriveStringKeys = async(email) => {
+export const testDriveStringKeys = async(email: string) => {
 
   const privateKey = process.env.PRIVATE_KEY;
   const publicKey = process.env.PUBLIC_KEY;
@@ -516,6 +537,10 @@ export const testDriveStringKeys = async(email) => {
         //entracts components from encrypted data
         const { ciphertext, key, iv } = encryptedData;
 
+        //returns if no public key
+        if (publicKey === undefined){
+          return
+        }
         //imports public key
         const importedPublicKey = await importRsaPublicKey(publicKey)
         
@@ -523,11 +548,12 @@ export const testDriveStringKeys = async(email) => {
         //wraps aes symmetrical encryption key with public rsa key - POINT A
         const wrappedKey = await subtle.wrapKey('raw', key, importedPublicKey, 'RSA-OAEP');
 
-        console.log('got here')
+        //returns if no private key
+        if (privateKey === undefined){
+          return
+        }
         //import private key
-        const importedPrivateKey = await importPrivateRsaKeyMdn(privateKey)
-
-        console.log('but not here')
+        const importedPrivateKey = await importPrivateRsaKeyMdn(privateKey)        
         
         //unwrap using imported private key
         const unwrappedKey = await unwrapKey(wrappedKey, importedPrivateKey)
@@ -653,6 +679,11 @@ export const encryptUserData = async(inputObject: UserDataObject) => {
         //entracts components from encrypted data
         const { encryptedData, key, iv } = encryptedDataKeyIv;
         
+        //returns if no public key
+        if (publicKey === undefined){
+          return
+        }
+
         //imports public key
         const importedPublicKey = await importRsaPublicKey(publicKey)
         
@@ -686,6 +717,10 @@ export const encryptUserData = async(inputObject: UserDataObject) => {
         //transforms retrieved stringified wrapped key back into a buffer
         const bufferisedRetrievedWrappedKey = Buffer.from(retrievedStringifiedWrappedKey, 'hex')
 
+        //returns if no private key
+        if (privateKey === undefined){
+          return
+        }
         //import private key
         const mdnImportedPrivateKey = await importPrivateRsaKeyMdn(privateKey)
         
@@ -720,6 +755,11 @@ export const privateKeyAsCryptoKey = async() => {
   //collects private key from env var
   const privateKey = process.env.PRIVATE_KEY;
 
+  
+  //returns if no private key
+  if (privateKey === undefined){
+    return
+  }
   //imports private key
   const importedPrivateKey = await importPrivateRsaKeyMdn(privateKey)
 
