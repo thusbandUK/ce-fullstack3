@@ -2,6 +2,7 @@
 
 import { State, updateUser } from '../lib/actions';
 import { useFormState } from 'react-dom';
+import { useActionState } from 'react';
 import ArrowCommand from './dashboard/arrowCommand';
 
 export default function UpdateUsername({
@@ -14,7 +15,7 @@ export default function UpdateUsername({
   
   const initialState: State = { message: null, errors: {username: [], email: []}};
   const updateUserWithNewName = updateUser.bind(null, email);
-  const [state, formAction] = useFormState(updateUserWithNewName, initialState);
+  const [state, formAction] = useActionState(updateUserWithNewName, initialState);
   
   return (
     <form action={formAction} role="form">

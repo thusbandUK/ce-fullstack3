@@ -8,7 +8,15 @@ import BottomRow from "@/app/ui/dashboard/bottomRow";
 //import MailTest from "./mailTest";
 import dynamic from 'next/dynamic';
 //const IndividualElephantContainer = dynamic(() => import('../../animation/individualElephantContainer'), { ssr: false });
-import { encryptionExperiment, testingStringKeys, testDriveStringKeys, hashEmail, testHashEmail, encryptAndDecryptIvStringConversion, testHashedEmailAgainstDatabase, testWrappedKeysDatabase } from "@/app/lib/encryption";
+import { encryptUserData, encryptionExperiment, testingStringKeys, testDriveStringKeys, hashEmail, testHashEmail, encryptAndDecryptIvStringConversion, testHashedEmailAgainstDatabase, testWrappedKeysDatabase } from "@/app/lib/encryption";
+
+/*type UserDataObject = {
+  name: string;
+  email: string;
+  image: string;
+}*/
+
+//export const encryptUserData
 
 //import CombinedAnimation2 from "../animation/explosion";
 
@@ -34,7 +42,9 @@ export default async function About(){
     //testHashedEmailAgainstDatabase('thsciencetutor@gmail.com')
     //testWrappedKeysDatabase('thsciencetutor@gmail.com')
     
-    
+    //const {encryptionDataId, encryptedData} = await encryptUserData({name: 'me', email: 'fakeEmail@email.com', image: 'image'})
+    //console.log('encryptionDataId', encryptionDataId)
+    //console.log('email', encryptedData.email)
 
      return (
       <>

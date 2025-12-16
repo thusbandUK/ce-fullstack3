@@ -58,6 +58,8 @@ export type StateSignUpNewsletter = {
   };
 };
 
+
+
 export type StateExecuteSignIn = {
   message?: string | null;
   errors?: {    
@@ -122,6 +124,7 @@ export const betterAuthSignOut = async () => {
 
 }
 
+
 export const betterAuthDeleteUser = async() => {
 
   try {
@@ -154,6 +157,7 @@ what is expected
 see exemplar: https://github.com/altcha-org/altcha-starter-nodejs-ts/blob/main/src/index.ts 
 */
 
+/*
 export async function executeSignInFunction(location: string | null, provider: any, prevState: StateExecuteSignIn, formData: FormData) {
 
   const hmacKey = process.env.ALTCHA_HMAC_SECRET
@@ -234,49 +238,104 @@ export async function executeSignInFunction(location: string | null, provider: a
   redirect('/account/auth/verify-request');
 
 }
+*/
+
+/*
+CHANGES REQUIRED TO SIGNUPUSER BELOW
+the user will have sent their desired username via a form, which will call the corresponding function
+in that file, let's say: updateUsername
+
+RECEIVES: encrypted email address from user, the new username, any location
+
+1) validates the incoming username, string: no symbols, particular length, all lowercase, etc.
+2) retrieves the wrapped key and iv from the database - so the session object has the encryptionDataId
+3) unwraps the key using unwrapkey
+4) encodes the username using the above, via aesEncryptString
+5) writes the encoded username to the database
+
+need to figure out: what data is included in the session / user data (id?), so that we know how to 
+search for their data
+
+*/
+
+//import { getSession } from 'better-auth/api';
+//import { authClient } from "@/lib/client"
+import { unwrapKey, aesEncryptString, importPrivateRsaKeyMdn, privateKeyAsCryptoKey, unwrapStringifiedKey } from './encryption';
+//import { headers } from "next/headers";
+
 
 export async function signUpUser(email: string, location: string | null, prevState: State, formData: FormData) {
 
-//validates email
-const emailValidation = UserEmailSchema.safeParse({
-  validatedEmail: email,
-});
+  //takes whatever has been passed as location and returns string
+  const parsedLocation = locationParser(location)
 
-//validates username to ensure string between 5 and 20 characters long
-const validatedFields = NewUser.safeParse({    
-  username: formData.get('username'),
-  mailTick: formData.get('mailTick'),  
-});
+  //collects private key from env var
+  const privateKey = await privateKeyAsCryptoKey();
   
-// If form validation fails, return errors early. Otherwise, continue.
+  //retrieves session data for user
+  const session = await auth.api.getSession({
+    headers: await headers() // you need to pass the headers object.
+  })
+  
+  //redirects user to login if no session data
+  if (!session){    
+    redirect(parsedLocation.length !== 0 ? parsedLocation : '/account');
+  }
+  
+  //collects id for user table and corresponding row of encryptionData table
+  const { id, encryptionDataId } = session.user;
 
-if (!validatedFields.success) {  
+  //validates username to ensure string between 5 and 20 characters long and mailTick to ensure boolean
+  const validatedFields = NewUser.safeParse({    
+    username: formData.get('username'),
+    mailTick: formData.get('mailTick'),  
+  });
+
+  // If form validation fails, return errors early. Otherwise, continue.
+
+  if (!validatedFields.success) {  
+    return {
+      message: 'Username rejected. Try again.',      
+      errors: {        
+        username: validatedFields.error.flatten().fieldErrors.username,
+        email: []
+      },    
+    };
+  }
+
+  //harvests validated values
+  const validatedMailTick = validatedFields.data?.mailTick;
+  const validatedUsername = validatedFields.data?.username;
+
+  //encryptionData query
+  const queryForWrappedKeyIv = 'SELECT iv, wrapped_key FROM encryption_data WHERE id = $1'
+  const argumentForWrappedKeyIv = [encryptionDataId]
+
+  try {
+  
+    const returnedKeyIv = await sql.query(queryForWrappedKeyIv, argumentForWrappedKeyIv)  
+    const { iv: returnedIv, wrapped_key: returnedWrappedKey} = returnedKeyIv.rows[0]  
+
+    //bufferises returned IV
+    const bufferisedReturnedIv = Buffer.from(returnedIv, 'hex')
+  
+    //unwraps key returned from database
+    const unwrappedKey = await unwrapStringifiedKey(returnedWrappedKey, privateKey)
+  
+    //encrypts username
+    const encryptedUsername = await aesEncryptString(validatedUsername, unwrappedKey, bufferisedReturnedIv)
+  
+    //query and values to pass
+    const query = 'UPDATE "user" SET username = $1, receive_email = $2 WHERE id = $3'
+    const argumentData = [encryptedUsername, validatedMailTick, id];//, validatedEmail
+  
+    //writes encrypted username to database, records true or false for receive_email
+    await sql.query<UserDetails>(query, argumentData);
+  
+} catch (error){
+  console.error(error);
   return {
-    message: 'Username rejected. Try again.',      
-    errors: {        
-      username: validatedFields.error.flatten().fieldErrors.username,
-      email: []
-    },    
-  };
-}
-
-//harvests validated values
-const validatedMailTick = validatedFields.data?.mailTick;
-const validatedUsername = validatedFields.data?.username;
-const validatedEmail = emailValidation.data?.validatedEmail;
-
-const parsedLocation = locationParser(location)
-
-//query and values to pass
-const query = 'UPDATE users SET name = $1, receive_email = $2 WHERE email = $3'
-const argumentData = [validatedUsername, validatedMailTick, validatedEmail];
-
-try {  
-  const userDetails = await sql.query<UserDetails>(query, argumentData);
-      
-} catch (error){  
-  return {
-    message: 'Database Error: Failed to sign up new user.'
+    message: 'Database Error: Failed to create username. Please try again.'
   };
 }
 

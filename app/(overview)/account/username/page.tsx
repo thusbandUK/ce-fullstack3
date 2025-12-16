@@ -1,10 +1,15 @@
 import { auth } from '@/auth';
 import { redirect } from 'next/navigation';
 import UpdateUsername from "@/app/ui/updateUsername";
+import { headers } from "next/headers";
 
 export default async function Account(){
 
-    const session: any = await auth();
+    //const session: any = await auth();
+
+    const session = await auth.api.getSession({
+      headers: await headers() // you need to pass the headers object.
+  })
 
     if (!session){
       redirect(`/account/login`);

@@ -16,7 +16,13 @@ export default async function Account({ searchParams }: { searchParams: { locati
       headers: await headers() // you need to pass the headers object.
   })
 
-  console.log(session)
+  if (session){
+    if (session.user){
+      console.log(session.user)
+
+    }
+  }
+  
 
     //const session = null
     //if (!session){

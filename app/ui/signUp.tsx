@@ -3,6 +3,7 @@
 import ArrowCommand from './dashboard/arrowCommand';
 import { State, signUpUser } from '../lib/actions';
 import { useFormState } from 'react-dom';
+import { useActionState } from 'react';
 import BottomRow from './dashboard/bottomRow';
 import LeftHandColumn from './dashboard/leftHandColumn';
 import RightHandColumn from './dashboard/rightHandColumn';
@@ -19,7 +20,7 @@ export default function SignUpForm({
 
   const initialState: State = { message: null, errors: {username: [], email: []}};
   const signUpUserWithEmail = signUpUser.bind(null, email, location);
-  const [state, formAction] = useFormState(signUpUserWithEmail, initialState);
+  const [state, formAction] = useActionState(signUpUserWithEmail, initialState);
 
   return (
     <form action={formAction}>
