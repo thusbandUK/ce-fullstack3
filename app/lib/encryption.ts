@@ -171,16 +171,16 @@ async function exportPrivateCryptoKeyMdn(key) {
 
 
 /* Working system to import private key that is encoded in base64 (*not* pem formatted)
+pem formatted means it has the header and the footer and this doesn't, it's just stored
+as the actual key part of the pem format key
  */
-function importPrivateRsaKeyMdn(pem) {  
+export function importPrivateRsaKeyMdn(stringKey: string) {  
   
   // base64 decode the string to get the binary data
-  const binaryDerString = atob(pem);
+  const binaryDerString = atob(stringKey);
   
   // convert from a binary string to an ArrayBuffer
   const binaryDer = str2ab(binaryDerString);
-  console.log('binaryDer')
-  console.log(binaryDer)
 
   return subtle.importKey(
     "pkcs8",
@@ -361,6 +361,7 @@ export const testWrappedKeysDatabase = async(message) => {
         //make the buffer and iv to facilitate stringification below
         const bufferisedIv = Buffer.from(iv)  
         
+        
         //stringify iv for storage in database
         const stringifiedIv = bufferisedIv.toString("hex")
         
@@ -402,6 +403,7 @@ export const testWrappedKeysDatabase = async(message) => {
         //log results symmteric decryption
         console.log('decryptedData', decryptedData)
         
+        return retrievedStringifiedCipher
 
   } catch (error) {
     throw new Error;
@@ -540,5 +542,204 @@ export const testDriveStringKeys = async(email) => {
   }
   
   
+
+}
+
+export const modifyUserDataAndWriteKey = async() => {
+
+
+  try {
+
+  } catch (error) {
+
+  }
+}
+
+
+
+/*
+Takes the array buffer returned by encryption and converts it into a hex string
+*/
+function arrayBufferToHexString (inputArrayBuffer: ArrayBuffer){
+  const bufferedInput = Buffer.from(inputArrayBuffer)
+  //stringifies cipher text
+  const stringifiedInput = bufferedInput.toString('hex');
+  return stringifiedInput;
+}
+
+/*
+Takes a string, key and iv and returns the aes symmetrically encrypted data as a hex string
+*/
+
+export async function aesEncryptString(inputData: string, key: CryptoKey, iv: Uint8Array){
+  const ec = new TextEncoder();
+  const ciphertext = await crypto.subtle.encrypt({
+    name: 'AES-CBC',
+    iv,
+  }, key, ec.encode(inputData));
+  const stringifiedCiphertext = arrayBufferToHexString(ciphertext)
+  return stringifiedCiphertext;
+}
+
+/*
+This needs to encrypt: 
+name
+email
+image link
+
+user.name, user.email, user.image
+*/
+
+async function aesEncryptUserData(name: string, email: string, image: string) {
+  //const ec = new TextEncoder();
+  const key = await generateAesKey();
+  const iv = crypto.getRandomValues(new Uint8Array(16));
+
+  const encryptedData = {
+    name: '',
+    email: '',
+    image: ''
+  }  
+
+  if (name){
+    encryptedData.name = await aesEncryptString(name, key, iv);    
+  }
+
+  if (email){
+    encryptedData.email = await aesEncryptString(email, key, iv);    
+  }
+
+  if (image){
+    encryptedData.image = await aesEncryptString(image, key, iv);
+  }
+
+  return {
+    key,
+    iv,
+    encryptedData,
+  };
+}
+
+/*
+This needs to encrypt: 
+name
+email
+image link
+
+This 
+1) receives name, email and image link in unencrypted form
+2) encrypts them
+3) modifies 
+
+
+user.name, user.email, user.image
+*/
+type UserDataObject = {
+  name: string;
+  email: string;
+  image: string;
+}
+
+export const encryptUserData = async(inputObject: UserDataObject) => {
+
+  const {name, email, image} = inputObject;  
+
+  const privateKey = process.env.PRIVATE_KEY;
+  const publicKey = process.env.PUBLIC_KEY;
+  try {
+
+        const encryptedDataKeyIv = await aesEncryptUserData(name, email, image)
+
+        //entracts components from encrypted data
+        const { encryptedData, key, iv } = encryptedDataKeyIv;
+        
+        //imports public key
+        const importedPublicKey = await importRsaPublicKey(publicKey)
+        
+        //wraps aes symmetrical encryption key with public rsa key
+        const wrappedKey = await subtle.wrapKey('raw', key, importedPublicKey, 'RSA-OAEP');
+
+        //bufferises wrapped key for TypeScripting
+        const bufferisedWrappedKey = Buffer.from(wrappedKey)
+        
+        //stringifies wrapped key
+        const stringifiedWrappedKey = bufferisedWrappedKey.toString("hex")
+
+        //make the buffer and iv to facilitate stringification below
+        const bufferisedIv = Buffer.from(iv)        
+        
+        //stringify iv for storage in database
+        const stringifiedIv = bufferisedIv.toString("hex")
+        
+        //queries for insertion of iv, encrypted email and wrapped key into database
+        const insertQuery ='INSERT INTO encryption_data (iv, wrapped_key) VALUES ($1, $2) RETURNING *;'
+        const insertArgument = [stringifiedIv, stringifiedWrappedKey]  
+        
+        
+        //insert iv as string into database
+        const inputData = await sql.query(insertQuery, insertArgument)
+        const {id: encryptionDataId, iv: retrievedIv, wrapped_key: retrievedStringifiedWrappedKey }: {id: string, iv: string, wrapped_key: string } = inputData.rows[0];
+                
+        //transforms stringified cipher text back into buffer, note 'hex' must tally above and below
+        //const bufferisedRetrievedCipher = Buffer.from(retrievedStringifiedCipher, 'hex')        
+
+        //transforms retrieved stringified wrapped key back into a buffer
+        const bufferisedRetrievedWrappedKey = Buffer.from(retrievedStringifiedWrappedKey, 'hex')
+
+        //import private key
+        const mdnImportedPrivateKey = await importPrivateRsaKeyMdn(privateKey)
+        
+        //bufferise retrieved iv
+        const rebufferisedRetrievedIv = Buffer.from(retrievedIv, "hex")       
+
+        //unwrap using imported private key
+        const unwrappedKey = await unwrapKey(bufferisedRetrievedWrappedKey, mdnImportedPrivateKey)
+        
+        //transforms stringified cipher text back into buffer, note 'hex' must tally above and below
+        const bufferisedRetrievedCipher = Buffer.from(encryptedData.email, 'hex')  
+        //symmetric decryption         
+        const decryptedData = await aesDecrypt(bufferisedRetrievedCipher, unwrappedKey, rebufferisedRetrievedIv)
+        
+        //log results symmteric decryption
+        console.log('decryptedData', decryptedData)
+        
+        return {encryptedData, encryptionDataId}
+
+  } catch (error) {
+    throw new Error;
+  }
+}
+
+/*
+returns imported private key from env var
+reads as string from env var but then imports and returns as CryptoKey
+*/
+
+export const privateKeyAsCryptoKey = async() => {
+
+  //collects private key from env var
+  const privateKey = process.env.PRIVATE_KEY;
+
+  //imports private key
+  const importedPrivateKey = await importPrivateRsaKeyMdn(privateKey)
+
+  return importedPrivateKey;
+}
+
+/*
+takes the string version of the wrappedKey returned from the database, along with the imported 
+CryptoKey version of the private key
+bufferises the string, unwraps the key and returns the key ready for use as a Cryptokey
+*/
+
+export const unwrapStringifiedKey = async(stringifiedWrappedKey: string, privateKey: CryptoKey) => {
+
+  //transforms retrieved stringified wrapped key back into a buffer
+  const bufferisedWrappedKey = Buffer.from(stringifiedWrappedKey, 'hex')
+
+  //unwraps key
+  const unwrappedKey = await unwrapKey(bufferisedWrappedKey, privateKey)
+
+  return unwrappedKey;
 
 }
