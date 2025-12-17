@@ -783,3 +783,55 @@ export const unwrapStringifiedKey = async(stringifiedWrappedKey: string, private
   return unwrappedKey;
 
 }
+
+/*
+This should take the string in the database (from user object?) and return the decrypted string
+so as a minimum it should take the user(id), and or, use the session object, perhaps need to decide
+whether you're going to access encryptionData by user_id as foreign key OR by user.encryptionDataId
+for now user.encryptionDataId
+
+it's called from actions.ts or data.ts or wherever and the string is passed with the user.id and the 
+encryptionDataId (again for now)
+
+call wrapped key and iv
+call private key
+unwrap key
+decrypt data
+
+
+*/
+
+
+export const decryptUserData = async(stringifiedEncryptedData: string, userId: string, encryptionDataId: string) => {
+
+  const fetchWrappedKeyIvQuery = 'SELECT iv, wrapped_key FROM encryption_data WHERE id = $1';
+  const fetchWrappedKeyIvArgument = [encryptionDataId];
+
+  const privateKey = await privateKeyAsCryptoKey()
+
+  //transforms stringified cipher text back into buffer, note 'hex' must tally above and below
+  const bufferisedEncryptedData = Buffer.from(stringifiedEncryptedData, 'hex')
+
+  try {
+
+     const retrievedWrappedKeyIv = await sql.query(fetchWrappedKeyIvQuery, fetchWrappedKeyIvArgument)
+
+     const {wrapped_key: wrappedKey, iv}: {wrapped_key: string, iv: string} = retrievedWrappedKeyIv.rows[0]
+
+     if (privateKey === undefined){
+      return
+     }
+     const unwrappedKey = await unwrapStringifiedKey(wrappedKey, privateKey)
+     
+     const bufferisedIv = Buffer.from(iv, 'hex')
+
+     const decryptedData = await aesDecrypt(bufferisedEncryptedData, unwrappedKey, bufferisedIv)
+
+     return decryptedData;
+
+
+  } catch (error){
+    throw new Error();
+  }
+
+}
