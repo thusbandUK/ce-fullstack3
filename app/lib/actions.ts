@@ -344,6 +344,40 @@ redirect(parsedLocation.length !== 0 ? parsedLocation : '/account');
 
 }
 
+import { decryptUserData } from './encryption';
+
+export async function getDecryptedUsername(){
+
+  //retrieves session data for user
+  const session = await auth.api.getSession({
+    headers: await headers() // you need to pass the headers object.
+  })
+  
+  //redirects user to login if no session data
+  if (!session){    
+    return;
+  }
+  
+  //collects id for user table and corresponding row of encryptionData table
+  const { id, encryptionDataId } = session.user;
+
+  const fetchUsernameQuery = 'SELECT username FROM "user" WHERE id = $1';
+  const fetchUsernameArgument = [id]
+
+  const fetchedData = await sql.query(fetchUsernameQuery, fetchUsernameArgument)
+  
+  const {username} = fetchedData.rows[0]
+
+  if (!username){
+    return
+  }
+
+  const decryptedUsername = await decryptUserData(username, id, encryptionDataId);
+
+  return decryptedUsername;  
+
+}
+
 //signupnewsletter STARTS
 
 export async function signUpNewsletter(email: string, location: string | null, prevState: State, formData: FormData) {
