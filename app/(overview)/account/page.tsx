@@ -5,6 +5,7 @@ import { redirect } from 'next/navigation';
 import MenuItem from '../../ui/dashboard/menuItem';
 import { auth } from "../../../auth"; // path to your Better Auth server instance
 import { headers } from "next/headers";
+import { getDecryptedUsername } from "../../lib/actions";
 
 
 
@@ -16,12 +17,16 @@ export default async function Account({ searchParams }: { searchParams: { locati
       headers: await headers() // you need to pass the headers object.
   })
 
+  
   if (session){
     if (session.user){
       console.log(session.user)
 
     }
+    
   }
+
+  const decryptedUsername = await getDecryptedUsername()
   
 
     //const session = null
@@ -76,7 +81,7 @@ export default async function Account({ searchParams }: { searchParams: { locati
         <div>
           <div className="w-100 mx-auto mt-5">
             <div className="rounded-lg flex" style={{border: 'black solid 1px'}}>
-              <h1 className="m-auto md:ml-10 p-5">{ session ? `Welcome, ${session.user.name}!` : 'Welcome!'}</h1>
+              <h1 className="m-auto md:ml-10 p-5">{ session ? `Welcome, ${decryptedUsername}!` : 'Welcome!'}</h1>
             </div>          
             <div  className="md:grid md:grid-cols-2 gap-0 w-full items-center justify-center rounded-lg" >
               <div className="border border-black rounded-lg p-5 h-full">          
