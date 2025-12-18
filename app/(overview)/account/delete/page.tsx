@@ -6,20 +6,26 @@ import { checkExisting } from '@/app/lib/deleteAccount';
 import { redirect } from 'next/navigation';
 import { auth } from "../../../../auth"; // path to your Better Auth server instance
 import { headers } from "next/headers";
+import { decryptUserData } from '@/app/lib/encryption';
 
 
 const Delete = async () => {
 
   const session = await auth.api.getSession({
     headers: await headers() // you need to pass the headers object.
-})
+  })
   //  const session: any = await auth();
 
-   // if (!session){
-      //  redirect(`/login`);
-   // }
+    if (!session){
+        redirect(`/login`);
+    }
 
-    //await checkExisting(session.user.email);
+    const { email, id, encryptionDataId } = session.user
+    const decryptedEmail = await decryptUserData(email, id, encryptionDataId);
+    
+    if (!decryptedEmail){
+      redirect('/login');
+    }
 
     return (
         <>
@@ -32,7 +38,7 @@ const Delete = async () => {
               </div>
             </div>
             <DeleteRequest
-              email={session.user.email}
+              email={decryptedEmail}
             ></DeleteRequest>
           </div>
         </>

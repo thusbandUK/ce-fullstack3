@@ -2,6 +2,7 @@
 
 import { State2, initiateDelete } from '../lib/deleteAccount';
 import { useFormState } from 'react-dom';
+import { useActionState } from 'react';
 import ArrowCommand from './dashboard/arrowCommand';
 import { betterAuthDeleteUser } from '../lib/actions';
 import { authClient } from '../../auth-client';
@@ -14,18 +15,20 @@ export default function DeleteRequest({
 }) {
 
   const initialState: State2 = { message: null, errors: {email: []}};
-  //const bindEmailInitiateDelete = initiateDelete.bind(null, email);
-  const bindBetterAuthDeleteUser = betterAuthDeleteUser.bind(null)
-  //const [state, formAction] = useFormState(bindEmailInitiateDelete, initialState);
-  const [state, formAction] = useFormState(bindBetterAuthDeleteUser, initialState);
+  const bindEmailInitiateDelete = initiateDelete.bind(null, email);
+  //const bindBetterAuthDeleteUser = betterAuthDeleteUser.bind(null)
+  const [state, formAction] = useActionState(bindEmailInitiateDelete, initialState);
+  //const [state, formAction] = useFormState(bindBetterAuthDeleteUser, initialState);
+  //const [state, formAction] = useActionState(bindBetterAuthDeleteUser, initialState);
 
   const deleteUser = async() => {
     await authClient.deleteUser()
   }
-  //<form action={formAction} role="form" name="delete-request-form">
+  //</form><form action={deleteUser} role="form" name="delete-request-form">
   return (
     
-      <form action={deleteUser} role="form" name="delete-request-form">
+    <form action={formAction} role="form" name="delete-request-form">
+      
       <div className="w-full flex flex-col pb-4 mx-auto grid grid-cols-6">
         <div className="col-start-1 col-span-6 md:col-span-4 w-full border-2 border-black rounded-lg p-5">{/*COL 1 */}
           <p>Sorry to hear you want to delete your account. Click delete and we will send you an

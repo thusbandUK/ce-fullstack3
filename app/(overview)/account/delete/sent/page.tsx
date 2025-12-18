@@ -1,11 +1,16 @@
 import Link from "next/link";
 import ArrowCommand from '../../../../ui/dashboard/arrowCommand';
-import { auth } from "@/auth";
+import { auth } from "../../../../../auth";
+//import { auth } from "@/auth";
 import { redirect } from "next/navigation";
+import { headers } from "next/headers";
 
 const Sent = async () => {
 
-  const session: any = await auth();
+  //const session: any = await auth();
+  const session = await auth.api.getSession({
+    headers: await headers() // you need to pass the headers object.
+  })
 
   if (!session){
     redirect(`/account/login`);
