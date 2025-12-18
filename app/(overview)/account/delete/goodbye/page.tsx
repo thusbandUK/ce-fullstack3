@@ -3,8 +3,10 @@ import LeftHandColumn from "../../../../ui/dashboard/leftHandColumn";
 import BottomRow from "../../../../ui/dashboard/bottomRow";
 import RightHandColumn from "../../../../ui/dashboard/rightHandColumn";
 //import IndividualElephantContainer from "@/app/animation/individualElephantContainer";
-import dynamic from 'next/dynamic';
-const IndividualElephantContainer = dynamic(() => import('../../../../animation/individualElephantContainer'), { ssr: false });
+//import dynamic from 'next/dynamic';
+//const IndividualElephantContainer = dynamic(() => import('../../../../animation/individualElephantContainer'), { ssr: false });
+import IndividualElephantContainer from "../../../../animation/individualElephantContainer";
+
 
 const Goodbye = async () => {
 

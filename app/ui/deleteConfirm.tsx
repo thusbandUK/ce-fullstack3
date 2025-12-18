@@ -2,6 +2,7 @@
 
 import { State3, confirmDelete } from '../lib/deleteAccount';
 import { useFormState } from 'react-dom';
+import { useActionState } from 'react';
 import { useSearchParams } from 'next/navigation'
 import Link from "next/link";
 import LeftHandColumn from './dashboard/leftHandColumn';
@@ -19,7 +20,8 @@ export default function DeleteConfirm({
 
   const initialState: State3 = { message: null, linkParams: null, errors: {email: [], token: []}};
   const bindFormDataConfirmDelete = confirmDelete.bind(null);
-  const [ state, formAction ] = useFormState(bindFormDataConfirmDelete, initialState);
+  //const [ state, formAction ] = useFormState(bindFormDataConfirmDelete, initialState);
+  const [ state, formAction ] = useActionState(bindFormDataConfirmDelete, initialState);
   const [ isPending, startTransition ] = useTransition();
   const [ clientSideError, setClientSideError ] = useState("");
 
