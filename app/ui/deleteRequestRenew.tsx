@@ -1,7 +1,8 @@
 'use client';
 
 import { State2, renewDelete } from '../lib/deleteAccount';
-import { useFormState } from 'react-dom';
+//import { useFormState } from 'react-dom';
+import { useActionState } from 'react';
 import ArrowCommand from './dashboard/arrowCommand';
 
 export default function DeleteRequestRenew({
@@ -14,7 +15,7 @@ export default function DeleteRequestRenew({
 
   const initialState: State2 = { message: null, errors: {email: []}};
   const bindEmailRenewDelete = renewDelete.bind(null, email);
-  const [state, formAction] = useFormState(bindEmailRenewDelete, initialState);
+  const [state, formAction] = useActionState(bindEmailRenewDelete, initialState);
 
   return (
     <form action={formAction}>

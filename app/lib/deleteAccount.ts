@@ -61,6 +61,10 @@ export type State3 = {
 export async function autoSignOut(){
 
   //await signOut({redirectTo: '/account/delete/signed-out'})
+  const { success } = await auth.api.signOut({
+    headers: await headers(),
+  })
+  redirect('/account/delete/signed-out')
   return
 
 }
@@ -77,7 +81,7 @@ export async function confirmDelete(prevState: State3, formData: FormData){
   
   //redirects user to login if no session data
   if (!session){    
-    return;
+    redirect('/account/login')
   }
 
   //validates email and token to ensure not corrupted
@@ -255,7 +259,7 @@ export async function initiateDelete(email: string, prevState: State2){
   
   //redirects user to login if no session data (BEST URL FOR THIS?)
   if (!session){    
-    redirect(`/account`);
+    redirect(`/account/login`);
   }
   
   //validates email to ensure not corrupted, it expects one thing and one thing only
@@ -327,7 +331,19 @@ export async function initiateDelete(email: string, prevState: State2){
 //in the delete_token table
 
 export async function renewDelete(email: string, prevState: State2){
+  //retrieves session data for user
+  const session = await auth.api.getSession({
+    headers: await headers() // you need to pass the headers object.
+  })
   
+  //redirects user to login if no session data (BEST URL FOR THIS?)
+  if (!session){    
+    redirect(`/account/login`);
+  }
+  
+  const { email: encryptedEmail, id, encryptionDataId } = session.user;
+
+
   //validates email to ensure not corrupted, it expects one thing and one thing only
   //and that's a valid email
   const validatedFields = NewConfirmEmail.safeParse({
@@ -352,11 +368,14 @@ export async function renewDelete(email: string, prevState: State2){
   const token = crypto.randomBytes(32);
   const stringToken = token.toString('hex');    
       
-  const timestamp = new Date()      
+  const timestamp = new Date()
   
+  //the identifier is the encrypted email address (since all data should be encrypted, but then,
+    //could you not just use a foreign key?) but of course the delete email has to be sent 
+    //to the validated decrypted email address (from the email passed to the function)
   const query = 'UPDATE delete_token SET token = $1, expires = $2 WHERE identifier = $3'
   
-  const argumentData = [stringToken, timestamp, validatedEmail];  
+  const argumentData = [stringToken, timestamp, encryptedEmail];  
 
   try {
     
