@@ -7,14 +7,12 @@ import ArrowCommand from './dashboard/arrowCommand';
 
 export default function UpdateUsername({
   username,
-  email,  
 }: {
   username: string;
-  email: string;  
 }) {
   
-  const initialState: State = { message: null, errors: {username: [], email: []}};
-  const updateUserWithNewName = updateUser.bind(null, email);
+  const initialState: State = { message: null, errors: {username: []}};
+  const updateUserWithNewName = updateUser.bind(null);
   const [state, formAction] = useActionState(updateUserWithNewName, initialState);
   
   return (

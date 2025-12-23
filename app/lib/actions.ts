@@ -22,7 +22,6 @@ const NewUser = FormSchema;
 
 const UpdateUsernameSchema = z.object({
   username: z.coerce.string({invalid_type_error: "Username can only contain letters and numbers",}).regex(/^[a-zA-Z0-9]+$/, { message: "Username can only contain letters and numbers" }).max(20).min(5),  
-  email: z.coerce.string({invalid_type_error: "Invalid email"}).email({message: "Looks like your email is invalid"})
 });
 
 const UpdatedUser = UpdateUsernameSchema;
@@ -134,12 +133,14 @@ export const betterAuthDeleteUser = async() => {
     //}
   //)
 
+  
   const { success } = await auth.api.deleteUser({
     body: {
       callbackURL: '/account'
     },
     headers: await headers()
   })
+  /*const { success } = await auth.api.deleteUser()*/
   console.log(success)
 
   } catch (error){
@@ -260,7 +261,7 @@ search for their data
 
 //import { getSession } from 'better-auth/api';
 //import { authClient } from "@/lib/client"
-import { unwrapKey, aesEncryptString, importPrivateRsaKeyMdn, privateKeyAsCryptoKey, unwrapStringifiedKey } from './encryption';
+import { unwrapKey, aesEncryptString, encryptUsername, importPrivateRsaKeyMdn, privateKeyAsCryptoKey, unwrapStringifiedKey } from './encryption';
 //import { headers } from "next/headers";
 
 
@@ -270,7 +271,7 @@ export async function signUpUser(email: string, location: string | null, prevSta
   const parsedLocation = locationParser(location)
 
   //collects private key from env var
-  const privateKey = await privateKeyAsCryptoKey();
+  //const privateKey = await privateKeyAsCryptoKey();
   
   //retrieves session data for user
   const session = await auth.api.getSession({
@@ -308,23 +309,28 @@ export async function signUpUser(email: string, location: string | null, prevSta
   const validatedUsername = validatedFields.data?.username;
 
   //encryptionData query
-  const queryForWrappedKeyIv = 'SELECT iv, wrapped_key FROM encryption_data WHERE id = $1'
-  const argumentForWrappedKeyIv = [encryptionDataId]
+  //const queryForWrappedKeyIv = 'SELECT iv, wrapped_key FROM encryption_data WHERE id = $1'
+  //const argumentForWrappedKeyIv = [encryptionDataId]
 
   try {
   
-    const returnedKeyIv = await sql.query(queryForWrappedKeyIv, argumentForWrappedKeyIv)  
-    const { iv: returnedIv, wrapped_key: returnedWrappedKey} = returnedKeyIv.rows[0]  
+    //const returnedKeyIv = await sql.query(queryForWrappedKeyIv, argumentForWrappedKeyIv)  
+    //const { iv: returnedIv, wrapped_key: returnedWrappedKey} = returnedKeyIv.rows[0]  
 
     //bufferises returned IV
-    const bufferisedReturnedIv = Buffer.from(returnedIv, 'hex')
+    //const bufferisedReturnedIv = Buffer.from(returnedIv, 'hex')
   
+    //if (!privateKey){
+      //return
+    //}
     //unwraps key returned from database
-    const unwrappedKey = await unwrapStringifiedKey(returnedWrappedKey, privateKey)
+    //const unwrappedKey = await unwrapStringifiedKey(returnedWrappedKey, privateKey)
   
     //encrypts username
-    const encryptedUsername = await aesEncryptString(validatedUsername, unwrappedKey, bufferisedReturnedIv)
+    //const encryptedUsername = await aesEncryptString(validatedUsername, unwrappedKey, bufferisedReturnedIv)
   
+    const encryptedUsername = await encryptUsername(validatedUsername, id, encryptionDataId)
+
     //query and values to pass
     const query = 'UPDATE "user" SET username = $1, receive_email = $2 WHERE id = $3'
     const argumentData = [encryptedUsername, validatedMailTick, id];//, validatedEmail
@@ -432,17 +438,60 @@ export async function signUpNewsletter(email: string, location: string | null, p
 
 //signUpNewsletter ENDS
 
+/*
+This will take the user.encryptionDataId and user.id
+and write user.id as user_id in the encryptionData table where id = encryptionDataId
+*/
 
-export async function updateUser(email: string, prevState: State, formData: FormData) {  
+export async function encryptionDataUserId (userId: string, encryptionDataId: string){
 
-  
+  //retrieves session data for user
+  /*const session = await auth.api.getSession({
+    headers: await headers() // you need to pass the headers object.
+  })
+
+  //redirects user to login if no session data
+  if (!session){    
+    redirect('/account/login');
+  }
+
+  const { encryptionDataId } = session.user;*/
+  const query = 'UPDATE encryption_data SET "userId" = $1 WHERE id = $2'
+  const argument = [userId, encryptionDataId];
+
+  try {
+
+    await sql.query(query, argument)
+    return
+
+  } catch (error){
+    console.log(error)
+    throw new Error()
+  }
+
+}
+
+
+export async function updateUser(prevState: State, formData: FormData) {
+
+  //retrieves session data for user
+  const session = await auth.api.getSession({
+    headers: await headers() // you need to pass the headers object.
+  })
+
+  //redirects user to login if no session data
+  if (!session){    
+    redirect('/account/login');
+  }
+
+  //collects id for user table and corresponding row of encryptionData table
+  const { id, encryptionDataId } = session.user;
+
   //validates username to ensure string between 5 and 20 characters long,
-  //validates email (even though passed directly from session object)
   const validatedFields = UpdatedUser.safeParse({    
     username: formData.get('username'),
-    email: email
   });
-    
+
   // If form validation fails, return errors early. Otherwise, continue.  
   if (!validatedFields.success) {
     return {
@@ -453,22 +502,25 @@ export async function updateUser(email: string, prevState: State, formData: Form
       },      
     };
   }
-    
+
   const validatedUsername = validatedFields.data?.username;
-  const validatedEmail = validatedFields.data?.email;
-    
-  const query = 'UPDATE users SET name = $1 WHERE email = $2'
-  const argumentData = [validatedUsername, validatedEmail];
   
-  try {    
-    const userDetails = await sql.query<UserDetails>(query, argumentData);
+  try {
+
+    const encryptedUsername = await encryptUsername(validatedUsername, id, encryptionDataId)
+
+    const query = 'UPDATE "user" SET username = $1 WHERE id = $2'
+    const argumentData = [encryptedUsername, id];
+
+    await sql.query<UserDetails>(query, argumentData);
         
-  } catch (error){    
+  } catch (error){
+    console.log(error)
     return {
       message: 'Database Error: Failed to sign up new user.'
     };
   }
-  
+
   revalidatePath('/account/username');
   redirect(`/account`);
   

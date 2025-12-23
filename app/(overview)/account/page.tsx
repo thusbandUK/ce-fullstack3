@@ -28,6 +28,7 @@ export default async function Account({ searchParams }: { searchParams: { locati
 
   const decryptedUsername = await getDecryptedUsername()
   
+  
 
     //const session = null
     //if (!session){

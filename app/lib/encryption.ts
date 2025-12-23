@@ -835,3 +835,50 @@ export const decryptUserData = async(stringifiedEncryptedData: string, userId: s
   }
 
 }
+
+/*
+There are two functions which write the username to the database, signUpUser and updateUser (CHECK),
+each of them should be able to call the below to encrypt the username, using the encryption keys
+already created on first login 
+so, it takes the user.id, user.encryptionData.id and username to encrypt
+1) fetches private key
+2) fetches wrappedKey and IV
+3) unwraps key, rebufferises IV
+4) encrypts username
+5) returns encrypted username (username not written into database, that happens in other functions)
+*/
+
+export const encryptUsername = async(username: string, id: string, encryptionDataId: string) => {
+
+  //collects private key from env var
+  const privateKey = await privateKeyAsCryptoKey();
+
+  //encryptionData query
+  const queryForWrappedKeyIv = 'SELECT iv, wrapped_key FROM encryption_data WHERE id = $1'
+  const argumentForWrappedKeyIv = [encryptionDataId]
+
+  try {
+
+    const returnedKeyIv = await sql.query(queryForWrappedKeyIv, argumentForWrappedKeyIv)  
+    const { iv: returnedIv, wrapped_key: returnedWrappedKey} = returnedKeyIv.rows[0]  
+
+    //bufferises returned IV
+    const bufferisedReturnedIv = Buffer.from(returnedIv, 'hex')
+  
+    if (!privateKey){
+      throw new Error('no private key')
+    }
+    //unwraps key returned from database
+    const unwrappedKey = await unwrapStringifiedKey(returnedWrappedKey, privateKey)
+
+    //encrypts username
+    const encryptedUsername = await aesEncryptString(username, unwrappedKey, bufferisedReturnedIv)
+
+    return encryptedUsername;
+
+  } catch (error){
+    console.log(error)
+    throw new Error()
+  }
+
+}

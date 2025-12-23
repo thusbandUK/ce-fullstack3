@@ -2,6 +2,7 @@ import { auth } from '@/auth';
 import { redirect } from 'next/navigation';
 import UpdateUsername from "@/app/ui/updateUsername";
 import { headers } from "next/headers";
+import { getDecryptedUsername } from '../../../lib/actions';
 
 export default async function Account(){
 
@@ -15,6 +16,9 @@ export default async function Account(){
       redirect(`/account/login`);
     }
 
+    const decryptedUsername = await getDecryptedUsername()
+    
+
     return (
       <div>
         <div className="w-full flex flex-col mx-auto grid grid-cols-6">
@@ -26,7 +30,7 @@ export default async function Account(){
           </div>
             <UpdateUsername
               email={session.user.email}
-              username={session.user.name}
+              username={decryptedUsername ? decryptedUsername : ""}
             ></UpdateUsername>
           
           </div>
