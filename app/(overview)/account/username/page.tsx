@@ -29,7 +29,6 @@ export default async function Account(){
           </div>
           </div>
             <UpdateUsername
-              email={session.user.email}
               username={decryptedUsername ? decryptedUsername : ""}
             ></UpdateUsername>
           
