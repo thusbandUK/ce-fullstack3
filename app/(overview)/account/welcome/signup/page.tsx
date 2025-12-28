@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation';
 import SignUpForm from '@/app/ui/signUp';
 import HeaderDivs from '@/app/ui/dashboard/header';
 import { headers } from "next/headers";
+import { decryptUserData } from '@/app/lib/encryption';
 
 export default async function Page({ searchParams }: { searchParams: Promise<{ location: string, callbackUrl: string | null }> }) {
 
@@ -18,12 +19,14 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ l
       redirect('/account/login');
     }
 
+    const decryptedEmail = await decryptUserData(session.user.email, session.user.id)
+
     return (
       <div>
         <HeaderDivs h1Content='Welcome!'/>
             <SignUpForm
               username={''}
-              email={session.user?.email}
+              email={decryptedEmail ? decryptedEmail : ""}
               location={location}
             />
       </div>
