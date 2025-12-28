@@ -672,7 +672,7 @@ type UserDataObject = {
 
 export const encryptUserData = async(inputObject: UserDataObject) => {
 
-  const {name, email, image, id} = inputObject;  
+  const {name, email, image, id} = inputObject;
 
   const privateKey = process.env.PRIVATE_KEY;
   const publicKey = process.env.PUBLIC_KEY;
@@ -700,7 +700,7 @@ export const encryptUserData = async(inputObject: UserDataObject) => {
         //stringifies wrapped key
         const stringifiedWrappedKey = bufferisedWrappedKey.toString("hex")
 
-        //make the buffer and iv to facilitate stringification below
+        //make a buffer from iv to facilitate stringification below
         const bufferisedIv = Buffer.from(iv)        
         
         //stringify iv for storage in database
@@ -712,35 +712,36 @@ export const encryptUserData = async(inputObject: UserDataObject) => {
         
         
         //insert iv as string into database
-        const inputData = await sql.query(insertQuery, insertArgument)
-        const {id: encryptionDataId, iv: retrievedIv, wrapped_key: retrievedStringifiedWrappedKey }: {id: string, iv: string, wrapped_key: string } = inputData.rows[0];
+        //const inputData = await sql.query(insertQuery, insertArgument)
+        await sql.query(insertQuery, insertArgument)
+        //const {id: encryptionDataId, iv: retrievedIv, wrapped_key: retrievedStringifiedWrappedKey }: {id: string, iv: string, wrapped_key: string } = inputData.rows[0];
                 
         //transforms stringified cipher text back into buffer, note 'hex' must tally above and below
         //const bufferisedRetrievedCipher = Buffer.from(retrievedStringifiedCipher, 'hex')        
 
         //transforms retrieved stringified wrapped key back into a buffer
-        const bufferisedRetrievedWrappedKey = Buffer.from(retrievedStringifiedWrappedKey, 'hex')
+        //const bufferisedRetrievedWrappedKey = Buffer.from(retrievedStringifiedWrappedKey, 'hex')
 
         //returns if no private key
-        if (privateKey === undefined){
-          return
-        }
+        //if (privateKey === undefined){
+          //return
+        //}
         //import private key
-        const mdnImportedPrivateKey = await importPrivateRsaKeyMdn(privateKey)
+        //const mdnImportedPrivateKey = await importPrivateRsaKeyMdn(privateKey)
         
         //bufferise retrieved iv
-        const rebufferisedRetrievedIv = Buffer.from(retrievedIv, "hex")       
+        //const rebufferisedRetrievedIv = Buffer.from(retrievedIv, "hex")       
 
         //unwrap using imported private key
-        const unwrappedKey = await unwrapKey(bufferisedRetrievedWrappedKey, mdnImportedPrivateKey)
+        //const unwrappedKey = await unwrapKey(bufferisedRetrievedWrappedKey, mdnImportedPrivateKey)
         
         //transforms stringified cipher text back into buffer, note 'hex' must tally above and below
-        const bufferisedRetrievedCipher = Buffer.from(encryptedData.email, 'hex')  
+        //const bufferisedRetrievedCipher = Buffer.from(encryptedData.email, 'hex')  
         //symmetric decryption         
-        const decryptedData = await aesDecrypt(bufferisedRetrievedCipher, unwrappedKey, rebufferisedRetrievedIv)
+        //const decryptedData = await aesDecrypt(bufferisedRetrievedCipher, unwrappedKey, rebufferisedRetrievedIv)
         
         //log results symmteric decryption
-        console.log('decryptedData', decryptedData)
+        //console.log('decryptedData', decryptedData)
         
         //return {encryptedData: encryptedData}//, encryptionDataId
         return encryptedData
