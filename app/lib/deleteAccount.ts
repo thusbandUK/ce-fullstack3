@@ -125,14 +125,10 @@ export async function confirmDelete(prevState: State3, formData: FormData){
   const confirmCredentialsQuery = 'SELECT * FROM delete_token WHERE identifier = $1 AND token = $2'
   const confirmationArguments = [email, validatedToken]
 
-  //queries for the deletion of all user data throughout the different tables
+  //querY for the deletion of user data from "user" table (see note on delete cascade below)
 
   const deleteFromUserQuery = 'DELETE FROM "user" WHERE id = $1 RETURNING *'
-  const deleteFromSessionQuery ='DELETE FROM session WHERE "userId" = $1'
-  const deleteFromDeleteTokenQuery = 'DELETE FROM delete_token WHERE identifier = $1'
-  const deleteFromAccountQuery = 'DELETE FROM account WHERE "userId" = $1'
-  const deleteFromEncryptionData = 'DELETE FROM encryption_data WHERE "userId" = $1'
-
+  
   try {
 
     await sql.query("BEGIN")
@@ -151,9 +147,9 @@ export async function confirmDelete(prevState: State3, formData: FormData){
       }
     }
 
-    //If the credentials match, this extracts the identifier (email) and
+    //If the credentials match, this extracts the 
     //recorded timestamp
-    const { identifier, expires } = confirmationAttempt.rows[0];
+    const { expires } = confirmationAttempt.rows[0];
 
     //this uses the imported function dateCompare() to check if the
     //link is older than one hour
@@ -168,14 +164,10 @@ export async function confirmDelete(prevState: State3, formData: FormData){
       }
     }
 
-    //deletes remaining user data from all other tables
-    
-    await sql.query(deleteFromSessionQuery, [id])    
-    await sql.query(deleteFromDeleteTokenQuery, [email])
-    await sql.query(deleteFromAccountQuery, [id])
-    await sql.query(deleteFromEncryptionData, [id])
-
-    //this deletes the user's entry in the users table
+    //this deletes the user's entry in the users table, which then automatically
+    //cascades to delete rows of all tables which reference user.id as a foreign key,
+    //ie: account, session, delete_token, encryption_data (but NOT verification, a column
+    //required for better-auth, but which was not currently in use at time of writing)
     await sql.query(deleteFromUserQuery, [id])
 
     await sql.query("COMMIT")    
@@ -267,7 +259,7 @@ export async function initiateDelete(email: string, prevState: State2){
   //extracts validated email
   const validatedEmail = validatedFields.data?.email;
 
-  const {email: encryptedEmail} = session.user;
+  const {email: encryptedEmail, id} = session.user;
 
     //collectively, the two terms below generate a random 64-character alphanumerical string
     const token = crypto.randomBytes(32);
@@ -276,12 +268,18 @@ export async function initiateDelete(email: string, prevState: State2){
     const timestamp = new Date()
         
     const query = //'INSERT INTO delete_token VALUES ($1, $2, $3) ON CONFLICT (identifier) DO NOTHING;'
-    `INSERT INTO delete_token (identifier, expires, token) 
+    /*`INSERT INTO delete_token (identifier, expires, token) 
        VALUES ($1, $2, $3)
        ON CONFLICT (identifier, token) DO UPDATE 
          SET expires = excluded.expires, 
+         token = excluded.token;`*/
+      `INSERT INTO delete_token ("userId", identifier, expires, token) 
+       VALUES ($1, $2, $3, $4)
+       ON CONFLICT ("userId") DO UPDATE 
+         SET expires = excluded.expires, 
+         identifier = excluded.identifier,
          token = excluded.token;`
-    const argumentData = [encryptedEmail, timestamp, stringToken];
+    const argumentData = [id, encryptedEmail, timestamp, stringToken];
 
     try {
 
@@ -324,7 +322,7 @@ export async function renewDelete(email: string, prevState: State2){
     redirect(`/account/login`);
   }
   
-  const { email: encryptedEmail } = session.user;
+  const { email: encryptedEmail, id } = session.user;
 
 
   //validates email to ensure not corrupted, it expects one thing and one thing only
@@ -356,9 +354,9 @@ export async function renewDelete(email: string, prevState: State2){
   //the identifier is the encrypted email address (since all data should be encrypted, but then,
     //could you not just use a foreign key?) but of course the delete email has to be sent 
     //to the validated decrypted email address (from the email passed to the function)
-  const query = 'UPDATE delete_token SET token = $1, expires = $2 WHERE identifier = $3'
+  const query = 'UPDATE delete_token SET "userId" = $1, token = $2, expires = $3 WHERE identifier = $4'
   
-  const argumentData = [stringToken, timestamp, encryptedEmail];  
+  const argumentData = [id, stringToken, timestamp, encryptedEmail];  
 
   try {
     
