@@ -6,6 +6,14 @@
 // create a new type HTMLElementEvent that has a target of type you pass
 // type T must be a HTMLElement (e.g. HTMLTextAreaElement extends HTMLElement)
 
+export type encryptedData = {
+  
+    name: string;
+    email: string;
+    image: string;
+
+}
+
 export type assessedResponse = {
   id: number;
   flashcardDataIndex: number;  

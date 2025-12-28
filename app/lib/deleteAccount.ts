@@ -21,8 +21,10 @@ const crypto = require('crypto');
 import { sendMail } from './send-mail';
 import { dateCompare } from './dateCompare';
 const SITE_URL = process.env.SITE_URL;
-//import { signOut } from '../../auth';
 import { customDeleteMailHtml, customDeleteMailText } from '../emails/deleteAccountEmail';
+import { headers } from 'next/headers';
+import { auth } from '../../auth';
+import { decryptUserData } from './encryption';
 
 const InitiateDeleteSchema = z.object({
   email: z.coerce.string({invalid_type_error: "Invalid email"}).email()
@@ -69,9 +71,7 @@ export async function autoSignOut(){
 
 }
 
-import { headers } from 'next/headers';
-import { auth } from '../../auth';
-import { decryptUserData } from './encryption';
+
 
 export async function confirmDelete(prevState: State3, formData: FormData){
   //retrieves session data for user
@@ -108,9 +108,9 @@ export async function confirmDelete(prevState: State3, formData: FormData){
   const validatedToken = validatedFields.data?.token;
   
   //confirm email passed in token matches that for user signed in
-  const { email, id, encryptionDataId } = session.user;
+  const { email, id } = session.user;
 
-  const decryptedEmail = await decryptUserData(email, id, encryptionDataId);
+  const decryptedEmail = await decryptUserData(email, id);
 
   /*This should be an auto signout situation, see previous logic */
   if (decryptedEmail !== validatedEmail){
@@ -126,17 +126,12 @@ export async function confirmDelete(prevState: State3, formData: FormData){
   const confirmationArguments = [email, validatedToken]
 
   //queries for the deletion of all user data throughout the different tables
-  /*const deleteFromUsersQuery = 'DELETE FROM users WHERE email = $1 RETURNING *'
-  const deleteFromSessionsQuery ='DELETE FROM sessions WHERE "userId" = $1' 
-  const deleteFromVerificationTokenQuery = 'DELETE FROM verification_token WHERE identifier = $1'
-  const deleteFromDeleteTokenQuery = 'DELETE FROM delete_token WHERE identifier = $1'*/
 
   const deleteFromUserQuery = 'DELETE FROM "user" WHERE id = $1 RETURNING *'
   const deleteFromSessionQuery ='DELETE FROM session WHERE "userId" = $1'
-  //here identifier is currently the decrypted email, which is wrong
   const deleteFromDeleteTokenQuery = 'DELETE FROM delete_token WHERE identifier = $1'
   const deleteFromAccountQuery = 'DELETE FROM account WHERE "userId" = $1'
-  const deleteFromEncryptionData = 'DELETE FROM encryption_data WHERE id = $1'
+  const deleteFromEncryptionData = 'DELETE FROM encryption_data WHERE "userId" = $1'
 
   try {
 
@@ -173,26 +168,14 @@ export async function confirmDelete(prevState: State3, formData: FormData){
       }
     }
 
-    
-
-    //harvests userId foreign key (see above)
-    //const userId = usersReturned.rows[0].id;
-
     //deletes remaining user data from all other tables
-    /*
-    await sql.query(deleteFromSessionsQuery, [userId])
-    await sql.query(deleteFromVerificationTokenQuery, [identifier])
-    await sql.query(deleteFromDeleteTokenQuery, [identifier])
-*/
+    
     await sql.query(deleteFromSessionQuery, [id])    
     await sql.query(deleteFromDeleteTokenQuery, [email])
     await sql.query(deleteFromAccountQuery, [id])
-    await sql.query(deleteFromEncryptionData, [encryptionDataId])
+    await sql.query(deleteFromEncryptionData, [id])
 
-    //this deletes the user's entry in the users table, but also returns the
-    //corresponding id, which is then passed as userId (foreign key) to delete the user
-    //data from the sessions table
-    //const usersReturned = await sql.query(deleteFromUsersQuery, [identifier])
+    //this deletes the user's entry in the users table
     await sql.query(deleteFromUserQuery, [id])
 
     await sql.query("COMMIT")    
@@ -341,7 +324,7 @@ export async function renewDelete(email: string, prevState: State2){
     redirect(`/account/login`);
   }
   
-  const { email: encryptedEmail, id, encryptionDataId } = session.user;
+  const { email: encryptedEmail } = session.user;
 
 
   //validates email to ensure not corrupted, it expects one thing and one thing only

@@ -653,9 +653,12 @@ email
 image link
 
 This 
-1) receives name, email and image link in unencrypted form
-2) encrypts them
-3) modifies 
+1) receives name, email and image link in unencrypted form, along with newly generated user.id
+2) encrypts name, email and image link
+3) symmetrically encrypts with IV, which is stringified and written to encryptionData
+4) wraps symmetrical encryption key with public key and writes the wrapped key to the database
+5) writes the user.id as userId foreign key
+6) returns encrypted name, email and image link for writing into the user table
 
 
 user.name, user.email, user.image
@@ -664,11 +667,12 @@ type UserDataObject = {
   name: string;
   email: string;
   image: string;
+  id: string;
 }
 
 export const encryptUserData = async(inputObject: UserDataObject) => {
 
-  const {name, email, image} = inputObject;  
+  const {name, email, image, id} = inputObject;  
 
   const privateKey = process.env.PRIVATE_KEY;
   const publicKey = process.env.PUBLIC_KEY;
@@ -703,8 +707,8 @@ export const encryptUserData = async(inputObject: UserDataObject) => {
         const stringifiedIv = bufferisedIv.toString("hex")
         
         //queries for insertion of iv, encrypted email and wrapped key into database
-        const insertQuery ='INSERT INTO encryption_data (iv, wrapped_key) VALUES ($1, $2) RETURNING *;'
-        const insertArgument = [stringifiedIv, stringifiedWrappedKey]  
+        const insertQuery ='INSERT INTO encryption_data ("userId", iv, wrapped_key) VALUES ($1, $2, $3) RETURNING *;'
+        const insertArgument = [id, stringifiedIv, stringifiedWrappedKey]
         
         
         //insert iv as string into database
@@ -738,7 +742,8 @@ export const encryptUserData = async(inputObject: UserDataObject) => {
         //log results symmteric decryption
         console.log('decryptedData', decryptedData)
         
-        return {encryptedData, encryptionDataId}
+        //return {encryptedData: encryptedData}//, encryptionDataId
+        return encryptedData
 
   } catch (error) {
     throw new Error;
@@ -802,10 +807,10 @@ decrypt data
 */
 
 
-export const decryptUserData = async(stringifiedEncryptedData: string, userId: string, encryptionDataId: string) => {
+export const decryptUserData = async(stringifiedEncryptedData: string, userId: string) => {
 
-  const fetchWrappedKeyIvQuery = 'SELECT iv, wrapped_key FROM encryption_data WHERE id = $1';
-  const fetchWrappedKeyIvArgument = [encryptionDataId];
+  const fetchWrappedKeyIvQuery = 'SELECT iv, wrapped_key FROM encryption_data WHERE "userId" = $1';
+  const fetchWrappedKeyIvArgument = [userId];
 
   const privateKey = await privateKeyAsCryptoKey()
 
@@ -854,8 +859,8 @@ export const encryptUsername = async(username: string, id: string, encryptionDat
   const privateKey = await privateKeyAsCryptoKey();
 
   //encryptionData query
-  const queryForWrappedKeyIv = 'SELECT iv, wrapped_key FROM encryption_data WHERE id = $1'
-  const argumentForWrappedKeyIv = [encryptionDataId]
+  const queryForWrappedKeyIv = 'SELECT iv, wrapped_key FROM encryption_data WHERE "userId" = $1'
+  const argumentForWrappedKeyIv = [id]
 
   try {
 
@@ -879,6 +884,55 @@ export const encryptUsername = async(username: string, id: string, encryptionDat
   } catch (error){
     console.log(error)
     throw new Error()
+  }
+
+}
+
+/*
+This accepts encrypted user data (id, name, email and image link) and overwrites the 
+non-encrypted data in the user table
+See below for what happens if it throws an error
+*/
+
+
+export const updateUserEncryptedData = async(user: UserDataObject) => {
+
+  const {id, name, email, image} = user;
+
+  const updateQuery = 'UPDATE "user" SET name = $1, email = $2, image = $3 WHERE id = $4;'
+  const updateArguments = [name, email, image, id]
+
+  try {
+    await sql.query(updateQuery, updateArguments)
+    
+    return {success: true}
+
+  } catch (error){
+    console.log(error)    
+    return {error: true}
+  }
+}
+
+/*
+this accepts the user.id and uses it to delete the entries in the user and encryption_data
+tables. it's called if the above function throws an error to reverse the entries already 
+made in the db (user, encryption_data) before the signUp process is aborted
+*/
+
+export const abortUserCreation = async(userId: string) => {
+
+  const deleteUserQuery = 'DELETE FROM "user" WHERE id = $1;'
+  const deleteEncryptionQuery = 'DELETE FROM encryption_data WHERE "userId" = $1;'
+  const bothArgument = [userId]
+
+  try {
+    await sql.query(deleteEncryptionQuery, bothArgument)
+    await sql.query(deleteUserQuery, bothArgument)
+    
+    return
+  } catch (error){
+    console.log(error);
+    throw new Error();
   }
 
 }
