@@ -674,7 +674,7 @@ export const encryptUserData = async(inputObject: UserDataObject) => {
 
   const {name, email, image, id} = inputObject;
 
-  const privateKey = process.env.PRIVATE_KEY;
+  //const privateKey = process.env.PRIVATE_KEY;
   const publicKey = process.env.PUBLIC_KEY;
   try {
 
@@ -923,11 +923,11 @@ made in the db (user, encryption_data) before the signUp process is aborted
 export const abortUserCreation = async(userId: string) => {
 
   const deleteUserQuery = 'DELETE FROM "user" WHERE id = $1;'
-  const deleteEncryptionQuery = 'DELETE FROM encryption_data WHERE "userId" = $1;'
+  //const deleteEncryptionQuery = 'DELETE FROM encryption_data WHERE "userId" = $1;'
   const bothArgument = [userId]
 
   try {
-    await sql.query(deleteEncryptionQuery, bothArgument)
+    //await sql.query(deleteEncryptionQuery, bothArgument)
     await sql.query(deleteUserQuery, bothArgument)
     
     return
