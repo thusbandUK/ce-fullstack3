@@ -5,15 +5,24 @@ import HeaderDivs from '../../../ui/dashboard/header';
 /*
 This is the login page, it's probably not really necessary as (implicitly) clicking any signin
 button could direct straight to the page where user inputs email. Consider removing.
+
+export default async function Page({ params }: { params: Promise<{ examboard_id: string } >}) {
+  
+    //const session: any = await auth();
+    const session: any = fakeSession;
+    //const session = null
+    
+    const {examboard_id} = await params;
 */
 
-export default function LoginPage({ searchParams }: { searchParams: { location: string } }) {
+export default async function LoginPage({ searchParams }: { searchParams: Promise<{ location: string }> }) {
 
+  const { location } = await searchParams;
   return (
     <>
-      <HeaderDivs h1Content='Login' />
+      <HeaderDivs h1Content='Sign in or sign up' />
       <InitiateSignIn
-        location={searchParams.location ? searchParams.location : ''}
+        location={location ? location : ''}
         error={false}
       />
     </>

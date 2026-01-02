@@ -1,55 +1,29 @@
 import SignOut from "@/app/ui/dashboard/signOut";
 import { InitiateSignIn } from "@/app/ui/initiateSignIn";
-//import { auth } from '@/auth';
 import { redirect } from 'next/navigation';
 import MenuItem from '../../ui/dashboard/menuItem';
 import { auth } from "../../../auth"; // path to your Better Auth server instance
 import { headers } from "next/headers";
 import { getDecryptedUsername } from "../../lib/actions";
 
-
-
-export default async function Account({ searchParams }: { searchParams: { location: string } }){
+export default async function Account({ searchParams }: { searchParams: Promise<{ location: string }> }){
   
-    //const session: any = await auth();
-
-    const session = await auth.api.getSession({
-      headers: await headers() // you need to pass the headers object.
+  const session = await auth.api.getSession({
+    headers: await headers() // you need to pass the headers object.
   })
 
-  
-  if (session){
-    if (session.user){
-      console.log(session.user)
+  const { location } = await searchParams;
 
-    }
-    
+  if (location){
+    redirect(`/${location}`)
   }
+  
+  if (!session){
+     redirect(`/account/login`);
+   }
 
   const decryptedUsername = await getDecryptedUsername()
   
-  
-
-    //const session = null
-    //if (!session){
-     // redirect(`/account/login`);
-    //}
-/*
-    if (!session.user.name){
-      if (!searchParams.location){
-        redirect('/account/welcome/signup');
-      } else {
-        redirect(`/account/welcome/signup?location=${searchParams.location}`);
-      }
-    }
-*/
-/*
-    if (session){
-      if (searchParams.location){
-        redirect(searchParams.location)
-      }
-    }*/
-
     type MenuContentTypeType = {
       heading: string;
       content: string;
@@ -85,14 +59,8 @@ export default async function Account({ searchParams }: { searchParams: { locati
               <h1 className="m-auto md:ml-10 p-5">{ session ? `Welcome, ${decryptedUsername}!` : 'Welcome!'}</h1>
             </div>          
             <div  className="md:grid md:grid-cols-2 gap-0 w-full items-center justify-center rounded-lg" >
-              <div className="border border-black rounded-lg p-5 h-full">          
-                { session ?
-                  <SignOut />
-                  :
-                  <InitiateSignIn
-                    location="/account"
-                    error={false}
-                  />}
+              <div className="border border-black rounded-lg p-5 h-full">
+                <SignOut />                  
               </div>
               {
                 Object.keys(menuContent).map((x) => (

@@ -8,6 +8,8 @@ import ArrowCommand from './dashboard/arrowCommand';
 import BottomRow from './dashboard/bottomRow';
 import LeftHandColumn from './dashboard/leftHandColumn';
 import RightHandColumn from './dashboard/rightHandColumn';
+import GoogleButton from './dashboard/googleButton';
+import IndividualElephantContainer from '../animation/individualElephantContainer';
 
 export function InitiateSignIn({
   location,
@@ -56,44 +58,42 @@ export function InitiateSignIn({
 
   
   return (
-    <form
-      action={async () => {
-        "use server"        
-        //await signIn(provider, { redirectTo: whereToRedirect});
-        await betterAuthSignIn()
-        //const data = await authClient.signIn.social({
-          //provider: "google",
-       // });
-
-        //const { redirect, url } = await authClient.signIn.social({
-          //provider: "google",
-          //disableRedirect: false,
-        //});
-      }}
-    >
+    
       <BottomRow>
         <LeftHandColumn>
           <div className="spacer"></div>
-          {
-            error ?
-            <p>Looks like something went wrong! Click sign in to try again.</p>
-            :
-            <p>Click sign in to login to Chemistry Elephant</p>
-          }
-          <div className="spacer"></div>
+          <form
+            action={async () => {
+            "use server"
+            await betterAuthSignIn()        
+            }}
+          >
+            {
+              error ?
+              <p>Looks like something went wrong! Click sign in to try again.</p>
+              :
+              <p>Click to sign in or sign up to Chemistry Elephant via Google</p>
+            }
+            <div className="spacer"></div>
+            <div className="flex justify-center">
+              <GoogleButton />
+            </div>
+          </form>
         </LeftHandColumn>
         <RightHandColumn>
           <div className="m-5">
+            {/*
             <button type="submit">
               <ArrowCommand
                 command="SIGN IN"
                 borderGray={false}
                 disabled={false}
               />
-            </button>
+            </button>*/}
+            <IndividualElephantContainer />
           </div>
         </RightHandColumn>
       </BottomRow>
-    </form>
+    
   )
 }
