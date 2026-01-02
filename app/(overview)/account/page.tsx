@@ -12,15 +12,15 @@ export default async function Account({ searchParams }: { searchParams: Promise<
     headers: await headers() // you need to pass the headers object.
   })
 
-  const { location } = await searchParams;
+  const { location } = await searchParams;  
+  
+  if (!session){
+     redirect(`/account/login?location=/account`);
+   }
 
   if (location){
     redirect(`/${location}`)
   }
-  
-  if (!session){
-     redirect(`/account/login`);
-   }
 
   const decryptedUsername = await getDecryptedUsername()
   

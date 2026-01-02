@@ -2,7 +2,8 @@
 
 import { StateSignUpNewsletter, signUpNewsletter } from '@/app/lib/actions';
 import React, { useState } from 'react';
-import { useFormState } from 'react-dom';
+//import { useFormState } from 'react-dom';
+import { useActionState } from 'react';
 import ArrowCommand from './dashboard/arrowCommand';
 import clsx from 'clsx';
 
@@ -17,7 +18,7 @@ export default function SignUpNewsletter({
 }) {
   const initialState: StateSignUpNewsletter = { message: null, errors: {mailTick: [], email: []}};
   const signUpUserWithEmail = signUpNewsletter.bind(null, email, location);
-  const [state, formAction] = useFormState(signUpUserWithEmail, initialState);
+  const [state, formAction] = useActionState(signUpUserWithEmail, initialState);
   const [checked, setChecked] = useState(receivingNewsletter);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {

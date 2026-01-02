@@ -70,22 +70,22 @@ export type StateExecuteSignIn = {
 import { auth } from '../../auth';
 
 
-export async function betterAuthSignIn(){
-  console.log('betterAuthSignIn called')
+export async function betterAuthSignIn(location: string){  
 
   let url = "";
 
+  const baseUrl = process.env.BETTER_AUTH_URL
   try {
 
-   // const signInResult = await authClient.signIn.social({     
-     // provider: "google",     
- // });
+   
 
   const signInResult = await auth.api.signInSocial({
     body: {
       provider: "google", // or any other provider id,
       disableRedirect: false,
-      newUserCallbackURL: "/account/welcome/signup"
+      callbackURL: location ? `${baseUrl}/${location}` : undefined,
+      newUserCallbackURL: "/account/welcome/signup",
+          
     },
   });
   //console.log('betterAuthSignIn got past social sign in call')

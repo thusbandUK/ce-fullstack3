@@ -64,8 +64,11 @@ export function InitiateSignIn({
           <div className="spacer"></div>
           <form
             action={async () => {
+              
             "use server"
-            await betterAuthSignIn()        
+            console.log('parsedLocation')
+              console.log(parsedLocation)
+            await betterAuthSignIn(parsedLocation)        
             }}
           >
             {

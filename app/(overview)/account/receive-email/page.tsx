@@ -1,13 +1,18 @@
 import { auth } from '../../../../auth'
 import { redirect } from 'next/navigation';
 import SignUpNewsletter from '../../../ui/signUpNewsletter';
+import { headers } from "next/headers";
 
-export default async function ReceiveEmail({ searchParams }: { searchParams: { location: string } }){
+export default async function ReceiveEmail({ searchParams }: { searchParams: Promise<{ location: string }> }){
 
-    const session: any = await auth();
+    const session = await auth.api.getSession({
+      headers: await headers() // you need to pass the headers object.
+    })
+
+    const { location } = await searchParams;
 
     if (!session){
-      redirect(`/account/login`);
+      redirect(`/account/login?location=/account/receive-email${ location ? '?location=' + location : null}`);
     }
 
     return (
@@ -22,7 +27,7 @@ export default async function ReceiveEmail({ searchParams }: { searchParams: { l
 
         <SignUpNewsletter
           email={session.user.email}
-          location={searchParams.location ? searchParams.location : ''}
+          location={location ? location : ''}
           receivingNewsletter={session.user.receive_email}
         ></SignUpNewsletter>
       </div>
