@@ -9,6 +9,7 @@ import { nextCookies } from "better-auth/next-js";
 import { APIError } from "better-auth/api";
 import { encryptUserData, abortUserCreation, updateUserEncryptedData } from "./app/lib/encryption";
 import { openAPI } from "better-auth/plugins"
+import { inferAdditionalFields } from "better-auth/client/plugins";
 
 export const auth = betterAuth({
     database: new Pool({ connectionString: process.env.DATABASE_URL }),
@@ -29,8 +30,14 @@ export const auth = betterAuth({
         additionalFields: {
           username: {
             type: "string",
+            input : false,
             required: true
           },
+          receive_email: {
+            type: "boolean",
+            input : false,
+            required: true
+          }
         },
         create: {
           after: async (user) => {
@@ -83,5 +90,17 @@ export const auth = betterAuth({
       plugins: [
         nextCookies(),
         openAPI(),
+        inferAdditionalFields(
+          {
+              user: {
+                  receive_email: {
+                    type: "string",
+                  },
+                  username: {
+                    type: "string",
+                  }
+              }
+          }
+      )
       ]//make sure last item in 'array' 
 })
