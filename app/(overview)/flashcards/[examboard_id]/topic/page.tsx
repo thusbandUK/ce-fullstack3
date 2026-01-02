@@ -6,16 +6,15 @@ import MenuItem from '../../../../../app/ui/dashboard/menuItem'
 import { auth } from '../../../../../auth';
 import { Suspense } from "react";
 import { CardSkeleton, TopicsSkeleton } from "../../../../../app/ui/dashboard/skeletons";
-import { fakeSession } from '../../../../upgradeFiles/miscObjectsAndFunctions';
+import { headers } from 'next/headers';
 
 export default async function Page({ params }: { params: Promise<{ examboard_id: string } >}) {
-  
-    //const session: any = await auth();
-    const session: any = fakeSession;
-    //const session = null
+
+    const session = await auth.api.getSession({
+      headers: await headers() // you need to pass the headers object.
+    })
     
     const {examboard_id} = await params;
-
 
     const topics = await fetchTopics(examboard_id);
 
@@ -31,8 +30,7 @@ export default async function Page({ params }: { params: Promise<{ examboard_id:
 //className='w-11/12 md:w-4/5 mx-auto mt-10'
 // className="w-full md:w-4/5 mx-auto mt-10 p-2"
     return (
-      <div className="w-full md:w-4/5 mx-auto">
-        
+      <div className="w-full md:w-4/5 mx-auto">        
         
         <h1>Select your set of flashcards</h1>
         <div className="grid md:grid-cols-3 gap-0 mt-10">
