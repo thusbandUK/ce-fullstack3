@@ -1,7 +1,7 @@
 import FlashcardPresentation from "@/app/ui/dashboard/flashcards";
 import { fetchIndividualFlashcardByCode } from "@/app/lib/data";
 import { auth } from "@/auth";
-import { fakeSession } from "../../../../../upgradeFiles/miscObjectsAndFunctions";
+import { headers } from "next/headers";
 
 export default async function Page({ params }: { params: Promise<{ flashcard_code: string }>}) {    
 
@@ -9,8 +9,9 @@ export default async function Page({ params }: { params: Promise<{ flashcard_cod
     
     const allFlashcardsData = await fetchIndividualFlashcardByCode(flashcard_code);
 
-    //const session: any = await auth();
-    const session = fakeSession;
+    const session = await auth.api.getSession({
+        headers: await headers() // you need to pass the headers object.
+      })   
 
     /*
     So, I would like this to go straight into the multiple choice question, one option for which

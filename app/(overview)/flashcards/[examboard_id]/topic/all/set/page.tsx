@@ -3,12 +3,14 @@ import FlashcardPresentation from "@/app/ui/dashboard/flashcards";
 import { CardSkeleton } from "@/app/ui/dashboard/skeletons"; 
 import { Suspense } from 'react';
 import { auth } from "@/auth";
-import { fakeSession } from "@/app/upgradeFiles/miscObjectsAndFunctions";
+import { headers } from "next/headers";
 
 export default async function Page({ params }: { params: Promise<{ examboard_id: string }>}) {    
 
-    //const session: any = await auth();
-    const session: any = fakeSession;
+    
+    const session = await auth.api.getSession({
+        headers: await headers() // you need to pass the headers object.
+      })    
 
     const { examboard_id } = await params;
 

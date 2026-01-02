@@ -2,23 +2,20 @@ import { fetchFlashcardsByTopic } from "@/app/lib/data";
 import FlashcardPresentation from "@/app/ui/dashboard/flashcards";
 import { redirect } from 'next/navigation';
 import { auth } from '@/auth';
-import { fakeSession } from "../../../../../../upgradeFiles/miscObjectsAndFunctions";
+import { headers } from "next/headers";
 
 export default async function Page({ params }: { params: Promise<{ topic_id: string, examboard_id: string }> }) {    
 
-  //const session: any = await auth();
-  const session = fakeSession;
-  //const session = null
-
-  console.log('i am on th epage i am thinking')
+  const session = await auth.api.getSession({
+    headers: await headers() // you need to pass the headers object.
+  })
 
   const { topic_id, examboard_id } = await params;
     
     if (!session) {
       //if user is not signed in they are redirected to login, with a query of the current url
       //to which they are returned upon completion of sign in
-      redirect(`/account/login?location=/flashcards/${examboard_id}/topic/${topic_id}/set`);
-      //`/login?location=/flashcards/${params.examboard_id}/topic/${params.topic_id}/set`
+      redirect(`/account/login?location=/flashcards/${examboard_id}/topic/${topic_id}/set`);      
     }
 
     const allFlashcardsData = await fetchFlashcardsByTopic(topic_id);    
