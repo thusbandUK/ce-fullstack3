@@ -365,7 +365,7 @@ export async function getDecryptedUsername(){
   }
   
   //collects id for user table and corresponding row of encryptionData table
-  const { id, encryptionDataId } = session.user;
+  const { id } = session.user;
 
   const fetchUsernameQuery = 'SELECT username FROM "user" WHERE id = $1';
   const fetchUsernameArgument = [id]
@@ -378,7 +378,7 @@ export async function getDecryptedUsername(){
     return
   }
 
-  const decryptedUsername = await decryptUserData(username, id, encryptionDataId);
+  const decryptedUsername = await decryptUserData(username, id);
 
   return decryptedUsername;  
 
