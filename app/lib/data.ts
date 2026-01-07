@@ -90,6 +90,15 @@ export async function fetchExamboards() {
   }
 }
 
+import { headers } from "next/headers";
+
+export async function getClientIpAddress(){
+  //see https://github.com/vercel/next.js/pull/59719/commits/3cc1a3798246c4f952a2d23e69bba4bb5ae617a7
+  const returnedHeaders = await headers();
+
+  return returnedHeaders.get("x-forwarded-for") ? returnedHeaders.get("x-forwarded-for") : 'no ip address available' 
+}
+
 export async function fetchTopics(examboardId: string) {
   
   //sanitises the argument passed to examboardId parameter 
