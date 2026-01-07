@@ -9,8 +9,8 @@ import { UserEmailSchema } from './schema';
 import { UserDetails } from './definitions';
 import { locationParser } from './functions';
 //import { isRedirectError } from "next/dist/client/components/redirect";
-import { verifySolution } from 'altcha-lib';
-import { authClient } from '../../auth-client';
+//import { verifySolution } from 'altcha-lib';
+//import { authClient } from '../../auth-client';
 
 
 const FormSchema = z.object({
