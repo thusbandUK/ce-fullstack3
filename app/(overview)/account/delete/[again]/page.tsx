@@ -5,7 +5,7 @@ import DeleteRequestRenew from '../../../../ui/deleteRequestRenew';
 import { redirect } from 'next/navigation';
 import { renewDeleteMessage } from '../../../../lib/functions';
 import { headers } from 'next/headers';
-import { decryptUserData } from '@/app/lib/encryption';
+import { decryptUserData } from '../../../../lib/encryption';
 
 const Again = async ({ params }: { params: { again: string } }) => {
 
@@ -18,8 +18,8 @@ const Again = async ({ params }: { params: { again: string } }) => {
       redirect(`/login`);
     }
 
-    const { email, id, encryptionDataId } = session.user
-    const decryptedEmail = await decryptUserData(email, id, encryptionDataId);
+    const { email, id } = session.user
+    const decryptedEmail = await decryptUserData(email, id);
     
     if (!decryptedEmail){
       redirect('/login');
