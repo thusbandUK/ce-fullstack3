@@ -51,6 +51,7 @@ __tests__/ManualAndLinks.txt
 # misc
 .DS_Store
 *.pem
+.authLog.txt
 
 # debug
 npm-debug.log*
