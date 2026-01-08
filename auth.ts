@@ -10,22 +10,11 @@ import { APIError } from "better-auth/api";
 import { encryptUserData, abortUserCreation, updateUserEncryptedData } from "./app/lib/encryption";
 import { openAPI } from "better-auth/plugins"
 import { inferAdditionalFields } from "better-auth/client/plugins";
+import { signUpIpAddressLog } from "./app/lib/logging";
 
 export const auth = betterAuth({
     database: new Pool({ connectionString: process.env.DATABASE_URL }),
-    databaseHooks: {
-      /*session: {
-        create: {
-          before: async(session, ctx) => {
-            console.log('the userId in session before hook')
-            console.log(session.userId)
-            console.log('and the ctx')
-            console.log(ctx)
-            return false;
-          }
-        }
-
-      },*/
+    databaseHooks: {      
       user: {
         additionalFields: {
           username: {
@@ -75,6 +64,44 @@ export const auth = betterAuth({
           },
         },
       },
+      session: {
+        create: {
+          before: async(session) => {
+
+            //generates random code to be stored in database in place of ipAddress (see below)
+            const randomSixCharCode = require('crypto').randomBytes(6).toString('hex')
+            
+            //sends data to be logged in authLog.txt
+            const response = await signUpIpAddressLog({
+              ipAddressToLog: session.ipAddress ? session.ipAddress : 'no ip address available',
+              userIdToLog: session.userId,
+              timeToLog: session.createdAt,
+              ipAddressCode: randomSixCharCode
+            })
+
+            /*passes the random alphanumerical code in place of the ipAddress, which is not to be permanently
+              stored at this stage, but if there is any suspicious activity, the ipAddress can be looked up
+              from the log
+              */
+            if (response.success){
+              return {
+                data: {
+                  ...session,
+                  ipAddress: randomSixCharCode
+                }
+              }
+            }
+            
+            //if the authLog logic throws an error, the login is cancelled and any entries already
+            //made to the user table deleted
+            if (response.error){              
+              await abortUserCreation(session.userId)
+              return false
+            }
+          }
+        }
+      }
+      
   },
     socialProviders: {
         google: {
