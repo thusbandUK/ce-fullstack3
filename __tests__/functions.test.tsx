@@ -3,6 +3,7 @@ import { shuffle, locationParser } from '../app/lib/functions';
 import { cleanUpUrl } from '../app/lib/authFunctions';
 import { colourManagement } from './colourManagementFunctionCopy'
 import { ColourManagementClass, TimeoutClass, sequenceRandomiser } from '../app/animation/animationFunctions';
+import { signUpIpAddressLog, exampleUserLogObject } from '../app/lib/logging';
 
 /*Tests various functions including:
 
@@ -12,9 +13,23 @@ cleanUpUrl
 colourManagement
 ColourManagementClass
 sequenceRandomiser
+testZod
 
 */
 
+//tests signUpIpAddressLog
+/*
+describe('signUpIpAddressLog', () => {
+    it('tests how it works', async () => {
+        //spy function which returns only the first number in the array
+        
+        const response = await signUpIpAddressLog(exampleUserLogObject)
+        
+        expect(response.success).toBe(true)
+        
+    })
+})
+*/
 //tests sequenceRandomiser
 describe('sequenceRandomiser', () => {
     it('tests ensures that the only output is an array of numbers of either 1 to 7 or 7 to 1', () => {
