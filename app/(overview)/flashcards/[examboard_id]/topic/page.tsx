@@ -7,6 +7,7 @@ import { auth } from '../../../../../auth';
 import { Suspense } from "react";
 import { CardSkeleton, TopicsSkeleton } from "../../../../../app/ui/dashboard/skeletons";
 import { headers } from 'next/headers';
+import { redirect } from 'next/navigation';
 
 export default async function Page({ params }: { params: Promise<{ examboard_id: string } >}) {
 
@@ -17,6 +18,9 @@ export default async function Page({ params }: { params: Promise<{ examboard_id:
     const {examboard_id} = await params;
 
     const topics = await fetchTopics(examboard_id);
+    if (!topics){
+      redirect('/flashcards')
+    }
 
     const modalContent: ModalContent = 
     {

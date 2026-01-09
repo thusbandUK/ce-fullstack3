@@ -11,7 +11,7 @@ const IndividualCardSchema = z.object({
 })
 
 const ExamboardSchema = z.object({
-  examboard_id: z.string()
+  examboard_id: z.string().regex(/^[0-9]+$/, {message: "illegal characters"})
 });
 
 const TopicSchema = z.object({
@@ -99,25 +99,34 @@ export async function getClientIpAddress(){
   return returnedHeaders.get("x-forwarded-for") ? returnedHeaders.get("x-forwarded-for") : 'no ip address available' 
 }
 
+import { logSuspiciousActivity } from './logging';
+
 export async function fetchTopics(examboardId: string) {
   
   //sanitises the argument passed to examboardId parameter 
   const validatedExamboardId = ExamboardSchema.safeParse({
     examboard_id: examboardId,
   });
-
-  const query ='SELECT * FROM topics WHERE examboards_id = $1'
-
-  const argument = [validatedExamboardId.data?.examboard_id];
   
   try {    
+
+    if (!validatedExamboardId.success){
+      const errorMessage = validatedExamboardId.error.flatten().fieldErrors.examboard_id
+      if (errorMessage?.includes("illegal characters")){
+        await logSuspiciousActivity(examboardId, "fetchTopics")
+      }
+      return
+    }
+    const query ='SELECT * FROM topics WHERE examboards_id = $1'
+
+    const argument = [validatedExamboardId.data?.examboard_id];
 
     const data = await sql.query<TopicData>(query, argument);    
 
     return data.rows;
   } catch (error) {
     console.error('Database Error:', error);
-    throw new Error('Failed to fetch flashcard data.');
+    return
   }
 }
 
