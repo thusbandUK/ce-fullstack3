@@ -281,13 +281,21 @@ export async function fetchRandomSetOfFlashcards(examboardId: string) {
   //sanitises the argument passed to examboardId parameter 
   const validatedExamboardId = ExamboardSchema.safeParse({
     examboard_id: examboardId,
-  });  
+  });
   
-  const initialQuery ='SELECT * FROM topics LEFT JOIN questions ON topics.id = questions.topics_id LEFT JOIN flashcards ON flashcards.id = questions.question WHERE topics.examboards_id = ($1) ORDER BY random() LIMIT 15'
+  try {
 
-  const initialArgument = [validatedExamboardId.data?.examboard_id];
-  
-  try {    
+    if (!validatedExamboardId.success){
+      const errorMessage = validatedExamboardId.error.flatten().fieldErrors.examboard_id
+      if (errorMessage?.includes("illegal characters")){
+        await logSuspiciousActivity(examboardId, "fetchRandomSetOfFlashcards")
+      }
+      return
+    }
+
+    const initialQuery ='SELECT * FROM topics LEFT JOIN questions ON topics.id = questions.topics_id LEFT JOIN flashcards ON flashcards.id = questions.question WHERE topics.examboards_id = ($1) ORDER BY random() LIMIT 15'
+
+    const initialArgument = [validatedExamboardId.data?.examboard_id];
 
     //this fetches the question numbers listed for the queried topic
     const allFlashcardsData = await sql.query<FlashcardData>(initialQuery, initialArgument);    
@@ -296,7 +304,7 @@ export async function fetchRandomSetOfFlashcards(examboardId: string) {
    
   } catch (error) {
     console.error('Database Error:', error);
-    throw new Error('Failed to fetch flashcard data.');
+    return
   }
 }
 

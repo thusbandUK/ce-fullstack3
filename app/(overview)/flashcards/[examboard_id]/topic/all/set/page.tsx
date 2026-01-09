@@ -4,6 +4,7 @@ import { CardSkeleton } from "@/app/ui/dashboard/skeletons";
 import { Suspense } from 'react';
 import { auth } from "@/auth";
 import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 
 export default async function Page({ params }: { params: Promise<{ examboard_id: string }>}) {    
 
@@ -14,7 +15,11 @@ export default async function Page({ params }: { params: Promise<{ examboard_id:
 
     const { examboard_id } = await params;
 
-    const allFlashcardsData = await fetchRandomSetOfFlashcards(examboard_id) 
+    const allFlashcardsData = await fetchRandomSetOfFlashcards(examboard_id)
+    
+    if (!allFlashcardsData){
+      redirect('/flashcards')
+    }
 //
 //style={{height: '84vh'}}
 return (
