@@ -222,20 +222,28 @@ export async function fetchComplementaryTopic(examboardId: string) {
   //sanitises the argument passed to examboardId parameter 
   const validatedExamboardId = ExamboardSchema.safeParse({
     examboard_id: examboardId,
-  });
-
-  const query ='SELECT flashcards.id, flashcards.definition, flashcards.question, flashcards.name, flashcards.multiple_choice_responses, flashcards.correct_answer, flashcards.checklist FROM topics LEFT JOIN questions ON topics.id = topics_id LEFT JOIN flashcards ON flashcards.id = questions.question WHERE topics.complementary = true AND topics.examboards_id = $1;'
-
-  const argument = [validatedExamboardId.data?.examboard_id];
+  });  
   
-  try {    
+  try {
+    
+    if (!validatedExamboardId.success){
+      const errorMessage = validatedExamboardId.error.flatten().fieldErrors.examboard_id
+      if (errorMessage?.includes("illegal characters")){
+        await logSuspiciousActivity(examboardId, "fetchComplementaryTopic")
+      }
+      return
+    }
+
+    const query ='SELECT flashcards.id, flashcards.definition, flashcards.question, flashcards.name, flashcards.multiple_choice_responses, flashcards.correct_answer, flashcards.checklist FROM topics LEFT JOIN questions ON topics.id = topics_id LEFT JOIN flashcards ON flashcards.id = questions.question WHERE topics.complementary = true AND topics.examboards_id = $1;'
+
+    const argument = [validatedExamboardId.data?.examboard_id];
 
     const data = await sql.query<FlashcardData>(query, argument);    
 
     return data.rows;
   } catch (error) {
     console.error('Database Error:', error);
-    throw new Error('Failed to fetch flashcard data.');
+    return;
   }
 }
 
