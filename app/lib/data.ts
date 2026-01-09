@@ -10,12 +10,13 @@ const IndividualCardSchema = z.object({
   flashcard_code: z.string({invalid_type_error: "Code must be three letters",}).regex(/^[A-Za-z]+$/).max(3).min(3).toUpperCase(), 
 })
 
+const illegal = {message: "illegal characters"}
 const ExamboardSchema = z.object({
-  examboard_id: z.string().regex(/^[0-9]+$/, {message: "illegal characters"})
+  examboard_id: z.string().regex(/^[0-9]+$/, illegal)
 });
 
 const TopicSchema = z.object({
-  topic_id: z.string()
+  topic_id: z.string().regex(/^[0-9]+$/, illegal)
 });
 
 //checks that TopicTitle string contains no special characters other than periods
@@ -240,14 +241,22 @@ export async function fetchComplementaryTopic(examboardId: string) {
 
 export async function fetchFlashcardsByTopic(topicId: string) {
   //sanitises the argument passed to topicId parameter 
-  const validatedExamboardId = TopicSchema.safeParse({
+  const validatedTopicId = TopicSchema.safeParse({
     topic_id: topicId,
-  });
-
-  const initialQuery = 'SELECT flashcards.id, flashcards.definition, flashcards.question, flashcards.name, flashcards.multiple_choice_responses, flashcards.correct_answer, flashcards.checklist FROM questions LEFT JOIN flashcards ON flashcards.id = questions.question WHERE topics_id = $1'
-  const initialArgument = [validatedExamboardId.data?.topic_id]
+  });  
   
   try {
+
+    if (!validatedTopicId.success){
+      const errorMessage = validatedTopicId.error.flatten().fieldErrors.topic_id
+      if (errorMessage?.includes("illegal characters")){
+        await logSuspiciousActivity(topicId, "fetchFlashcardsByTopic")
+      }
+      return
+    }
+
+    const initialQuery = 'SELECT flashcards.id, flashcards.definition, flashcards.question, flashcards.name, flashcards.multiple_choice_responses, flashcards.correct_answer, flashcards.checklist FROM questions LEFT JOIN flashcards ON flashcards.id = questions.question WHERE topics_id = $1'
+    const initialArgument = [validatedTopicId.data?.topic_id]
     
     const allFlashcardsData = await sql.query<FlashcardData>(initialQuery, initialArgument);    
 
@@ -255,7 +264,7 @@ export async function fetchFlashcardsByTopic(topicId: string) {
    
   } catch (error) {
     console.error('Database Error:', error);
-    throw new Error('Failed to fetch flashcard data.');
+    return;
   }
 }
 
