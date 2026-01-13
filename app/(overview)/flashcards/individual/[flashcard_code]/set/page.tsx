@@ -2,6 +2,7 @@ import FlashcardPresentation from "@/app/ui/dashboard/flashcards";
 import { fetchIndividualFlashcardByCode } from "@/app/lib/data";
 import { auth } from "@/auth";
 import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 
 export default async function Page({ params }: { params: Promise<{ flashcard_code: string }>}) {    
 
@@ -27,7 +28,10 @@ export default async function Page({ params }: { params: Promise<{ flashcard_cod
     was a back button so they could complete the same question again.
     */
 
-
+    //this only happens if an invalid code is passed, esp a suspicious one with regex failure
+    if (!allFlashcardsData){
+      redirect('/flashcards')
+    }
   
 return (    
     <div className="h-82-vh">

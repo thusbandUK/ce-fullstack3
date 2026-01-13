@@ -6,11 +6,12 @@ import { FlashcardData, ExamboardData, TopicData, QuestionsData, UserData } from
 import { UserEmailSchema } from './schema';
 import { redirect } from 'next/navigation'
 
+const illegal = {message: "illegal characters"}
+
 const IndividualCardSchema = z.object({
-  flashcard_code: z.string({invalid_type_error: "Code must be three letters",}).regex(/^[A-Za-z]+$/).max(3).min(3).toUpperCase(), 
+  flashcard_code: z.string({invalid_type_error: "Code must be three letters",}).regex(/^[A-Za-z]+$/, illegal).max(3).min(3).toUpperCase(),
 })
 
-const illegal = {message: "illegal characters"}
 const ExamboardSchema = z.object({
   examboard_id: z.string().regex(/^[0-9]+$/, illegal)
 });
@@ -147,7 +148,15 @@ export async function fetchIndividualFlashcardByCode(flashcardCode: string) {
 
   const argument = [validatedData.data?.flashcard_code];
   
-  try {    
+  try {
+
+    if (!validatedData.success){
+      const errorMessage = validatedData.error.flatten().fieldErrors.flashcard_code
+      if (errorMessage?.includes("illegal characters")){
+        await logSuspiciousActivity(flashcardCode, "fetchIndividualFlashcardByCode")
+      }
+      return
+    }
 
     const data = await sql.query<FlashcardData>(query, argument);
 
