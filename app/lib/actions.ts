@@ -74,7 +74,9 @@ export async function betterAuthSignIn(location: string){
 
   let url = "";
 
-  const baseUrl = process.env.BETTER_AUTH_URL
+  //const baseUrl = process.env.BETTER_AUTH_URL
+  const baseUrl = process.env["BETTER_AUTH_URL"]
+
   try {
 
    
@@ -542,8 +544,8 @@ export async function signUpUser2(email: string, location: string | null, prevSt
   // If form validation fails, return errors early. Otherwise, continue.
   
   if (!validatedFields.success) {
-    console.log('validated fields not successful');
-    console.log(validatedFields.error.flatten());
+    //console.log('validated fields not successful');
+    //console.log(validatedFields.error.flatten());
     return {
       message: 'Username rejected. Try again.',      
       errors: {        
@@ -556,7 +558,7 @@ export async function signUpUser2(email: string, location: string | null, prevSt
   
   const validatedMailTick = validatedFields.data?.mailTick;
 
-  console.log(validatedMailTick);
+  //console.log(validatedMailTick);
 
   const validatedUsername = validatedFields.data?.username;
   

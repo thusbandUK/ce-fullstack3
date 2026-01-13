@@ -267,7 +267,7 @@ export const encryptionExperiment = async(message: string) => {
 
         const encryptedData = await aesEncrypt(message)
 
-        console.log('encrypted message: ', encryptedData.ciphertext);        
+        //console.log('encrypted message: ', encryptedData.ciphertext);        
 
         //entracts components from encrypted data
         const { ciphertext, key, iv } = encryptedData;
@@ -331,10 +331,10 @@ export const encryptionExperiment = async(message: string) => {
         
         //log results symmteric decryption
 
-        console.log('decryptedData', decryptedData)
-        console.log('wrapperDecryptedData', wrapperDecryptedData)
-        console.log('wrapperImportedDecryptedData', wrapperImportedDecryptedData)
-        console.log('wrapperDecryptedDataFromImportedPrivateKey', wrapperDecryptedDataFromImportedPrivateKey)
+        //console.log('decryptedData', decryptedData)
+        //console.log('wrapperDecryptedData', wrapperDecryptedData)
+        //console.log('wrapperImportedDecryptedData', wrapperImportedDecryptedData)
+        //console.log('wrapperDecryptedDataFromImportedPrivateKey', wrapperDecryptedDataFromImportedPrivateKey)
         return wrapperDecryptedDataFromImportedPrivateKey;
 
     } catch (error){
@@ -345,16 +345,20 @@ export const encryptionExperiment = async(message: string) => {
 
 export const testWrappedKeysDatabase = async(message: string) => {
 
-  console.log('message passed to function')
-  console.log(message)
+  //console.log('message passed to function')
+  //console.log(message)
 
-  const privateKey = process.env.PRIVATE_KEY;
-  const publicKey = process.env.PUBLIC_KEY;
+  //const privateKey = process.env.PRIVATE_KEY;
+  //const publicKey = process.env.PUBLIC_KEY;
+  const privateKey = process.env["PRIVATE_KEY"];
+  const publicKey = process.env["PUBLIC_KEY"];
+
+
   try {
 
         const encryptedData = await aesEncrypt(message)
 
-        console.log('encrypted message: ', encryptedData.ciphertext);        
+        //console.log('encrypted message: ', encryptedData.ciphertext);        
 
         //entracts components from encrypted data
         const { ciphertext, key, iv } = encryptedData;
@@ -422,7 +426,7 @@ export const testWrappedKeysDatabase = async(message: string) => {
         const decryptedData = await aesDecrypt(bufferisedRetrievedCipher, unwrappedKey, rebufferisedRetrievedIv)
         
         //log results symmteric decryption
-        console.log('decryptedData', decryptedData)
+        //console.log('decryptedData', decryptedData)
         
         return retrievedStringifiedCipher
 
@@ -445,13 +449,13 @@ export const testingStringKeys = async() => {
   //export private key
   const exportedPrivateKey = await exportPrivateCryptoKeyMdn(keyPair.privateKey)
 
-  console.log('exported public key')
+  //console.log('exported public key')
 
-  console.log(exportedPublicKey)
+  //console.log(exportedPublicKey)
 
-  console.log('exported private key')
+  //console.log('exported private key')
 
-  console.log(exportedPrivateKey)
+  //console.log(exportedPrivateKey)
 }
 
 
@@ -488,14 +492,14 @@ export const testHashedEmailAgainstDatabase = async(email: string) => {
     const data = await sql.query(query, argument);
     
     const {hashed_email: retrievedHash, email_salt: retrievedSalt} = data.rows[0];
-    console.log('made it here')
+    //console.log('made it here')
     //const secondHashedEmail = hashEmail(email, testSalt);
-    console.log(retrievedSalt)
+    //console.log(retrievedSalt)
     const retrievedSaltString = retrievedSalt.toString("hex")
-    console.log('and here')
+    //console.log('and here')
     const secondHashedEmail = hashEmail(email, retrievedSalt);
     
-    console.log(require('crypto').timingSafeEqual(retrievedHash, secondHashedEmail))
+    //console.log(require('crypto').timingSafeEqual(retrievedHash, secondHashedEmail))
 
   } catch (error){
     throw new Error;
@@ -510,29 +514,32 @@ export const testHashEmail = async(email: string) => {
   
   const secondHash = hashEmail(email).toString("hex")
   
-  console.log('comparing same email with two different randomly generated salts, should false')
-  console.log(firstHash === secondHash);
+  //console.log('comparing same email with two different randomly generated salts, should false')
+  //console.log(firstHash === secondHash);
 
   const testSalt = '12843hdryfhgj78y'
   const thirdHash = hashEmail(email, testSalt)//.toString("hex")
-  console.log(typeof thirdHash)
-  console.log(thirdHash)
+  //console.log(typeof thirdHash)
+  //console.log(thirdHash)
   const fourthHash = hashEmail(email, testSalt)//.toString("hex")
-  console.log(thirdHash)
-  console.log('comparing same email with same salt, should true')
-  console.log(thirdHash === fourthHash)
-  console.log(require('crypto').timingSafeEqual(thirdHash, fourthHash))
+  //console.log(thirdHash)
+  //console.log('comparing same email with same salt, should true')
+  //console.log(thirdHash === fourthHash)
+  //console.log(require('crypto').timingSafeEqual(thirdHash, fourthHash))
 }
 
 export const testDriveStringKeys = async(email: string) => {
 
-  const privateKey = process.env.PRIVATE_KEY;
-  const publicKey = process.env.PUBLIC_KEY;
+  //const privateKey = process.env.PRIVATE_KEY;
+  //const publicKey = process.env.PUBLIC_KEY;
+
+  const privateKey = process.env["PRIVATE_KEY"];
+  const publicKey = process.env["PUBLIC_KEY"];
 
   try {
         const encryptedData = await aesEncrypt(email)
 
-        console.log('encrypted message: ', encryptedData.ciphertext);        
+        //console.log('encrypted message: ', encryptedData.ciphertext);        
 
         //entracts components from encrypted data
         const { ciphertext, key, iv } = encryptedData;
@@ -561,7 +568,7 @@ export const testDriveStringKeys = async(email: string) => {
         //symmetric decryption 
         const decryptedData = await aesDecrypt(ciphertext, unwrappedKey, iv)
 
-        console.log('decryptedData', decryptedData)
+        //console.log('decryptedData', decryptedData)
 
   } catch (error){
     throw new Error
@@ -675,7 +682,10 @@ export const encryptUserData = async(inputObject: UserDataObject) => {
   const {name, email, image, id} = inputObject;
 
   //const privateKey = process.env.PRIVATE_KEY;
-  const publicKey = process.env.PUBLIC_KEY;
+  
+  //const publicKey = process.env.PUBLIC_KEY;
+  const publicKey = process.env["PUBLIC_KEY"];
+
   try {
 
         const encryptedDataKeyIv = await aesEncryptUserData(name, email, image)
@@ -759,9 +769,9 @@ reads as string from env var but then imports and returns as CryptoKey
 export const privateKeyAsCryptoKey = async() => {
 
   //collects private key from env var
-  const privateKey = process.env.PRIVATE_KEY;
+  //const privateKey = process.env.PRIVATE_KEY;
+  const privateKey = process.env["PRIVATE_KEY"];
 
-  
   //returns if no private key
   if (privateKey === undefined){
     return
