@@ -1,6 +1,8 @@
 //this directs user back to the app after authentication via third party users
 
 /*
+
+THIS IS NOT NEEDED FOR NEXTJS 16 W BETTER AUTH
 Note that the exact same handlers can be found in the original architecture of /api/auth/[...nextauth]
 When the login email is clicked to direct the user back to the site, these handlers have to be available
 to authenticate the user email and token. 
@@ -10,6 +12,8 @@ The url for such in the previous architecture was host/api/auth/callback/nodemai
 with this new architecture it's host/auth/callback/nodemailer etc.
 
 */
-
-import { handlers } from "@/auth";
-export const { GET, POST } = handlers;
+/*
+//import { handlers } from "@/auth";
+import { auth } from "@/auth";
+import { toNextJsHandler } from "better-auth/next-js";
+export const { GET, POST } = handlers;*/

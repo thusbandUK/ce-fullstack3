@@ -3,7 +3,7 @@ import BottomRow from "../../../../ui/dashboard/bottomRow";
 import LeftHandColumn from "../../../../ui/dashboard/leftHandColumn";
 import RightHandColumn from "../../../../ui/dashboard/rightHandColumn";
 import dynamic from 'next/dynamic';
-const IndividualElephantContainer = dynamic(() => import('../../../../animation/individualElephantContainer'), { ssr: false });
+//const IndividualElephantContainer = dynamic(() => import('../../../../animation/individualElephantContainer'), { ssr: false });
 /*
 Custom page to inform the user that an email has been sent and that they should check their emails and
 click the link inside and that they may need to check their spam folder
@@ -22,9 +22,11 @@ export default async function EmailVerification(){
               </div>
             </LeftHandColumn>
             <RightHandColumn>
-              <IndividualElephantContainer />
+              
             </RightHandColumn>
           </BottomRow>
         </div>
     )
 }
+
+//<IndividualElephantContainer />
