@@ -22,6 +22,7 @@ export default async function EmailVerification(){
               </div>
             </LeftHandColumn>
             <RightHandColumn>
+              <p>Hello</p>
               
             </RightHandColumn>
           </BottomRow>
