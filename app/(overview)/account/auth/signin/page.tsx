@@ -1,7 +1,7 @@
 "use server"
 
-import { providerMap, auth } from "../../../../../auth";
-import { ExecuteSignIn } from "../../../../ui/executeSignIn";
+import { auth } from "../../../../../auth";
+//import { ExecuteSignIn } from "../../../../ui/executeSignIn";
 import HeaderDivs from "../../../../ui/dashboard/header";
 import { redirect } from "next/navigation";
 
@@ -17,22 +17,23 @@ export default async function SignInPage(props: {
   searchParams: { callbackUrl: string | undefined }
 }) {
 
-  const session: any = await auth();
-
+  //const session: any = await auth();
+/*
   if (session){
     redirect(`/account`);
-  }
+  }*/
 
 return (
     <>
       <HeaderDivs h1Content={"Login"}/>
+      {/**
       {Object.values(providerMap).map((provider) => (
         <ExecuteSignIn
           provider={provider}
           location={props.searchParams?.callbackUrl === undefined ? null : props.searchParams.callbackUrl}
           key={provider.id}
         ></ExecuteSignIn>
-      ))}
+      ))} */}
     </>
   )
 }
