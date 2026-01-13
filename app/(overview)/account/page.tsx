@@ -18,10 +18,6 @@ export default async function Account({ searchParams }: { searchParams: Promise<
      redirect(`/account/login?location=/account`);
    }
 
-  if (location){
-    redirect(`/${location}`)
-  }
-
   const decryptedUsername = await getDecryptedUsername()
   
     type MenuContentTypeType = {
