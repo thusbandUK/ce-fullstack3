@@ -11,6 +11,7 @@ import { encryptUserData, abortUserCreation, updateUserEncryptedData } from "./a
 import { openAPI } from "better-auth/plugins"
 import { inferAdditionalFields } from "better-auth/client/plugins";
 import { signUpIpAddressLog } from "./app/lib/logging";
+import { additionalFieldsPlugin } from "./additionalFieldsPlugin";
 
 export const auth = betterAuth({
     database: new Pool({ connectionString: process.env.DATABASE_URL }),
@@ -117,11 +118,12 @@ export const auth = betterAuth({
       plugins: [
         nextCookies(),
         openAPI(),
+        additionalFieldsPlugin(),
         inferAdditionalFields(
           {
               user: {
                   receive_email: {
-                    type: "string",
+                    type: "boolean",
                   },
                   username: {
                     type: "string",

@@ -9,7 +9,7 @@ export const authClient = createAuthClient({
         {
             user: {
                 receive_email: {
-                  type: "string",
+                  type: "boolean",
                 },
                 username: {
                     type: "string",
