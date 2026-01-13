@@ -63,6 +63,9 @@ yarn-error.log*
 .env
 .env.production
 .env.development
+/oldEnvToDelete/.env
+/oldEnvToDelete/.env.development
+/oldEnvToDelete/.env.production
 
 # vercel
 .vercel
