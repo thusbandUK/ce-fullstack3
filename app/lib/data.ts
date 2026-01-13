@@ -183,13 +183,20 @@ it uses IndividualCardSchema and CodeState (both defined at top of this module)
 
 export async function fetchIndividualFlashcardByCodeInternal(prevState: CodeState, formData: FormData) {
 
+  //extracts formData
+  const flashcardCode = formData.get("flashcard-code")
   //sanitises the arguments passed
   const validatedData = IndividualCardSchema.safeParse({
-    flashcard_code: formData.get("flashcard-code"),
+    flashcard_code: flashcardCode,
   })
 
   //returns error if entered code is anything other than three letters
   if (!validatedData.success) {
+    const errorMessage = validatedData.error.flatten().fieldErrors.flashcard_code
+      if (errorMessage?.includes("illegal characters")){
+        const stringToPass = flashcardCode ? flashcardCode.toString() : 'no code passed'
+        await logSuspiciousActivity(stringToPass, "fetchIndividualFlashcardByCodeInternal")
+      }
     return {
       message: 'Code rejected. It must be three letters. Please try again.',
       errors: {
