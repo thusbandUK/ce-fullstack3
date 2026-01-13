@@ -854,7 +854,7 @@ so, it takes the user.id, user.encryptionData.id and username to encrypt
 5) returns encrypted username (username not written into database, that happens in other functions)
 */
 
-export const encryptUsername = async(username: string, id: string, encryptionDataId: string) => {
+export const encryptUsername = async(username: string, id: string) => {
 
   //collects private key from env var
   const privateKey = await privateKeyAsCryptoKey();

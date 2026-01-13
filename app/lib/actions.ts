@@ -284,7 +284,7 @@ export async function signUpUser(email: string, location: string | null, prevSta
   }
   
   //collects id for user table and corresponding row of encryptionData table
-  const { id, encryptionDataId } = session.user;
+  const { id } = session.user;
 
   //validates username to ensure string between 5 and 20 characters long and mailTick to ensure boolean
   const validatedFields = NewUser.safeParse({    
@@ -329,7 +329,7 @@ export async function signUpUser(email: string, location: string | null, prevSta
     //encrypts username
     //const encryptedUsername = await aesEncryptString(validatedUsername, unwrappedKey, bufferisedReturnedIv)
   
-    const encryptedUsername = await encryptUsername(validatedUsername, id, encryptionDataId)
+    const encryptedUsername = await encryptUsername(validatedUsername, id)
 
     //query and values to pass
     const query = 'UPDATE "user" SET username = $1, receive_email = $2 WHERE id = $3'
@@ -485,7 +485,7 @@ export async function updateUser(prevState: State, formData: FormData) {
   }
 
   //collects id for user table and corresponding row of encryptionData table
-  const { id, encryptionDataId } = session.user;
+  const { id } = session.user;
 
   //validates username to ensure string between 5 and 20 characters long,
   const validatedFields = UpdatedUser.safeParse({    
@@ -507,7 +507,7 @@ export async function updateUser(prevState: State, formData: FormData) {
   
   try {
 
-    const encryptedUsername = await encryptUsername(validatedUsername, id, encryptionDataId)
+    const encryptedUsername = await encryptUsername(validatedUsername, id)
 
     const query = 'UPDATE "user" SET username = $1 WHERE id = $2'
     const argumentData = [encryptedUsername, id];
