@@ -6,7 +6,7 @@ import MenuItem from '@/app/ui/dashboard/menuItem';
 import { incrementExamboard } from '@/app/lib/actions';
 import { Suspense } from "react";
 import { CardSkeleton, ExamSkeleton } from "@/app/ui/dashboard/skeletons";
-import DashboardSkeleton from '@/app/ui/dashboard/skeletons';
+//import DashboardSkeleton from '@/app/ui/dashboard/skeletons';
 
 export default async function Page() {
 
