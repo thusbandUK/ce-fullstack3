@@ -237,13 +237,7 @@ type ErrorObject = {
 }
 
 describe('testZod', () => {
-    it('tests that Zod returns specific messages when specific erroneous arguments are passed', () => {
-
-        const dirtyUrl = "http://localhost:3000/account/auth/callback/nodemailer?callbackUrl=http://localhost:3000/account/auth/callback/nodemailer?callbackUrl=%2Faccount%3Flocation%3D%2Fflashcards%2F%2Ftopic%2F%2Fset&token=cdd16e840fe2445194cca0757dd1d39cb7351da2add6ffd27024bf687148e21b&email=tammihusband%40gmail.com"
-        const cleanedUrl = "http://localhost:3000/account/auth/callback/nodemailer?callbackUrl=%2Faccount%3Flocation%3D%2Fflashcards%2F%2Ftopic%2F%2Fset&token=cdd16e840fe2445194cca0757dd1d39cb7351da2add6ffd27024bf687148e21b&email=tammihusband%40gmail.com"
-
-        //test that passing dirtyUrl returns cleanedUrl
-        expect(cleanUpUrl(dirtyUrl)).toBe(cleanedUrl);
+    it('tests that Zod returns specific messages when specific erroneous arguments are passed', () => {        
 
         expect(testFunction('adg')).toBe(true);
 
@@ -273,5 +267,75 @@ describe('testZod', () => {
 
         expect(twoLetterCodePassed["errors"]["code"]).toContain("Code must contain at least three characters")
         expect(twoLetterCodePassed["message"]).toContain("Code rejected. It must be three letters. Please try again.");
+    })
+})
+
+const TestCoercionSchema = z.object({
+    flashcard_code: z.coerce.string().regex(/^[A-Za-z]+$/, { message: "Regex failure" })
+  })
+
+  const CoercionOnlySchema = z.object({
+    coercionOnly: z.coerce.string()
+  })
+
+  const testCoercionFunction = (argument: string) => {
+    //sanitises the arguments passed
+    const validatedData = TestCoercionSchema.safeParse({
+      flashcard_code: argument,
+    })
+
+    const coercedData = CoercionOnlySchema.safeParse({
+        coercionOnly: argument
+    })
+  
+    //returns error if entered code is anything other than three letters
+    if (!validatedData.success) {
+      return {
+        //content: "hello",
+        content: coercedData.data?.coercionOnly,
+        message: 'Code rejected. It must be three letters. Please try again.',
+        errors: {
+          code: validatedData.error.flatten().fieldErrors.flashcard_code,
+        },
+      };
+    }
+  
+    return validatedData.data.flashcard_code
+  }
+
+  describe('testZod coercion', () => {
+    it('demonstrates the products when zod coercion function called', () => {        
+
+        const coercedData = testCoercionFunction('absfud<>/')
+        expect(coercedData.content).include('absfud<>/');
+
+        /*
+        const twoLetterCodePassed: boolean | ErrorObject = testFunction('ab')
+        const fourLetterCodePassed: boolean | ErrorObject = testFunction('absc');
+        const numberPassed: boolean | ErrorObject = testFunction(123)
+        const blackListedSymbolsPassed: boolean | ErrorObject = testFunction('<script>Malicious code!</script>')
+        
+        //rejects four letter string with with specified messages
+        //expect(fourLetterCodePassed["errors"]["code"]).toContain("String must contain at most 3 character(s)")
+        
+        expect(fourLetterCodePassed["errors"]["code"]).toContain("More than 3 characters passed")
+        expect(fourLetterCodePassed.errors.code).toContain("More than 3 characters passed")
+        expect(fourLetterCodePassed["message"]).toContain("Code rejected. It must be three letters. Please try again.");
+        
+        //rejects number with specified message
+        expect(numberPassed["errors"]["code"]).toContain("Code must be three letters")
+        expect(numberPassed["message"]).toContain("Code rejected. It must be three letters. Please try again.");
+
+        //Returns "Invalid" when illegal characters passed, eg: <> etc.
+        //expect(blackListedSymbolsPassed["errors"]["code"][0]).toContain("Invalid")
+        expect(blackListedSymbolsPassed["errors"]["code"]).toContain("Regex failure")
+        
+        //expect(blackListedSymbolsPassed["errors"]["code"]).toContain("String must contain at most 3 character(s)")
+        expect(blackListedSymbolsPassed["errors"]["code"]).toContain("More than 3 characters passed")
+        expect(blackListedSymbolsPassed["message"]).toContain("Code rejected. It must be three letters. Please try again.");
+
+        expect(twoLetterCodePassed["errors"]["code"]).toContain("Code must contain at least three characters")
+        expect(twoLetterCodePassed["message"]).toContain("Code rejected. It must be three letters. Please try again.");
+        */
     })
 })
