@@ -1,62 +1,25 @@
-
 import HeaderDivs from "@/app/ui/dashboard/header";
-
-import SignUpForm from "@/app/ui/signUp";
 import LeftHandColumn from "@/app/ui/dashboard/leftHandColumn";
 import RightHandColumn from "@/app/ui/dashboard/rightHandColumn";
 import BottomRow from "@/app/ui/dashboard/bottomRow";
-//import MailTest from "./mailTest";
-import dynamic from 'next/dynamic';
-//const IndividualElephantContainer = dynamic(() => import('../../animation/individualElephantContainer'), { ssr: false });
-import { encryptUserData, encryptionExperiment, testingStringKeys, testDriveStringKeys, hashEmail, testHashEmail, encryptAndDecryptIvStringConversion, testHashedEmailAgainstDatabase, testWrappedKeysDatabase } from "@/app/lib/encryption";
-
-/*type UserDataObject = {
-  name: string;
-  email: string;
-  image: string;
-}*/
-
-//export const encryptUserData
-
-//import CombinedAnimation2 from "../animation/explosion";
+import IndividualElephantContainer from "@/app/animation/individualElephantContainer";
 
 export default async function About(){
-  
-  //const session: any = await auth();
-  //const mockLocation = ""
 
-    
-    //if (!session){
-      //redirect(`/account/login`);
-    //}
-
-    //encryptionExperiment('tammihusband@gmail.com');
-
-    //testingStringKeys()
-
-    //testDriveStringKeys('thsciencetutor@gmail.com')
-
-    //hashEmail('thsciencetutor@gmail.com')
-    //testHashEmail('thsciencetutor@gmail.com')
-    //encryptAndDecryptIvStringConversion('thsciencetutor@gmail.com')
-    //testHashedEmailAgainstDatabase('thsciencetutor@gmail.com')
-    //testWrappedKeysDatabase('thsciencetutor@gmail.com')
-    
-    //const {encryptionDataId, encryptedData} = await encryptUserData({name: 'me', email: 'fakeEmail@email.com', image: 'image'})
-    //console.log('encryptionDataId', encryptionDataId)
-    //console.log('email', encryptedData.email)
-
+// className="m-auto"
      return (
       <>
-      <HeaderDivs h1Content="Goodbye!"></HeaderDivs>
+      <HeaderDivs h1Content="Coming soon!"></HeaderDivs>
           <BottomRow>
             <LeftHandColumn>
-              <div className="m-auto">
-                <p>Sorry you are leaving. Hope you have found Chemistry Elephant useful. You know where we are if you need us again.</p>
+              <div>
+                <p>Watch this space folks, content coming soon!</p>
               </div>
             </LeftHandColumn>
             <RightHandColumn>
-              <p>Hello!</p>
+              <IndividualElephantContainer />
+              
+              
               
             </RightHandColumn>
           </BottomRow>
