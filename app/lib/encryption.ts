@@ -305,7 +305,7 @@ export const encryptionExperiment = async(message: string) => {
         
         //implicitly creates a hex string from the buffer above then turns it back into a buffer,
         //to concept test the storage of the wrapped key as a string
-        const rebufferedWrappedKey = Buffer.from(bufferedWrappedKey.toString("hex"), "hex")
+        const rebufferedWrappedKey: ArrayBuffer = Buffer.from(bufferedWrappedKey.toString("hex"), "hex")
         
         //contd from POINT A, this unwraps the key using the rsa private key
         const unwrappedKey = await unwrapKey(rebufferedWrappedKey, keyPair.privateKey)
