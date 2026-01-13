@@ -34,9 +34,15 @@ const ConfirmDeleteSchema = z.object({
   email: z.coerce.string({invalid_type_error: "Corrupted email"}).email(),  
   token: z.coerce.string({invalid_type_error: "Corrupted token"}).regex(/^[a-zA-Z0-9]+$/, { message: "link can only contain letters and numbers" }).min(64).max(64),
 });
+
+const ConfirmCoercionSchema = z.object({
+  email: z.coerce.string(),
+  token: z.coerce.string()
+})
  
 const NewConfirmEmail = InitiateDeleteSchema;
 const NewConfirmUser = ConfirmDeleteSchema;
+const ConfirmCoercion = ConfirmCoercionSchema;
 
 export type State2 = {
   
@@ -71,7 +77,7 @@ export async function autoSignOut(){
 
 }
 
-
+import { logSuspiciousActivity } from './logging';
 
 export async function confirmDelete(prevState: State3, formData: FormData){
   //retrieves session data for user
@@ -84,16 +90,37 @@ export async function confirmDelete(prevState: State3, formData: FormData){
     redirect('/account/login')
   }
 
+  //extracts email and token from formData
+  const emailArgument = formData.get('email')
+  const tokenArgument = formData.get('token')
+
   //validates email and token to ensure not corrupted
   const validatedFields = NewConfirmUser.safeParse({    
-    email: formData.get('email'),
-    token: formData.get('token'),
+    email: emailArgument,
+    token: tokenArgument,
   });  
+  
   
   //if validation fails, the function returns and the front end
   //renders a link to which is passed the params 'corrupted', which
   //conditionally renders an explanatory note about what's gone wrong
-  if (!validatedFields.success) {    
+  //ALSO suspicious activity is logged
+  if (!validatedFields.success) {
+    //coerces token and email arguments into strings
+    const coercedData = ConfirmCoercion.safeParse({
+      email: emailArgument,
+      token: tokenArgument
+    })
+    
+    //extracts coerced email and token
+    const coercedEmail = coercedData.data?.email;
+    const  coercedToken = coercedData.data?.token
+    
+    //prepares and then logs data
+    const combinedString: string = `Email: ${coercedEmail}, Token: ${coercedToken}`
+    await logSuspiciousActivity(combinedString, "confirmDelete")
+
+    //returns error message
     return {
       message: 'Corrupted link. Please request a new one.',
       linkParams: 'corrupted',
@@ -104,9 +131,10 @@ export async function confirmDelete(prevState: State3, formData: FormData){
     };
   }
 
+  //extracts validated email and token arguments
   const validatedEmail = validatedFields.data?.email;
   const validatedToken = validatedFields.data?.token;
-  
+    
   //confirm email passed in token matches that for user signed in
   const { email, id } = session.user;
 
@@ -125,7 +153,7 @@ export async function confirmDelete(prevState: State3, formData: FormData){
   const confirmCredentialsQuery = 'SELECT * FROM delete_token WHERE identifier = $1 AND token = $2'
   const confirmationArguments = [email, validatedToken]
 
-  //querY for the deletion of user data from "user" table (see note on delete cascade below)
+  //query for the deletion of user data from "user" table (see note on delete cascade below)
 
   const deleteFromUserQuery = 'DELETE FROM "user" WHERE id = $1 RETURNING *'
   
