@@ -36,7 +36,8 @@ async function aesEncrypt(plaintext: string) {
 
 /* This takes care of the symmetric decryption
  */
-async function aesDecrypt(ciphertext: ArrayBuffer, key: CryptoKey, iv: Uint8Array) {
+//async function aesDecrypt(ciphertext: ArrayBuffer, key: CryptoKey, iv: Uint8Array) {
+  async function aesDecrypt(ciphertext: ArrayBuffer, key: CryptoKey, iv: BufferSource) {
   const dec = new TextDecoder();
   const plaintext = await crypto.subtle.decrypt({
     name: 'AES-CBC',
