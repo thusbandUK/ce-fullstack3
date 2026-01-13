@@ -5,11 +5,11 @@ import { redirect } from "next/navigation";
 
 export default async function SignInError(){
 
-  const session: any = await auth();
-
+  //const session: any = await auth();
+/*
   if (session){
     redirect(`/account`);
-  }
+  }*/
 
     return (
         <>
