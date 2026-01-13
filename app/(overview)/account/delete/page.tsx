@@ -20,8 +20,8 @@ const Delete = async () => {
         redirect(`/login`);
     }
 
-    const { email, id, encryptionDataId } = session.user
-    const decryptedEmail = await decryptUserData(email, id, encryptionDataId);
+    const { email, id } = session.user
+    const decryptedEmail = await decryptUserData(email, id);
     
     if (!decryptedEmail){
       redirect('/login');
