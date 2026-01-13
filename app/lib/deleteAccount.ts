@@ -68,12 +68,10 @@ export type State3 = {
 
 export async function autoSignOut(){
 
-  //await signOut({redirectTo: '/account/delete/signed-out'})
   const { success } = await auth.api.signOut({
     headers: await headers(),
   })
   redirect('/account/delete/signed-out')
-  return
 
 }
 
