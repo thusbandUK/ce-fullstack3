@@ -290,6 +290,7 @@ export function stringToArrayBuffer(str: string): ArrayBuffer {
   return buffer;
 }
 
+/*
 export const encryptionExperiment = async(message: string) => {
 
     try {
@@ -391,7 +392,7 @@ export const encryptionExperiment = async(message: string) => {
 
     }
 }
-/**/
+*/
 export const testWrappedKeysDatabase = async(message: string) => {
 
   //console.log('message passed to function')
@@ -712,10 +713,13 @@ This
 1) receives name, email and image link in unencrypted form, along with newly generated user.id
 2) encrypts name, email and image link
 3) symmetrically encrypts with IV, which is stringified and written to encryptionData
-4) wraps symmetrical encryption key with public key and writes the wrapped key to the database
+4) wraps symmetrical encryption key with public key and writes the wrapped key to the database SEE CHANGE
 5) writes the user.id as userId foreign key
 6) returns encrypted name, email and image link for writing into the user table
 
+CHANGE 15-1-26
+wrappedKey is converted from an arrayBuffer, first into a binary string and then into a base64-coded
+string, to facilitate type safety
 
 user.name, user.email, user.image
 */
@@ -730,7 +734,7 @@ export const encryptUserData = async(inputObject: UserDataObject) => {
 
   const {name, email, image, id} = inputObject;
 
-  //const privateKey = process.env.PRIVATE_KEY;
+  const privateKey = process.env.PRIVATE_KEY;
   
   //const publicKey = process.env.PUBLIC_KEY;
   const publicKey = process.env["PUBLIC_KEY"];
@@ -754,10 +758,15 @@ export const encryptUserData = async(inputObject: UserDataObject) => {
         const wrappedKey = await subtle.wrapKey('raw', key, importedPublicKey, 'RSA-OAEP');
 
         //bufferises wrapped key for TypeScripting
-        const bufferisedWrappedKey = Buffer.from(wrappedKey)
+        //const bufferisedWrappedKey = Buffer.from(wrappedKey)
+
+        //new method of string conversion for type safety implemented 15-1-26
+        const binaryStringWrappedKey = ab2str(wrappedKey)
         
         //stringifies wrapped key
-        const stringifiedWrappedKey = bufferisedWrappedKey.toString("hex")
+        //const stringifiedWrappedKey = bufferisedWrappedKey.toString("hex")
+
+        const stringifiedWrappedKey = btoa(binaryStringWrappedKey)
 
         //make a buffer from iv to facilitate stringification below
         const bufferisedIv = Buffer.from(iv)        
@@ -777,10 +786,13 @@ export const encryptUserData = async(inputObject: UserDataObject) => {
                 
         //transforms stringified cipher text back into buffer, note 'hex' must tally above and below
         //const bufferisedRetrievedCipher = Buffer.from(retrievedStringifiedCipher, 'hex')        
+        //const bufferisedRetrievedCipher = Buffer.from(encryptedData.email, 'hex')        
 
         //transforms retrieved stringified wrapped key back into a buffer
         //const bufferisedRetrievedWrappedKey = Buffer.from(retrievedStringifiedWrappedKey, 'hex')
+        //const previousEncodingTypeString = atob(retrievedStringifiedWrappedKey)
 
+        //const bufferisedRetrievedWrappedKey = str2ab(previousEncodingTypeString)
         //returns if no private key
         //if (privateKey === undefined){
           //return
@@ -798,6 +810,7 @@ export const encryptUserData = async(inputObject: UserDataObject) => {
         //const bufferisedRetrievedCipher = Buffer.from(encryptedData.email, 'hex')  
         //symmetric decryption         
         //const decryptedData = await aesDecrypt(bufferisedRetrievedCipher, unwrappedKey, rebufferisedRetrievedIv)
+        
         
         //log results symmteric decryption
         //console.log('decryptedData', decryptedData)
@@ -836,22 +849,33 @@ export const privateKeyAsCryptoKey = async() => {
 /*
 takes the string version of the wrappedKey returned from the database, along with the imported 
 CryptoKey version of the private key
-bufferises the string, unwraps the key and returns the key ready for use as a Cryptokey
+
+
+CHANGE 15-1-26
+for type safety, it had to be changed so that the string format received is base64, that is
+then transformed into binary string format (by atob()), which is then transformed into 
+arrayBuffer format by str2ab()
+
+THEN (as before) unwraps the key and returns the key ready for use as a Cryptokey
+
 */
 
 export const unwrapStringifiedKey = async(stringifiedWrappedKey: string, privateKey: CryptoKey) => {
 
   //transforms retrieved stringified wrapped key back into a buffer
-  const bufferisedWrappedKey = Buffer.from(stringifiedWrappedKey, 'hex')
+  //const bufferisedWrappedKey = Buffer.from(stringifiedWrappedKey, 'hex')
   //console.log(bufferisedWrappedKey)
 
+  const binaryStringWrappedKey = atob(stringifiedWrappedKey)
+
+  const arrayBufferWrappedKey = str2ab(binaryStringWrappedKey)
   
   //const arrayBufferisedWrappedKey = stringToArrayBuffer(stringifiedWrappedKey)
   //console.log(arrayBufferisedWrappedKey)
   
   //unwraps key
-  const unwrappedKey = await unwrapKey(bufferisedWrappedKey, privateKey)
-  //const unwrappedKey = await unwrapKey(arrayBufferisedWrappedKey, privateKey)
+  //const unwrappedKey = await unwrapKey(bufferisedWrappedKey, privateKey)
+  const unwrappedKey = await unwrapKey(arrayBufferWrappedKey, privateKey)
 
   return unwrappedKey;
 
