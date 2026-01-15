@@ -642,12 +642,27 @@ export const modifyUserDataAndWriteKey = async() => {
 
 /*
 Takes the array buffer returned by encryption and converts it into a hex string
+
+CHANGE 15-1-26 DON'T USE THIS FORMAT
+need to change so that it uses binary string and then base64-coded string for type safety
 */
 function arrayBufferToHexString (inputArrayBuffer: ArrayBuffer){
   const bufferedInput = Buffer.from(inputArrayBuffer)
   //stringifies cipher text
   const stringifiedInput = bufferedInput.toString('hex');
   return stringifiedInput;
+}
+
+//CHANGE 15-1-26
+/*
+takes the arrayBuffer for each unit of encryption (eg: email), then converts to a binaryString
+then converts that into a base64 string which is returned, this is all for type safety
+*/
+
+function arrayBufferToBase64String (inputArrayBuffer: ArrayBuffer){
+  const binaryString = ab2str(inputArrayBuffer);
+  const base64String = btoa(binaryString)
+  return base64String;
 }
 
 /*
@@ -660,7 +675,8 @@ export async function aesEncryptString(inputData: string, key: CryptoKey, iv: Bu
     name: 'AES-CBC',
     iv,
   }, key, ec.encode(inputData));
-  const stringifiedCiphertext = arrayBufferToHexString(ciphertext)
+  //const stringifiedCiphertext = arrayBufferToHexString(ciphertext)
+  const stringifiedCiphertext = arrayBufferToBase64String(ciphertext)
   return stringifiedCiphertext;
 }
 
@@ -881,6 +897,23 @@ export const unwrapStringifiedKey = async(stringifiedWrappedKey: string, private
 
 }
 
+//INTRODUCED 15-1-26
+/*
+Had to change the way ciphers were transformed from arrayBuffer to string for type safety
+the below function takes the (base-64-encoded) string returned from the db and transforms it
+back into an array buffer
+*/
+
+const arrayBufferFromBase64String = (base64String: string) => {
+
+  const binaryString = atob(base64String);
+
+  const arrayBuffer = str2ab(binaryString)
+
+  return arrayBuffer;
+}
+
+
 /*
 This should take the string in the database (from user object?) and return the decrypted string
 so as a minimum it should take the user(id), and or, use the session object, perhaps need to decide
@@ -907,7 +940,9 @@ export const decryptUserData = async(stringifiedEncryptedData: string, userId: s
   const privateKey = await privateKeyAsCryptoKey()
 
   //transforms stringified cipher text back into buffer, note 'hex' must tally above and below
-  const bufferisedEncryptedData = Buffer.from(stringifiedEncryptedData, 'hex')
+  //const bufferisedEncryptedData = Buffer.from(stringifiedEncryptedData, 'hex')
+
+  const bufferisedEncryptedData = arrayBufferFromBase64String(stringifiedEncryptedData)
 
   try {
 
