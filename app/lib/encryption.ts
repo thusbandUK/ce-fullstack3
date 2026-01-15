@@ -262,6 +262,34 @@ h) that the imported private / public keys can still play their roles in i) wrap
 key and ii) unwrapping the wrapped key
 i) the unwrapped symmetric key can decrypt the original encrypted content
  */
+
+/**
+ * Converts an ArrayBuffer to a String.
+ *
+ * @param buffer - Buffer to convert.
+ * @returns String.
+ */
+export function arrayBufferToString(buffer: ArrayBuffer): string {
+  return String.fromCharCode.apply(null, Array.from(new Uint16Array(buffer)));
+}
+
+/**from: https://gist.github.com/AndrewLeedham/a7f41ac6bb678f1eb21baf523aa71fd5 
+ * (to which linked from: https://gist.github.com/skratchdot/e095036fad80597f1c1a)
+ * Converts a String to an ArrayBuffer.
+ *
+ * @param str - String to convert.
+ * @returns ArrayBuffer.
+ */
+export function stringToArrayBuffer(str: string): ArrayBuffer {
+  const stringLength = str.length;
+  const buffer = new ArrayBuffer(stringLength * 2);
+  const bufferView = new Uint16Array(buffer);
+  for (let i = 0; i < stringLength; i++) {
+    bufferView[i] = str.charCodeAt(i);
+  }
+  return buffer;
+}
+
 export const encryptionExperiment = async(message: string) => {
 
     try {
@@ -305,7 +333,24 @@ export const encryptionExperiment = async(message: string) => {
         
         //implicitly creates a hex string from the buffer above then turns it back into a buffer,
         //to concept test the storage of the wrapped key as a string
-        const rebufferedWrappedKey: ArrayBufferLike = Buffer.from(bufferedWrappedKey.toString("hex"), "hex")
+        const rebufferedWrappedKey = Buffer.from(bufferedWrappedKey.toString("hex"), "hex")
+
+        //const stringWrappedKeyNewMethod = arrayBufferToString(wrappedImportedKey)
+
+        const stringWrappedKeyNewMethod = ab2str(wrappedImportedKey)
+        
+        console.log('stringWrappedKeyNewMethod')
+        console.log(stringWrappedKeyNewMethod)
+
+        const base64encodedString = btoa(stringWrappedKeyNewMethod)
+        console.log('base64encodedString')
+        console.log(base64encodedString)
+
+        const previousEncodingTypeString = atob(base64encodedString)
+        //const arrayBufferWrappedKeyNewMethod = stringToArrayBuffer(stringWrappedKeyNewMethod)
+        const arrayBufferWrappedKeyNewMethod = str2ab(previousEncodingTypeString)
+        //const arrayBufferWrappedKeyNewMethod = str2ab(stringWrappedKeyNewMethod)
+        //const arrayBufferWrappedKeyNewMethod = stringToArrayBuffer(previousEncodingTypeString)
         
         //contd from POINT A, this unwraps the key using the rsa private key
         const unwrappedKey = await unwrapKey(rebufferedWrappedKey, keyPair.privateKey)
@@ -313,6 +358,7 @@ export const encryptionExperiment = async(message: string) => {
         //contd from POINT B, this unwraps the imported key using the rsa private key
         const unwrappedImportedKey = await unwrapKey(wrappedImportedKey, keyPair.privateKey)
 
+        const unwrappedKeyNewMethod = await unwrapKey(arrayBufferWrappedKeyNewMethod, keyPair.privateKey)
         //export and import private key
         const mdnExportedPrivateKey = await exportPrivateCryptoKeyMdn(keyPair.privateKey)
 
@@ -330,12 +376,14 @@ export const encryptionExperiment = async(message: string) => {
 
         const wrapperDecryptedDataFromImportedPrivateKey = await aesDecrypt(backToBuffer, unwrappedKeyUsingImportedPrivateKey, iv)
         
+        const usingNewMethodJan14 = await aesDecrypt(backToBuffer, unwrappedKeyNewMethod, iv)
         //log results symmteric decryption
 
-        //console.log('decryptedData', decryptedData)
-        //console.log('wrapperDecryptedData', wrapperDecryptedData)
-        //console.log('wrapperImportedDecryptedData', wrapperImportedDecryptedData)
-        //console.log('wrapperDecryptedDataFromImportedPrivateKey', wrapperDecryptedDataFromImportedPrivateKey)
+        console.log('decryptedData', decryptedData)
+        console.log('wrapperDecryptedData', wrapperDecryptedData)
+        console.log('wrapperImportedDecryptedData', wrapperImportedDecryptedData)
+        console.log('wrapperDecryptedDataFromImportedPrivateKey', wrapperDecryptedDataFromImportedPrivateKey)
+        console.log('usingNewMethodJan14', usingNewMethodJan14)
         return wrapperDecryptedDataFromImportedPrivateKey;
 
     } catch (error){
@@ -343,7 +391,7 @@ export const encryptionExperiment = async(message: string) => {
 
     }
 }
-
+/**/
 export const testWrappedKeysDatabase = async(message: string) => {
 
   //console.log('message passed to function')
@@ -408,7 +456,7 @@ export const testWrappedKeysDatabase = async(message: string) => {
         const bufferisedRetrievedCipher = Buffer.from(retrievedStringifiedCipher, 'hex')        
 
         //transforms retrieved stringified wrapped key back into a buffer
-        const bufferisedRetrievedWrappedKey = Buffer.from(retrievedStringifiedWrappedKey, 'hex')
+        const bufferisedRetrievedWrappedKey = Buffer.from(retrievedStringifiedWrappedKey, 'hex').buffer
 
         //returns if no privateKey
         if (privateKey === undefined){
@@ -421,10 +469,10 @@ export const testWrappedKeysDatabase = async(message: string) => {
         const rebufferisedRetrievedIv = Buffer.from(retrievedIv, "hex")
 
         //unwrap using imported private key
-        const unwrappedKey = await unwrapKey(bufferisedRetrievedWrappedKey, mdnImportedPrivateKey)
+        const unwrappedKey: CryptoKey = await unwrapKey(bufferisedRetrievedWrappedKey, mdnImportedPrivateKey)
         
         //symmetric decryption         
-        const decryptedData = await aesDecrypt(bufferisedRetrievedCipher, unwrappedKey, rebufferisedRetrievedIv)
+        //const decryptedData = await aesDecrypt(bufferisedRetrievedCipher, unwrappedKey, rebufferisedRetrievedIv)
         
         //log results symmteric decryption
         //console.log('decryptedData', decryptedData)
@@ -605,7 +653,7 @@ function arrayBufferToHexString (inputArrayBuffer: ArrayBuffer){
 Takes a string, key and iv and returns the aes symmetrically encrypted data as a hex string
 */
 
-export async function aesEncryptString(inputData: string, key: CryptoKey, iv: Uint8Array){
+export async function aesEncryptString(inputData: string, key: CryptoKey, iv: BufferSource){
   const ec = new TextEncoder();
   const ciphertext = await crypto.subtle.encrypt({
     name: 'AES-CBC',
@@ -627,7 +675,7 @@ user.name, user.email, user.image
 async function aesEncryptUserData(name: string, email: string, image: string) {
   //const ec = new TextEncoder();
   const key = await generateAesKey();
-  const iv = crypto.getRandomValues(new Uint8Array(16));
+  const iv = crypto.getRandomValues(new Uint8Array(16)).buffer;
 
   const encryptedData = {
     name: '',
@@ -783,6 +831,8 @@ export const privateKeyAsCryptoKey = async() => {
   return importedPrivateKey;
 }
 
+
+
 /*
 takes the string version of the wrappedKey returned from the database, along with the imported 
 CryptoKey version of the private key
@@ -793,9 +843,15 @@ export const unwrapStringifiedKey = async(stringifiedWrappedKey: string, private
 
   //transforms retrieved stringified wrapped key back into a buffer
   const bufferisedWrappedKey = Buffer.from(stringifiedWrappedKey, 'hex')
+  //console.log(bufferisedWrappedKey)
 
+  
+  //const arrayBufferisedWrappedKey = stringToArrayBuffer(stringifiedWrappedKey)
+  //console.log(arrayBufferisedWrappedKey)
+  
   //unwraps key
   const unwrappedKey = await unwrapKey(bufferisedWrappedKey, privateKey)
+  //const unwrappedKey = await unwrapKey(arrayBufferisedWrappedKey, privateKey)
 
   return unwrappedKey;
 
