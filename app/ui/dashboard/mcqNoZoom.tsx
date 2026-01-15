@@ -30,17 +30,21 @@ export default function MCQNoZoom(
     const [questionSet, setQuestionSet] = useState<string[]>([]);    
     const [responseTextSize, setResponseTextSize] = useState<number>(48);    
 
+    //this creates an empty div object, which can then be passed to the various useRef variables below
+    const initialDivElValue = document.createElement('div');
     //this is the ref used to compare scroll height and client height for the question
-    const divRef = useRef<HTMLDivElement>(null);
+    const divRef = useRef<HTMLDivElement>(initialDivElValue);
 
     //these are the refs, the one for whichever response happens to be longest is used to compare the 
     //scroll height and the client height so that the text can be resized to fit
     
+    
     const pRefs: pRefsType = {
-        A: useRef<HTMLDivElement>(null),
-        B: useRef<HTMLDivElement>(null),
-        C: useRef<HTMLDivElement>(null),
-        D: useRef<HTMLDivElement>(null)
+        //A: useRef<HTMLDivElement>(null),
+        A: useRef<HTMLDivElement>(initialDivElValue),
+        B: useRef<HTMLDivElement>(initialDivElValue),
+        C: useRef<HTMLDivElement>(initialDivElValue),
+        D: useRef<HTMLDivElement>(initialDivElValue)
     }
 
     //this resets the text size back to a maximum value from which to downsize whenever a new question
