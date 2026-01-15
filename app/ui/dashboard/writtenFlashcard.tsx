@@ -43,8 +43,12 @@ const WrittenFlashcard = (
 
     //variables used to resize input box to fill available screen space
     const [ height, setHeight ] = useState<number>(167)
-    const h1Ref = useRef<HTMLDivElement>(null);
-    const submitBoxRef = useRef<HTMLDivElement>(null);
+
+    //this creates an empty div object, which can then be passed to the various useRef variables below
+    const initialDivElValue = document.createElement('div');
+
+    const h1Ref = useRef<HTMLDivElement>(initialDivElValue);
+    const submitBoxRef = useRef<HTMLDivElement>(initialDivElValue);
 
     //returns the index in the ResponseAssementContext of the question being answered
     const index: number = responseAssessment.findIndex((x: assessedResponse) => {
