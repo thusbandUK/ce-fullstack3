@@ -77,6 +77,10 @@ export async function betterAuthSignIn(location: string){
   //const baseUrl = process.env.BETTER_AUTH_URL
   const baseUrl = process.env["BETTER_AUTH_URL"]
 
+  //from auth redirectURI: `${process.env.BETTER_AUTH_URL}/api/auth/callback/google`,
+  console.log('redirectURI called...')
+  console.log(`${process.env.BETTER_AUTH_URL}/api/auth/callback/google`)
+
   try {
 
    
