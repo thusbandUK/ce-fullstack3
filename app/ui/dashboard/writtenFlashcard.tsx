@@ -67,7 +67,7 @@ const WrittenFlashcard = (
     }
 
     return (
-        <div className="w-full md:w-4/5 flex flex-col h-84-vh pb-4 mx-auto md:grid md:grid-cols-6">
+        <div className="w-full md:w-4/5 flex flex-col h-82-vh pb-4 mx-auto md:grid md:grid-cols-6">
           <div className="border-2 w-full flex flex-col border-black rounded-lg px-5 py-1 col-start-1 col-span-6">
             <div className="spacer"></div>
             <h1
