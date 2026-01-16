@@ -1,6 +1,6 @@
 import React from 'react';
 import { ResponseAssessmentContext } from './flashcards';
-import { useContext, useRef, useState } from "react";
+import { useContext } from "react";
 import { assessedResponse, FlashcardData } from '@/app/lib/definitions';
 import DOMPurify from "isomorphic-dompurify";
 import ArrowCommand from './arrowCommand';
@@ -41,15 +41,6 @@ const WrittenFlashcard = (
     const {checklist, definition, question, id: questionId} = oneFlashcardData;
     const responseAssessment = useContext(ResponseAssessmentContext);
 
-    //variables used to resize input box to fill available screen space
-    const [ height, setHeight ] = useState<number>(167)
-
-    //this creates an empty div object, which can then be passed to the various useRef variables below
-    const initialDivElValue = document.createElement('div');
-
-    const h1Ref = useRef<HTMLDivElement>(initialDivElValue);
-    const submitBoxRef = useRef<HTMLDivElement>(initialDivElValue);
-
     //returns the index in the ResponseAssementContext of the question being answered
     const index: number = responseAssessment.findIndex((x: assessedResponse) => {
         return x.id === Number(questionId);
@@ -62,19 +53,7 @@ const WrittenFlashcard = (
 
     //harvests answer written into the form field and dispatches it to ResponseAssessmentContext
     const handleResponseChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-      //console.log('handleHeight called')
-      //return
       return responseAssessment[index].response = event.target.value;
-    }
-
-    //the above refs (from useRef) work best once this component has rendered, so they are passed
-    //as props to the below InputBox component, within which, their client heights can be ascertained
-    //and combined to calculate the remaining height for the InputBox to occupy. This information is
-    //then passed back via props and this function, which simply sets height with the calculated number
-    const handleHeight = (newHeight: number) => {
-      console.log('handleHeight called')
-      return
-      //setHeight(newHeight)
     }
 
     //updates checkbox for corresponding checklist item in ResponseAssessmentContext
@@ -89,7 +68,7 @@ const WrittenFlashcard = (
 
     return (
         <div className="w-full md:w-4/5 flex flex-col h-84-vh pb-4 mx-auto md:grid md:grid-cols-6">
-          <div ref={h1Ref} className="border-2 w-full flex flex-col border-black rounded-lg px-5 py-1 m-auto col-start-1 col-span-6">
+          <div className="border-2 w-full flex flex-col border-black rounded-lg px-5 py-1 m-auto col-start-1 col-span-6">
             <div className="spacer"></div>
             <h1
               dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(question)}}
@@ -100,18 +79,16 @@ const WrittenFlashcard = (
 
           {
             (writtenStage === "response") ?
-            <div style={{flex: 1}} className="grow flex flex-col">
+            <div style={{flex: 1}} className="grow flex flex-col md:col-start-1 grow col-span-6 md:col-span-4 w-full">
 
             <>
-              <div style={{height: height}} className="col-start-1 grow col-span-6 md:col-span-4 w-full">
+            {/** col-start-1 grow col-span-6 md:col-span-4 w-full */}
+              <div className="grow">
                 <InputBox
-                  h1Ref={h1Ref}
-                  submitBoxRef={submitBoxRef}
                   handleResponseChange={handleResponseChange}
-                  handleHeight={handleHeight}
                 />
               </div>
-              <div ref={submitBoxRef} className="col-start-1 md:col-start-5 col-span-6 md:col-span-2 border-2 border-black rounded-lg flex flex-col justify-end">
+              <div className="col-start-1 md:col-start-5 col-span-6 md:col-span-2 border-2 border-black rounded-lg flex flex-col justify-end">
                 <button  onClick={submitResponse}>
                   <label htmlFor="response" className="cursor-pointer">
                     <div className="m-5">
