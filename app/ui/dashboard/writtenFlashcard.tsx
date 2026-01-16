@@ -62,6 +62,8 @@ const WrittenFlashcard = (
 
     //harvests answer written into the form field and dispatches it to ResponseAssessmentContext
     const handleResponseChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+      //console.log('handleHeight called')
+      //return
       return responseAssessment[index].response = event.target.value;
     }
 
@@ -70,7 +72,9 @@ const WrittenFlashcard = (
     //and combined to calculate the remaining height for the InputBox to occupy. This information is
     //then passed back via props and this function, which simply sets height with the calculated number
     const handleHeight = (newHeight: number) => {
-      setHeight(newHeight)
+      console.log('handleHeight called')
+      return
+      //setHeight(newHeight)
     }
 
     //updates checkbox for corresponding checklist item in ResponseAssessmentContext
@@ -96,6 +100,7 @@ const WrittenFlashcard = (
 
           {
             (writtenStage === "response") ?
+            <div style={{flex: 1}}>
 
             <>
               <div style={{height: height}} className="col-start-1 col-span-6 md:col-span-4 w-full">
@@ -120,6 +125,7 @@ const WrittenFlashcard = (
                 </button>
               </div>
             </>
+            </div>
 
             : null
           }

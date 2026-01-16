@@ -11,7 +11,7 @@ export default function InputBox({
     handleResponseChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => string,
     handleHeight: (newHeight: number) => void
 }){
-    
+    /*
     const { height: screenHeight, width: screenWidth } = window.screen;
     const h1Height = typeof h1Ref.current?.children[0].clientHeight === 'number' ? h1Ref.current?.children[0].clientHeight : 0;
     const submitBox = typeof submitBoxRef.current?.children[0].clientHeight === 'number' ? submitBoxRef.current?.children[0].clientHeight : 0;    
@@ -23,7 +23,7 @@ export default function InputBox({
         const heightToSet = (screenHeight * 0.84) - h1Height - submitBox;
         handleHeight(heightToSet)
     }, [screenHeight, h1Height, submitBox])
-    
+    */
     return (
         <>
           <textarea 
