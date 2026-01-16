@@ -68,7 +68,7 @@ const WrittenFlashcard = (
 
     return (
         <div className="w-full md:w-4/5 flex flex-col h-84-vh pb-4 mx-auto md:grid md:grid-cols-6">
-          <div className="border-2 w-full flex flex-col border-black rounded-lg px-5 py-1 m-auto col-start-1 col-span-6">
+          <div className="border-2 w-full flex flex-col border-black rounded-lg px-5 py-1 col-start-1 col-span-6">
             <div className="spacer"></div>
             <h1
               dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(question)}}
@@ -79,11 +79,11 @@ const WrittenFlashcard = (
 
           {
             (writtenStage === "response") ?
-            <div style={{flex: 1}} className="grow flex flex-col md:col-start-1 grow col-span-6 md:col-span-4 w-full">
+            <div style={{flex: 1}} className="grow flex flex-col grow md:col-span-6 md:grid md:grid-cols-6 w-full">
 
             <>
-            {/** col-start-1 grow col-span-6 md:col-span-4 w-full */}
-              <div className="grow">
+
+              <div className="grow md:col-start-1 md:col-span-4">
                 <InputBox
                   handleResponseChange={handleResponseChange}
                 />
