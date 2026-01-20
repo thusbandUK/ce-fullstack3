@@ -26,6 +26,7 @@ __tests__/ManualAndLinks.txt
 /app/seed/initiation.sql
 /app/seed/route.ts
 /app/seed/session.sql
+/app/seed
 
 #miscellaneous code
 /app/miscellaneous-code
@@ -73,3 +74,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# manuals
+/manuals
