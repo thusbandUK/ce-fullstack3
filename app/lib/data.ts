@@ -128,8 +128,12 @@ export async function fetchTopics(examboardId: string) {
 
     const argument = [validatedExamboardId.data?.examboard_id];
 
-    const data = await sql.query<TopicData>(query, argument);    
+    const client = await pool.connect();
 
+    const data = await client.query<TopicData>(query, argument);    
+
+    client.release()
+    
     return data.rows;
   } catch (error) {
     console.error('Database Error:', error);
