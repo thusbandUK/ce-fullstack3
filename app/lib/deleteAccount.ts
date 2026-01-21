@@ -15,6 +15,7 @@ see exemplar link in toDoHidden.txt
 
 import { z } from 'zod';
 import { sql } from '@vercel/postgres';
+import { pool } from './poolInstantiation';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 const crypto = require('crypto');
@@ -155,12 +156,14 @@ export async function confirmDelete(prevState: State3, formData: FormData){
 
   const deleteFromUserQuery = 'DELETE FROM "user" WHERE id = $1 RETURNING *'
   
+  const client = await pool.connect();
+
   try {
 
-    await sql.query("BEGIN")
+    await client.query("BEGIN")
 
     //call to check supplied credentials are present and paired
-    const confirmationAttempt = await sql.query(confirmCredentialsQuery, confirmationArguments);
+    const confirmationAttempt = await client.query(confirmCredentialsQuery, confirmationArguments);
     
     //if the supplied details (token and email) don't match the entry in the database,
     //the function returns and supplies params for the front end to make a bespoke
@@ -194,20 +197,24 @@ export async function confirmDelete(prevState: State3, formData: FormData){
     //cascades to delete rows of all tables which reference user.id as a foreign key,
     //ie: account, session, delete_token, encryption_data (but NOT verification, a column
     //required for better-auth, but which was not currently in use at time of writing)
-    await sql.query(deleteFromUserQuery, [id])
+    await client.query(deleteFromUserQuery, [id])
 
-    await sql.query("COMMIT")    
+    await client.query("COMMIT")    
 
   } catch (error){
     console.log(error)
     
-    await sql.query("ROLLBACK");
+    await client.query("ROLLBACK");
 
     return {
       message: 'Database Error: Failed to delete records.'
     };
 
-  }
+  } finally {
+
+    client.release();
+
+  }  
 
   //redirects user to goodbye page
   revalidatePath('/account/delete');
@@ -234,7 +241,11 @@ export async function checkExisting(email: string){
 
   try {
     
-    const existingEntry = await sql.query(query, argument);
+    const client = await pool.connect();
+
+    const existingEntry = await client.query(query, argument);
+
+    client.release();
     
     if (!existingEntry.rows[0]){      
       return      
@@ -309,7 +320,11 @@ export async function initiateDelete(email: string, prevState: State2){
 
     try {
 
-      const returnedData = await sql.query(query, argumentData);
+      const client = await pool.connect();
+
+      const returnedData = await client.query(query, argumentData);
+
+      client.release();
       
       const deleteUrl = `${SITE_URL}/account/delete/confirm?token=${stringToken}&email=${validatedEmail}`
       
@@ -385,8 +400,12 @@ export async function renewDelete(email: string, prevState: State2){
   const argumentData = [id, stringToken, timestamp, encryptedEmail];  
 
   try {
+
+    const client = await pool.connect();
     
-    const returnedData = await sql.query(query, argumentData);
+    const returnedData = await client.query(query, argumentData);
+
+    client.release();
     
     const deleteUrl = `${SITE_URL}/account/delete/confirm?token=${stringToken}&email=${validatedEmail}`
     
