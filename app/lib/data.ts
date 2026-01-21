@@ -133,7 +133,7 @@ export async function fetchTopics(examboardId: string) {
     const data = await client.query<TopicData>(query, argument);    
 
     client.release()
-    
+
     return data.rows;
   } catch (error) {
     console.error('Database Error:', error);
@@ -291,8 +291,12 @@ export async function fetchFlashcardsByTopic(topicId: string) {
     const initialQuery = 'SELECT flashcards.id, flashcards.definition, flashcards.question, flashcards.name, flashcards.multiple_choice_responses, flashcards.correct_answer, flashcards.checklist FROM questions LEFT JOIN flashcards ON flashcards.id = questions.question WHERE topics_id = $1'
     const initialArgument = [validatedTopicId.data?.topic_id]
     
-    const allFlashcardsData = await sql.query<FlashcardData>(initialQuery, initialArgument);    
+    const client = await pool.connect();
 
+    const allFlashcardsData = await client.query<FlashcardData>(initialQuery, initialArgument);    
+
+    client.release()
+    
     return allFlashcardsData.rows;
    
   } catch (error) {
