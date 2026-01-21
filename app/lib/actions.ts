@@ -391,7 +391,7 @@ export async function getDecryptedUsername(){
   const decryptedUsername = await decryptUserData(username, id);
 
   client.release()
-  
+
   return decryptedUsername;
 
 }
@@ -433,7 +433,11 @@ export async function signUpNewsletter(email: string, location: string | null, p
   
   try {
     
-    const userDetails = await sql.query<UserDetails>(query, argumentData);
+    const client = await pool.connect();
+
+    const userDetails = await client.query<UserDetails>(query, argumentData);
+
+    client.release()
         
   } catch (error){    
     return {
@@ -473,7 +477,12 @@ export async function encryptionDataUserId (userId: string, encryptionDataId: st
 
   try {
 
-    await sql.query(query, argument)
+    const client = await pool.connect();
+
+    await client.query(query, argument);
+
+    client.release()
+
     return
 
   } catch (error){
@@ -524,7 +533,11 @@ export async function updateUser(prevState: State, formData: FormData) {
     const query = 'UPDATE "user" SET username = $1 WHERE id = $2'
     const argumentData = [encryptedUsername, id];
 
-    await sql.query<UserDetails>(query, argumentData);
+    const client = await pool.connect();
+
+    await client.query<UserDetails>(query, argumentData);
+
+    client.release()
         
   } catch (error){
     console.log(error)
@@ -579,7 +592,12 @@ export async function signUpUser2(email: string, location: string | null, prevSt
   const argumentData = [validatedUsername, validatedEmail, validatedMailTick];
   
   try {
-    const userDetails = await sql.query<UserDetails>(query, argumentData);
+
+    const client = await pool.connect();
+
+    const userDetails = await client.query<UserDetails>(query, argumentData);
+
+    client.release();
         
   } catch (error){
     return {
@@ -630,7 +648,12 @@ export async function authenticate(
     const argumentData = [examboard];
 
     try {
-      const incrementedExamboard = await sql.query(query, argumentData);
+      const client = await pool.connect();
+
+      const incrementedExamboard = await client.query(query, argumentData);
+
+      client.release();
+      
       console.log(`Success, examboard ${examboard} incremented by 1`);
       return 
           
