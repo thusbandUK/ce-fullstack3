@@ -53,10 +53,14 @@ export async function fetchUser(email: string | undefined | null) {
 
   const argument = [validatedData.data?.validatedEmail];
   
-  try {    
+  try {
 
-    const data = await sql.query<UserData>(query, argument);    
-  
+    const client = await pool.connect();
+
+    const data = await client.query<UserData>(query, argument);    
+
+    client.release();
+
     console.log('User data fetch completed.');
 
     return data.rows;
@@ -167,7 +171,11 @@ export async function fetchIndividualFlashcardByCode(flashcardCode: string) {
       return
     }
 
-    const data = await sql.query<FlashcardData>(query, argument);
+    const client = await pool.connect();
+
+    const data = await client.query<FlashcardData>(query, argument);
+
+    client.release();
 
     return data.rows;
 
@@ -219,9 +227,13 @@ export async function fetchIndividualFlashcardByCodeInternal(prevState: CodeStat
   const argument = [validatedData.data?.flashcard_code];
 
   try {
+    const client = await pool.connect();
+
     //calls database to check for a flashcard with the entered three letter code
-    const data = await sql.query(query, argument);
+    const data = await client.query(query, argument);
     
+    client.release();
+
     //returns error if code not recognised
     if (data.rows.length === 0){
       return {
@@ -263,7 +275,11 @@ export async function fetchComplementaryTopic(examboardId: string) {
 
     const argument = [validatedExamboardId.data?.examboard_id];
 
-    const data = await sql.query<FlashcardData>(query, argument);    
+    const client = await pool.connect();
+
+    const data = await client.query<FlashcardData>(query, argument);    
+
+    client.release();
 
     return data.rows;
   } catch (error) {
@@ -296,7 +312,7 @@ export async function fetchFlashcardsByTopic(topicId: string) {
     const allFlashcardsData = await client.query<FlashcardData>(initialQuery, initialArgument);    
 
     client.release()
-    
+
     return allFlashcardsData.rows;
    
   } catch (error) {
@@ -326,8 +342,11 @@ export async function fetchRandomSetOfFlashcards(examboardId: string) {
 
     const initialArgument = [validatedExamboardId.data?.examboard_id];
 
+    const client = await pool.connect();
     //this fetches the question numbers listed for the queried topic
-    const allFlashcardsData = await sql.query<FlashcardData>(initialQuery, initialArgument);    
+    const allFlashcardsData = await client.query<FlashcardData>(initialQuery, initialArgument);    
+
+    client.release();
 
     return allFlashcardsData.rows;
    
@@ -376,10 +395,11 @@ export async function fetchFlashcardsByTopicDescriptor(topicTitle: string, logge
   let idAndExamboard = {id: "", examboard: ""}
 
   try {
-    
+    const client = await pool.connect();
     //calls database
-    const idAndExamboardData = await sql.query(initialQuery, initialArgument);
+    const idAndExamboardData = await client.query(initialQuery, initialArgument);
 
+    client.release()
     //returns error message if no data found
     if (idAndExamboardData.rows.length === 0){
       //logs message to server console, to record any broken topic titles
@@ -449,9 +469,11 @@ export async function fetchTopicsByExamboardTitle(examboardTitle: string) {
   let examboardIdForRedirect = ""
 
   try {
-    
+    const client = await pool.connect();
     //calls database
-    const examboardData = await sql.query(initialQuery, initialArgument);
+    const examboardData = await client.query(initialQuery, initialArgument);
+
+    client.release();
 
     //returns error message if no data found
     if (examboardData.rows.length === 0){
