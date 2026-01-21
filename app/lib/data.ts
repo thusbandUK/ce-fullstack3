@@ -4,7 +4,8 @@ import { sql } from '@vercel/postgres';
 import { z } from 'zod';
 import { FlashcardData, ExamboardData, TopicData, QuestionsData, UserData } from './definitions';
 import { UserEmailSchema } from './schema';
-import { redirect } from 'next/navigation'
+import { redirect } from 'next/navigation';
+import { pool } from './poolInstantiation';
 
 const illegal = {message: "illegal characters"}
 
@@ -81,9 +82,13 @@ export async function fetchFlashcards() {
 }
 
 export async function fetchExamboards() {
-  try {    
+  try {
 
-    const data = await sql<ExamboardData>`SELECT * FROM examboards`;    
+    const client = await pool.connect()
+
+    const data = await client.query<ExamboardData>(`SELECT * FROM examboards`);
+
+    client.release()
 
     return data.rows;
   } catch (error) {
