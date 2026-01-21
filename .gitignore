@@ -21,12 +21,14 @@
 __tests__/ManualAndLinks.txt
 /app/ui/updateUsernameCopy.tsx
 /app/ui/updateDeleteRequestCopy.tsx
+/app/(overview)/about/url-test/route.ts
 
 # db init content
 /app/seed/initiation.sql
 /app/seed/route.ts
 /app/seed/session.sql
 /app/seed
+/app/seed/supercededRoute
 
 #miscellaneous code
 /app/miscellaneous-code
