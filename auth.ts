@@ -4,7 +4,9 @@ at current commit, also see _auth and __auth (latter = current working one, form
 */
 
 import { betterAuth } from "better-auth";
-import { Pool } from "@neondatabase/serverless";
+//import { Pool } from "@neondatabase/serverless";
+import { Pool } from 'pg'
+import { pool } from "./app/lib/poolInstantiation";
 import { nextCookies } from "better-auth/next-js";
 import { APIError } from "better-auth/api";
 import { encryptUserData, abortUserCreation, updateUserEncryptedData } from "./app/lib/encryption";
@@ -14,7 +16,8 @@ import { signUpIpAddressLog } from "./app/lib/logging";
 import { additionalFieldsPlugin } from "./additionalFieldsPlugin";
 
 export const auth = betterAuth({
-    database: new Pool({ connectionString: process.env.DATABASE_URL }),
+    //database: new Pool({ connectionString: process.env.DATABASE_URL }),
+    database: pool,
     databaseHooks: {      
       user: {
         additionalFields: {

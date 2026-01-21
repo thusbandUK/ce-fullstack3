@@ -11,7 +11,7 @@ import { locationParser } from './functions';
 //import { isRedirectError } from "next/dist/client/components/redirect";
 //import { verifySolution } from 'altcha-lib';
 //import { authClient } from '../../auth-client';
-
+import { pool } from './poolInstantiation';
 
 const FormSchema = z.object({
   username: z.coerce.string({invalid_type_error: "Username can only contain letters and numbers",}).regex(/^[a-zA-Z0-9]+$/, { message: "Username can only contain letters and numbers" }).max(20).min(5),
@@ -341,8 +341,11 @@ export async function signUpUser(email: string, location: string | null, prevSta
     const query = 'UPDATE "user" SET username = $1, receive_email = $2 WHERE id = $3'
     const argumentData = [encryptedUsername, validatedMailTick, id];//, validatedEmail
   
+    const client = await pool.connect()
     //writes encrypted username to database, records true or false for receive_email
-    await sql.query<UserDetails>(query, argumentData);
+    await client.query<UserDetails>(query, argumentData);
+
+    client.release()
   
 } catch (error){
   console.error(error);
@@ -376,7 +379,8 @@ export async function getDecryptedUsername(){
   const fetchUsernameQuery = 'SELECT username FROM "user" WHERE id = $1';
   const fetchUsernameArgument = [id]
 
-  const fetchedData = await sql.query(fetchUsernameQuery, fetchUsernameArgument)
+  const client = await pool.connect()
+  const fetchedData = await client.query(fetchUsernameQuery, fetchUsernameArgument)
   
   const {username} = fetchedData.rows[0]
 
@@ -386,7 +390,9 @@ export async function getDecryptedUsername(){
 
   const decryptedUsername = await decryptUserData(username, id);
 
-  return decryptedUsername;  
+  client.release()
+  
+  return decryptedUsername;
 
 }
 

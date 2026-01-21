@@ -1,5 +1,6 @@
 const { subtle } = globalThis.crypto;
 import { sql } from '@vercel/postgres';
+import { pool } from './poolInstantiation';
 
 /* Generates an AES key for symmetric encryption
  */
@@ -286,10 +287,12 @@ export const encryptUserData = async(inputObject: UserDataObject) => {
         const insertQuery ='INSERT INTO encryption_data ("userId", iv, wrapped_key) VALUES ($1, $2, $3) RETURNING *;'
         const insertArgument = [id, stringifiedIv, stringifiedWrappedKey]
         
+        const client = await pool.connect()
         //insert iv as string into database        
-        await sql.query(insertQuery, insertArgument)
-                
-        
+        await client.query(insertQuery, insertArgument)
+
+        client.release()
+
         return encryptedData
 
   } catch (error) {
@@ -380,7 +383,9 @@ export const decryptUserData = async(stringifiedEncryptedData: string, userId: s
 
   try {
 
-     const retrievedWrappedKeyIv = await sql.query(fetchWrappedKeyIvQuery, fetchWrappedKeyIvArgument)
+     const client = await pool.connect()
+
+     const retrievedWrappedKeyIv = await client.query(fetchWrappedKeyIvQuery, fetchWrappedKeyIvArgument)
 
      const {wrapped_key: wrappedKey, iv}: {wrapped_key: string, iv: string} = retrievedWrappedKeyIv.rows[0]
 
@@ -393,6 +398,8 @@ export const decryptUserData = async(stringifiedEncryptedData: string, userId: s
 
      const decryptedData = await aesDecrypt(bufferisedEncryptedData, unwrappedKey, bufferisedIv)
 
+     client.release()
+     
      return decryptedData;
 
 
@@ -425,7 +432,9 @@ export const encryptUsername = async(username: string, id: string) => {
 
   try {
 
-    const returnedKeyIv = await sql.query(queryForWrappedKeyIv, argumentForWrappedKeyIv)  
+    const client = await pool.connect();
+
+    const returnedKeyIv = await client.query(queryForWrappedKeyIv, argumentForWrappedKeyIv)  
     const { iv: returnedIv, wrapped_key: returnedWrappedKey} = returnedKeyIv.rows[0]  
 
     //bufferises returned IV
@@ -440,6 +449,7 @@ export const encryptUsername = async(username: string, id: string) => {
     //encrypts username
     const encryptedUsername = await aesEncryptString(username, unwrappedKey, bufferisedReturnedIv)
 
+    client.release()
     return encryptedUsername;
 
   } catch (error){
@@ -464,7 +474,12 @@ export const updateUserEncryptedData = async(user: UserDataObject) => {
   const updateArguments = [name, email, image, id]
 
   try {
-    await sql.query(updateQuery, updateArguments)
+
+    const client = await pool.connect()
+
+    await client.query(updateQuery, updateArguments)
+
+    client.release()
     
     return {success: true}
 
@@ -489,7 +504,11 @@ export const abortUserCreation = async(userId: string) => {
 
   try {
     
-    await sql.query(deleteUserQuery, argument)
+    const client = await pool.connect();
+
+    await client.query(deleteUserQuery, argument)
+
+    client.release()
     
     return
   } catch (error){
