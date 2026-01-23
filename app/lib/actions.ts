@@ -27,7 +27,7 @@ const UpdateUsernameSchema = z.object({
 const UpdatedUser = UpdateUsernameSchema;
 
 const SignUpNewsLetterSchema = z.object({
-  mailTick: z.coerce.boolean(),
+  mailTick: z.coerce.boolean({invalid_type_error: "Checked or unchecked, no other options",}),
 })
 
 const UpdatedMailTick = SignUpNewsLetterSchema;
@@ -396,11 +396,11 @@ export async function getDecryptedUsername(){
 
 }
 
-//signupnewsletter STARTS
-//email: string, 
-//REPLACED STATE
-//replaced prevState
-export async function signUpNewsletter(location: string | null, state: StateSignUpNewsletter, formData: FormData) {
+/*
+This toggles receive_email true or false in the user table
+*/
+
+export async function signUpNewsletter(location: string | null, prevState: StateSignUpNewsletter, formData: FormData) {
   
   //retrieves session data for user
   const session = await auth.api.getSession({
@@ -409,7 +409,9 @@ export async function signUpNewsletter(location: string | null, state: StateSign
   
   //redirects user to login if no session data
   if (!session){    
-    return;
+    return {
+      message: 'You need to login to sign up for the newsletter.',
+    };
   }
   
   //collects id for user table and corresponding row of encryptionData table
@@ -425,7 +427,7 @@ export async function signUpNewsletter(location: string | null, state: StateSign
   
   if (!validatedFields.success) {    
     return {
-      message: 'Tick or no tick, no other options. Try again.',      
+      message: 'Tick or no tick, no other options. Try again.',
       errors: {        
         mailTick: validatedFields.error.flatten().fieldErrors.mailTick,        
       },      
@@ -443,7 +445,7 @@ export async function signUpNewsletter(location: string | null, state: StateSign
     
     const client = await pool.connect();
 
-    const userDetails = await client.query<UserDetails>(query, argumentData);
+    await client.query<UserDetails>(query, argumentData);
 
     client.release()
         

@@ -13,8 +13,9 @@ export default function SignUpNewsletter({
   location: string | null;
   receivingNewsletter: boolean;
 }) {
-  const initialState: StateSignUpNewsletter = { message: null, errors: {mailTick: []}};//, email: []}};
-  const signUpUserWithEmail = signUpNewsletter.bind(null, location);//email, location);
+
+  const initialState: StateSignUpNewsletter = { message: null, errors: {mailTick: []}};
+  const signUpUserWithEmail = signUpNewsletter.bind(null, location);
   const [state, formAction] = useActionState(signUpUserWithEmail, initialState);
   const [checked, setChecked] = useState(receivingNewsletter);
 
