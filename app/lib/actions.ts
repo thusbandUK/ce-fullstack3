@@ -400,6 +400,19 @@ export async function getDecryptedUsername(){
 
 export async function signUpNewsletter(email: string, location: string | null, prevState: State, formData: FormData) {
   
+  //retrieves session data for user
+  const session = await auth.api.getSession({
+    headers: await headers() // you need to pass the headers object.
+  })
+  
+  //redirects user to login if no session data
+  if (!session){    
+    return;
+  }
+  
+  //collects id for user table and corresponding row of encryptionData table
+  const { id } = session.user;
+
   //validates email
   const emailValidation = UserEmailSchema.safeParse({
     validatedEmail: email,
@@ -428,8 +441,11 @@ export async function signUpNewsletter(email: string, location: string | null, p
   const validatedMailTick = validatedFields.data?.mailTick;  
   const validatedEmail = emailValidation.data?.validatedEmail;  
   
-  const query = 'UPDATE users SET receive_email = $1 WHERE email = $2'  
-  const argumentData = [validatedMailTick, validatedEmail];
+  //const query = 'UPDATE "user" SET receive_email = $1 WHERE email = $2'  
+  //const argumentData = [validatedMailTick, validatedEmail];
+
+  const query = 'UPDATE "user" SET receive_email = $1 WHERE id = $2'  
+  const argumentData = [validatedMailTick, id];
   
   try {
     
