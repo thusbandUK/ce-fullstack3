@@ -52,7 +52,7 @@ export type StateSignUpNewsletter = {
   
   message?: string | null;
   errors?: {    
-    email?: string[];
+    //email?: string[];
     mailTick?: string[];
   };
 };
@@ -397,8 +397,10 @@ export async function getDecryptedUsername(){
 }
 
 //signupnewsletter STARTS
-
-export async function signUpNewsletter(email: string, location: string | null, prevState: State, formData: FormData) {
+//email: string, 
+//REPLACED STATE
+//replaced prevState
+export async function signUpNewsletter(location: string | null, state: StateSignUpNewsletter, formData: FormData) {
   
   //retrieves session data for user
   const session = await auth.api.getSession({
@@ -411,12 +413,7 @@ export async function signUpNewsletter(email: string, location: string | null, p
   }
   
   //collects id for user table and corresponding row of encryptionData table
-  const { id } = session.user;
-
-  //validates email
-  const emailValidation = UserEmailSchema.safeParse({
-    validatedEmail: email,
-  });
+  const { id } = session.user;  
   
   //validates username to ensure string between 5 and 20 characters long and location
   //to ensure string not null
@@ -430,19 +427,14 @@ export async function signUpNewsletter(email: string, location: string | null, p
     return {
       message: 'Tick or no tick, no other options. Try again.',      
       errors: {        
-        mailTick: validatedFields.error.flatten().fieldErrors.mailTick,
-        email: []
+        mailTick: validatedFields.error.flatten().fieldErrors.mailTick,        
       },      
     };
   }
   
   //harvests validation logic for validated values
 
-  const validatedMailTick = validatedFields.data?.mailTick;  
-  const validatedEmail = emailValidation.data?.validatedEmail;  
-  
-  //const query = 'UPDATE "user" SET receive_email = $1 WHERE email = $2'  
-  //const argumentData = [validatedMailTick, validatedEmail];
+  const validatedMailTick = validatedFields.data?.mailTick;
 
   const query = 'UPDATE "user" SET receive_email = $1 WHERE id = $2'  
   const argumentData = [validatedMailTick, id];
@@ -457,7 +449,10 @@ export async function signUpNewsletter(email: string, location: string | null, p
         
   } catch (error){    
     return {
-      message: 'Database Error: Failed to change newsletter setting.'
+      message: 'Database Error: Failed to change newsletter setting.',      
+      errors: {        
+        mailTick: []        
+      },      
     };
   }
   

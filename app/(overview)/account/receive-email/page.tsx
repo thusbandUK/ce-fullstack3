@@ -26,7 +26,6 @@ export default async function ReceiveEmail({ searchParams }: { searchParams: Pro
         </div>
 
         <SignUpNewsletter
-          email={session.user.email}
           location={location ? location : ''}
           receivingNewsletter={session.user.receive_email}
         ></SignUpNewsletter>

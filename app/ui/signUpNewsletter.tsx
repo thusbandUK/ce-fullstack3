@@ -2,22 +2,19 @@
 
 import { StateSignUpNewsletter, signUpNewsletter } from '@/app/lib/actions';
 import React, { useState } from 'react';
-//import { useFormState } from 'react-dom';
 import { useActionState } from 'react';
 import ArrowCommand from './dashboard/arrowCommand';
 import clsx from 'clsx';
 
-export default function SignUpNewsletter({  
-  email,
+export default function SignUpNewsletter({
   location,
   receivingNewsletter,
 }: {
-  email: string;
   location: string | null;
   receivingNewsletter: boolean;
 }) {
-  const initialState: StateSignUpNewsletter = { message: null, errors: {mailTick: [], email: []}};
-  const signUpUserWithEmail = signUpNewsletter.bind(null, email, location);
+  const initialState: StateSignUpNewsletter = { message: null, errors: {mailTick: []}};//, email: []}};
+  const signUpUserWithEmail = signUpNewsletter.bind(null, location);//email, location);
   const [state, formAction] = useActionState(signUpUserWithEmail, initialState);
   const [checked, setChecked] = useState(receivingNewsletter);
 
@@ -50,6 +47,15 @@ export default function SignUpNewsletter({
                 onChange={handleChange}
               ></input>
             </div>
+            <div id="username-error" aria-live="polite" aria-atomic="true">
+            {state?.errors?.mailTick &&
+              state.errors.mailTick.map((error: any) => (
+                <p className="mt-2 text-sm text-red-500" key={error}>
+                  {error}
+                </p>
+              ))
+            }
+          </div>
           </div>
         </div>{/*COL 1 ENDS */}
 
