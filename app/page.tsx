@@ -29,19 +29,19 @@ export default function Home() {
           </div>
        
           <div className="md:col-start-3 flex rounded-lg md:col-end-7 ..." style={{border: 'black solid 1px'}}>
-            <p className="p-5 m-auto md:p-10 text-lg">
+            <p className="p-5 m-auto md:p-10">
               Stride through chemistry with the majesty of an elephant
             </p>
           </div>
 
           {/** start of next section*/}
-          <div className="md:col-start-1 rounded-lg md:col-span-6 flex mt-5" style={{border: 'black solid 1px'}}>
+          <div className="md:col-start-1 rounded-lg md:col-span-6 flex mt-[40]" style={{border: 'black solid 1px'}}>
             <h2 className="m-auto md:ml-10 p-5">Learn chemistry</h2>
           </div>
 
           <div className="md:col-start-1 flex rounded-lg md:col-end-5 ..." style={{border: 'black solid 1px'}}>
-            <p className="p-5 m-auto md:p-10 text-lg">
-              So how difficult is A-level chemistry? Easier now you&#39;ve found Chemistry Elephant. Check out the flashcards section, where you can practice multiple choice questions while memorising core content. Coming soon: a blog with hints and tips for chemistry success and online courses. Sign up for our 
+            <p className="p-5 m-auto md:p-10">
+              Chemistry A-level is super challenging, we&#39;re sure you agree. We hope that Chemistry Elephant will help you conquer that challenge. Check out the flashcards section, where you can practice multiple choice questions while memorising core content. Coming soon: a blog with hints and tips for chemistry success and online courses. Sign up for our 
               <Link
                 href='/account/receive-email?location=/'
                 className="font-bold hover:underline active:text-red"
