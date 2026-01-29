@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Navbar from "./ui/dashboard/navbar";
+import Footer from "./ui/dashboard/footer";
 
 import dynamic from 'next/dynamic';
 //const IndividualElephantContainer = dynamic(() => import('./animation/individualElephantContainer'), { ssr: false });
@@ -62,6 +63,11 @@ export default function Home() {
       {/** end of next section*/}
 
       </main>
+      <footer>
+        <div className="p-2">
+          <Footer />
+        </div>
+      </footer>
     </>
   );
 }

@@ -1,3 +1,5 @@
+import Footer from "@/app/ui/dashboard/footer";
+
 export default function Layout({
   children,
 }: Readonly<{
@@ -5,8 +7,11 @@ export default function Layout({
 }>) {
 
   return (
-    <div className="w-full md:w-4/5 mx-auto">
-      {children}
-    </div>
+    <>
+      <div className="w-full md:w-4/5 mx-auto">
+        {children}
+      </div>
+      <Footer />
+    </>
   );
 }
