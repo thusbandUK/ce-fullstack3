@@ -5,11 +5,7 @@ function Layout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-//}: {
-  //children: React.ReactNode;
-//}) {
-//removed
-// md:w-4/5
+  
   return (
            <>
              <header>
