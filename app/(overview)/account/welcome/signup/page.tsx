@@ -5,6 +5,11 @@ import SignUpForm from '@/app/ui/signUp';
 import HeaderDivs from '@/app/ui/dashboard/header';
 import { headers } from "next/headers";
 import { decryptUserData } from '@/app/lib/encryption';
+import type { Metadata } from 'next'
+ 
+export const metadata: Metadata = {
+  title: 'Welcome',
+}
 
 export default async function Page({ searchParams }: { searchParams: Promise<{ location: string, callbackUrl: string | null }> }) {
 

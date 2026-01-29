@@ -1,5 +1,10 @@
 import Footer from "@/app/ui/dashboard/footer";
 import Scroll from "@/app/ui/dashboard/Scroll";
+import type { Metadata } from 'next'
+ 
+export const metadata: Metadata = {
+  title: 'Cookies',
+}
 
 export default function Layout({
     children,

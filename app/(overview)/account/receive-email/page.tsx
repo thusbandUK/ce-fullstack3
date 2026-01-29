@@ -2,6 +2,11 @@ import { auth } from '../../../../auth'
 import { redirect } from 'next/navigation';
 import SignUpNewsletter from '../../../ui/signUpNewsletter';
 import { headers } from "next/headers";
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'Newsletter',
+}
 
 export default async function ReceiveEmail({ searchParams }: { searchParams: Promise<{ location: string }> }){
 

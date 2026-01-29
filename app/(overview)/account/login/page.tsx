@@ -1,6 +1,11 @@
 import React from 'react';
 import { InitiateSignIn } from '../../../ui/initiateSignIn';
 import HeaderDivs from '../../../ui/dashboard/header';
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'Login',
+}
  
 /*
 This is the login page, it's probably not really necessary as (implicitly) clicking any signin

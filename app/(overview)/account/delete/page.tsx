@@ -1,4 +1,4 @@
-"use server"
+//"use server"
 
 //import { auth } from '@/auth';
 import DeleteRequest from '@/app/ui/deleteRequest';
@@ -7,9 +7,15 @@ import { redirect } from 'next/navigation';
 import { auth } from "../../../../auth"; // path to your Better Auth server instance
 import { headers } from "next/headers";
 import { decryptUserData } from '@/app/lib/encryption';
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'Delete',
+}
 
 
-const Delete = async () => {
+//const Delete = async () => {
+  export default async function Delete(){
 
   const session = await auth.api.getSession({
     headers: await headers() // you need to pass the headers object.
@@ -45,4 +51,4 @@ const Delete = async () => {
     )
 }
 
-export default Delete;
+//export default Delete;

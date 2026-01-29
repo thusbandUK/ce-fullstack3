@@ -3,6 +3,11 @@ import { redirect } from 'next/navigation';
 import UpdateUsername from "@/app/ui/updateUsername";
 import { headers } from "next/headers";
 import { getDecryptedUsername } from '../../../lib/actions';
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'Username',
+}
 
 export default async function Account(){
 

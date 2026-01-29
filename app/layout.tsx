@@ -12,7 +12,8 @@ const akkurat = localFont({
 
 export const metadata: Metadata = {
   title: "Chemistry Elephant",
-  description: "Learn chemistry",
+  description: "Help with learning A-level chemistry",
+  keywords: ['chemistry', 'A-level', 'flashcards'],
 };
 
 export default function RootLayout({

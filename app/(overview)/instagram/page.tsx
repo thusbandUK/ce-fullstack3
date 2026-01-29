@@ -1,5 +1,10 @@
 import MenuItem from "@/app/ui/dashboard/menuItem";
 import IndividualCardCodeForm from "@/app/ui/individualCardCodeForm";
+import type { Metadata } from 'next'
+ 
+export const metadata: Metadata = {
+  title: 'Instagram',
+}
 
 /*
 This renders a page intended for users who land from clicking the link that will be provided in the 
