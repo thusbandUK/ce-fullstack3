@@ -43,6 +43,7 @@ export const Section: React.FC<SectionProps> = (
 const elephantLeft = keyNumber % 2 === 0;
 //const keyBoolean = true;
     return (
+      <section>
         <div 
           key={keyNumber}
           className={clsx("md:grid md:grid-cols-6 gap-0 w-full items-center justify-center rounded-lg",
@@ -94,6 +95,7 @@ const elephantLeft = keyNumber % 2 === 0;
             }
           </div>
         </div>
+        </section>
     )
 }
 
