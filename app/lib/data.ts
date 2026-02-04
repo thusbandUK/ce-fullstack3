@@ -6,11 +6,13 @@ import { FlashcardData, ExamboardData, TopicData, QuestionsData, UserData } from
 import { UserEmailSchema } from './schema';
 import { redirect } from 'next/navigation';
 import { pool } from './poolInstantiation';
+import { verifySolution } from 'altcha-lib';
 
 const illegal = {message: "illegal characters"}
 
 const IndividualCardSchema = z.object({
   flashcard_code: z.string({invalid_type_error: "Code must be three letters",}).regex(/^[A-Za-z]+$/, illegal).max(3).min(3).toUpperCase(),
+  hmac: z.coerce.string(),
 })
 
 const ExamboardSchema = z.object({
@@ -36,6 +38,7 @@ export type CodeState = {
   message?: string | null;
   errors?: {
     code?: string[];
+    altcha?: string[];
   };
 };
 
@@ -196,15 +199,34 @@ It will also return an error if the three-letter code is not recognised.
 If the code is recognised, it is spliced into the url to which the function redirects, so that they go
 to the flashcard
 it uses IndividualCardSchema and CodeState (both defined at top of this module)
+It now also has the altcha connected
 */
 
 export async function fetchIndividualFlashcardByCodeInternal(prevState: CodeState, formData: FormData) {
+
+  const hmacKey = process.env.ALTCHA_HMAC_SECRET;
+
+  // Get the 'altcha' field containing the verification payload from the form data
+  const altcha = formData.get('altcha')
+
+  // If the 'altcha' field is missing, return an error
+  
+  if (!altcha) {
+    return {
+      ...prevState,
+      message: "Oh dear, there is a problem!",
+      errors: {
+        altcha: ["Did you tick the Captcha box?"]
+      }
+    }
+  }
 
   //extracts formData
   const flashcardCode = formData.get("flashcard-code")
   //sanitises the arguments passed
   const validatedData = IndividualCardSchema.safeParse({
     flashcard_code: flashcardCode,
+    hmac: hmacKey,
   })
 
   //returns error if entered code is anything other than three letters
@@ -215,11 +237,30 @@ export async function fetchIndividualFlashcardByCodeInternal(prevState: CodeStat
         await logSuspiciousActivity(stringToPass, "fetchIndividualFlashcardByCodeInternal")
       }
     return {
-      message: 'Code rejected. It must be three letters. Please try again.',
+      message: 'Code rejected.',
       errors: {
-        code: validatedData.error.flatten().fieldErrors.flashcard_code,
+        code: ['It must be three letters. Please try again.']
+        //validatedData.error.flatten().fieldErrors.flashcard_code,
       },
     };
+  }
+
+  //extracts string coerced hmacKey and validated email
+  const {hmac: validatedHmacKey} = validatedData.data;
+
+  //Verify the solution using the secret HMAC key
+  const verified = await verifySolution(String(altcha), validatedHmacKey)
+
+  //if the captcha doesn't verify, this returns an error message saying so
+  
+  if (!verified){
+    return {
+      message: 'Oh dear, there is a problem.',
+        errors: {
+          code: [],
+          altcha: ['Unfortunately your captcha attempt failed. Are you a robot?']
+      },
+    }
   }
 
   //database query for three letter code
@@ -238,6 +279,10 @@ export async function fetchIndividualFlashcardByCodeInternal(prevState: CodeStat
     if (data.rows.length === 0){
       return {
         message: 'No data for that code. Double check the code and try again.',
+        errors: {
+          code: [],
+          altcha: []
+        }
       }
     }
 

@@ -1,10 +1,10 @@
 'use client';
 
-import { useFormState } from 'react-dom';
 import { useActionState } from 'react';
 import { fetchIndividualFlashcardByCodeInternal } from '../lib/data';
 import { CodeState } from '../lib/data';
 import ArrowCommand from './dashboard/arrowCommand';
+import Altcha from './altcha';
 
 /*
 This renders a form which harvests a three letter code, which is server-side validated to ensure 
@@ -14,11 +14,16 @@ This renders a form which harvests a three letter code, which is server-side val
 It shows error messages if validation fails, only redirecting the user to the individual flashcard
 page if the code is valid
 
-*/
+NOTE: form renders altcha tick box to prevent form submission by bots, logic is explained in related
+  functions and components. It submits data along with email in formData, which then requires processing
+  in executeSignInFunction, which returns error if captcha fails
+
+  */
+
 
 export default function IndividualCardCodeForm() {
 
-  const initialState: CodeState = { message: null, errors: {code: []}};
+  const initialState: CodeState = { message: null, errors: {code: [], altcha: []}};
   const bindCodeFetchIndividualFlashcardByCode = fetchIndividualFlashcardByCodeInternal.bind(null);
   const [state, formAction] = useActionState(bindCodeFetchIndividualFlashcardByCode, initialState);
 
@@ -34,18 +39,37 @@ export default function IndividualCardCodeForm() {
           </label>
           <div className="relative">
             <input
-              className="border-black border rounded-[0.8rem] p-1"
+              className="border-black border rounded-[0.8rem] p-1 w-full md:w-1/2"
               id="flashcard-code"
               name="flashcard-code"
             >              
-            </input>            
-          </div>          
+            </input>
+          </div>
+          <Altcha></Altcha>
           <div id="error-message" aria-live="polite" aria-atomic="true">
             {state.message &&
               <p className="mt-2 text-sm text-red-500">
                 {state.message}
               </p>
             }
+            {state.errors &&
+              state.errors.altcha?.map((x) => (
+                <p
+                  key={x} 
+                  className="mt-2 text-sm text-red-500"
+                >
+                  {x}
+                </p>
+              ))
+            }
+            {state.errors &&
+              state.errors.code?.map((x) => (
+                <p className="mt-2 text-sm text-red-500">
+                  {x}
+                </p>
+              ))
+            }
+            
           </div>
         </div>
       </div>

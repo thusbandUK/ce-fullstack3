@@ -1,5 +1,8 @@
+"use client"
+
 import { useEffect, useRef, useState, forwardRef, useImperativeHandle } from 'react'
-import 'altcha'
+//import 'altcha'
+import('altcha')
 
 /*
 Very little changed here from exemplar here:
@@ -61,7 +64,7 @@ const Altcha = forwardRef<{ value: string | null }, AltchaProps>(({ onStateChang
         '--altcha-max-width': '100%',
       }}
       debug
-      challengeurl={'/account/login/altcha'}
+      challengeurl={'/instagram/altcha'}
     ></altcha-widget>
   )
 })
