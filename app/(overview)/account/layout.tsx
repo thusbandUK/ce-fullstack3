@@ -1,12 +1,12 @@
 import Footer from "@/app/ui/dashboard/footer";
-import type { Metadata } from 'next'
+/*import type { Metadata } from 'next'
  
 export const metadata: Metadata = {
   title: {
     template: '%s | Chemistry Elephant',
     default: 'Account'
   }
-}
+}*/
 
 export default function Layout({
   children,
