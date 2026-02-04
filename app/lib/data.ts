@@ -6,7 +6,7 @@ import { FlashcardData, ExamboardData, TopicData, QuestionsData, UserData } from
 import { UserEmailSchema } from './schema';
 import { redirect } from 'next/navigation';
 import { pool } from './poolInstantiation';
-import { verifySolution } from 'altcha-lib';
+//import { verifySolution } from 'altcha-lib';
 
 const illegal = {message: "illegal characters"}
 
@@ -205,7 +205,7 @@ It now also has the altcha connected
 export async function fetchIndividualFlashcardByCodeInternal(prevState: CodeState, formData: FormData) {
 
   const hmacKey = process.env.ALTCHA_HMAC_SECRET;
-
+/*
   // Get the 'altcha' field containing the verification payload from the form data
   const altcha = formData.get('altcha')
 
@@ -220,7 +220,7 @@ export async function fetchIndividualFlashcardByCodeInternal(prevState: CodeStat
       }
     }
   }
-
+*/
   //extracts formData
   const flashcardCode = formData.get("flashcard-code")
   //sanitises the arguments passed
@@ -249,8 +249,8 @@ export async function fetchIndividualFlashcardByCodeInternal(prevState: CodeStat
   const {hmac: validatedHmacKey} = validatedData.data;
 
   //Verify the solution using the secret HMAC key
-  const verified = await verifySolution(String(altcha), validatedHmacKey)
-
+  //const verified = await verifySolution(String(altcha), validatedHmacKey)
+  const verified = true;
   //if the captcha doesn't verify, this returns an error message saying so
   
   if (!verified){

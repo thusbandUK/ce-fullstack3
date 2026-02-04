@@ -45,7 +45,8 @@ export default function IndividualCardCodeForm() {
             >              
             </input>
           </div>
-          <Altcha></Altcha>
+          {/**
+          <Altcha></Altcha> */}
           <div id="error-message" aria-live="polite" aria-atomic="true">
             {state.message &&
               <p className="mt-2 text-sm text-red-500">
