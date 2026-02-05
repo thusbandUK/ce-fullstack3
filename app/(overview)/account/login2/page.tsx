@@ -1,4 +1,4 @@
-//import { InitiateSignIn } from '../../../ui/initiateSignIn';
+import { InitiateSignIn } from '../../../ui/initiateSignIn';
 import HeaderDivs from '../../../ui/dashboard/header';
 
 //export default async function LoginPage({ searchParams }: { searchParams: Promise<{ location: string }> }) {
@@ -11,12 +11,12 @@ export default async function LoginPage() {
     <>
     <p>Hello!</p>
     {/**
-      <HeaderDivs h1Content='Sign in or sign up' />
+      <HeaderDivs h1Content='Sign in or sign up' />*/}
       <InitiateSignIn
         location={location ? location : ''}
         error={false}
       />
-       */}
+       
     </>
   );
 }
