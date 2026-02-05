@@ -6,6 +6,7 @@ export default async function LoginPage() {
 
   console.log('account login page 1')
   //const { location } = await searchParams;
+  const location = ""
   console.log('account login page 2')
   return (
     <>
