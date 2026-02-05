@@ -7,18 +7,22 @@ import { headers } from "next/headers";
 import { getDecryptedUsername } from "../../lib/actions";
 
 export default async function Account({ searchParams }: { searchParams: Promise<{ location: string }> }){
-  
+  console.log('account base page 1')
   const session = await auth.api.getSession({
     headers: await headers() // you need to pass the headers object.
   })
 
+  console.log('account base page 2')
   const { location } = await searchParams;  
   
+  console.log('account base page 3')
   if (!session){
      redirect(`/account/login?location=/account`);
    }
 
+   console.log('account base page 4')
   const decryptedUsername = await getDecryptedUsername()
+  console.log('account base page 5')
   
     type MenuContentTypeType = {
       heading: string;

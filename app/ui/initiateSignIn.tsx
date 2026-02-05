@@ -53,10 +53,11 @@ export function InitiateSignIn({
 
   */  
 
+  console.log('initiate signIn 1')
   const parsedLocation = locationParser(location);
   const whereToRedirect = parsedLocation.length === 0 ? '/account' : '/account?location=' + parsedLocation;
 
-  
+  console.log('initiate signIn 2')
   return (
     
       <BottomRow>

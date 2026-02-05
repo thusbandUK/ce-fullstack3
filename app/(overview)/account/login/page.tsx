@@ -22,7 +22,9 @@ export default async function Page({ params }: { params: Promise<{ examboard_id:
 
 export default async function LoginPage({ searchParams }: { searchParams: Promise<{ location: string }> }) {
 
+  console.log('account login page 1')
   const { location } = await searchParams;
+  console.log('account login page 2')
   return (
     <>
       <HeaderDivs h1Content='Sign in or sign up' />
