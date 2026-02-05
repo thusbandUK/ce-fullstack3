@@ -18,7 +18,8 @@ import { sql } from '@vercel/postgres';
 import { pool } from './poolInstantiation';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
-const crypto = require('crypto');
+//const crypto = require('crypto');
+const { subtle } = globalThis.crypto;
 import { sendMail } from './send-mail';
 import { dateCompare } from './dateCompare';
 const SITE_URL = process.env.SITE_URL;
@@ -299,8 +300,13 @@ export async function initiateDelete(email: string, prevState: State2){
   const {email: encryptedEmail, id} = session.user;
 
     //collectively, the two terms below generate a random 64-character alphanumerical string
-    const token = crypto.randomBytes(32);
-    const stringToken = token.toString('hex');    
+    const {
+      randomBytes,
+    } = await import('node:crypto');
+    
+    const buf = randomBytes(32);
+    //const token = crypto.randomBytes(32);
+    const stringToken = buf.toString('hex');
         
     const timestamp = new Date()
         
@@ -386,9 +392,15 @@ export async function renewDelete(email: string, prevState: State2){
 
   //extracts validated email
   const validatedEmail = validatedFields.data?.email;
-
-  const token = crypto.randomBytes(32);
-  const stringToken = token.toString('hex');    
+  const {
+    randomBytes,
+  } = await import('node:crypto');
+  
+  const buf = randomBytes(32);
+  //const token = crypto.randomBytes(32);
+  const stringToken = buf.toString('hex');
+  //const token = crypto.randomBytes(32);
+  //const stringToken = token.toString('hex');    
       
   const timestamp = new Date()
   
