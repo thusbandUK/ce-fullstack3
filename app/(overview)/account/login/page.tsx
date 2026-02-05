@@ -1,6 +1,10 @@
+console.log('account login page 0.1')
 import React from 'react';
+console.log('account login page 0.2')
 import { InitiateSignIn } from '../../../ui/initiateSignIn';
+console.log('account login page 0.3')
 import HeaderDivs from '../../../ui/dashboard/header';
+console.log('account login page 0.4')
 /*import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
@@ -19,7 +23,7 @@ export default async function Page({ params }: { params: Promise<{ examboard_id:
     
     const {examboard_id} = await params;
 */
-
+console.log('account login page 0.6')
 export default async function LoginPage({ searchParams }: { searchParams: Promise<{ location: string }> }) {
 
   console.log('account login page 1')
