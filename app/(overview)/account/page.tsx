@@ -20,7 +20,7 @@ export default async function Account({ searchParams }: { searchParams: Promise<
   console.log('account base page 3')
   if (!session){
      //redirect(`/account/login?location=/account`);
-     redirect(`/account/login2`);
+     redirect(`/account/login2?location=/account`);
    }
 
    console.log('account base page 4')

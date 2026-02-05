@@ -10,9 +10,9 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
   console.log('account login page 2')
   return (
     <>
-    <p>Hello!</p>
-    {/**
-      <HeaderDivs h1Content='Sign in or sign up' />*/}
+     {/**<p>Hello!</p>*/}
+   
+      <HeaderDivs h1Content='Sign in or sign up' />
       <InitiateSignIn
         location={location ? location : ''}
         error={false}
