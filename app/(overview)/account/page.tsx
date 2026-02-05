@@ -1,5 +1,7 @@
+console.log('account base page 0.1')
 import SignOut from "@/app/ui/dashboard/signOut";
 //import { InitiateSignIn } from "@/app/ui/initiateSignIn";
+console.log('account base page 0.2')
 import { redirect } from 'next/navigation';
 import MenuItem from '../../ui/dashboard/menuItem';
 import { auth } from "../../../auth"; // path to your Better Auth server instance
@@ -17,8 +19,7 @@ export default async function Account({ searchParams }: { searchParams: Promise<
   
   console.log('account base page 3')
   if (!session){
-     //redirect(`/account/login?location=/account`);
-     redirect(`/login?location=/account`);
+     redirect(`/account/login?location=/account`);
    }
 
    console.log('account base page 4')
