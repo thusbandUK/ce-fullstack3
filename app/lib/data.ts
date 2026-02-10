@@ -1,6 +1,6 @@
 "use server"
 
-import { sql } from '@vercel/postgres';
+//import { sql } from '@vercel/postgres';
 import { z } from 'zod';
 import { FlashcardData, ExamboardData, TopicData, QuestionsData, UserData } from './definitions';
 import { UserEmailSchema } from './schema';
@@ -75,11 +75,20 @@ export async function fetchUser(email: string | undefined | null) {
 }
 
 export async function fetchFlashcards() {
+
+  const query = `SELECT * FROM flashcards`;
+
   try {    
 
-    const data = await sql<FlashcardData>`SELECT * FROM flashcards`;
+    const client = await pool.connect()
 
-    console.log('Flashcards data fetch completed.');
+    //const data = await sql<FlashcardData>`SELECT * FROM flashcards`;
+    //await client.query<UserDetails>(query, argumentData);
+    const data = await client.query<FlashcardData>(query);
+
+    client.release()
+
+    //console.log('Flashcards data fetch completed.');
 
     return data.rows;
   } catch (error) {

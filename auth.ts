@@ -5,7 +5,7 @@ at current commit, also see _auth and __auth (latter = current working one, form
 
 import { betterAuth } from "better-auth";
 //import { Pool } from "@neondatabase/serverless";
-import { Pool } from 'pg'
+//import { Pool } from 'pg'
 import { pool } from "./app/lib/poolInstantiation";
 import { nextCookies } from "better-auth/next-js";
 import { APIError } from "better-auth/api";

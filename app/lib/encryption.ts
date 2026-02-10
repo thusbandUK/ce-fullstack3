@@ -1,5 +1,5 @@
 const { subtle } = globalThis.crypto;
-import { sql } from '@vercel/postgres';
+//import { sql } from '@vercel/postgres';
 import { pool } from './poolInstantiation';
 
 /* Generates an AES key for symmetric encryption
