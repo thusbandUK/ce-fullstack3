@@ -1,7 +1,4 @@
-console.log('account base page 0.1')
 import SignOut from "@/app/ui/dashboard/signOut";
-//import { InitiateSignIn } from "@/app/ui/initiateSignIn";
-console.log('account base page 0.2')
 import { redirect } from 'next/navigation';
 import MenuItem from '../../ui/dashboard/menuItem';
 import { auth } from "../../../auth"; // path to your Better Auth server instance
@@ -9,24 +6,18 @@ import { headers } from "next/headers";
 import { getDecryptedUsername } from "../../lib/actions";
 
 export default async function Account({ searchParams }: { searchParams: Promise<{ location: string }> }){
-  console.log('account base page 1')
+  
   const session = await auth.api.getSession({
     headers: await headers() // you need to pass the headers object.
   })
 
-  console.log('account base page 2')
   const { location } = await searchParams;  
-  
-  console.log('account base page 3')
+    
   if (!session){
-     //redirect(`/account/login?location=/account`);
-     //redirect(`/account/login2?location=/account`);
-     redirect(`/account/login2`);
+     redirect(`/account/login?location=/account`);
    }
 
-   console.log('account base page 4')
   const decryptedUsername = await getDecryptedUsername()
-  console.log('account base page 5')
   
     type MenuContentTypeType = {
       heading: string;

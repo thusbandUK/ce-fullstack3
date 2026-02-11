@@ -50,8 +50,7 @@ export function InitiateSignIn({
 
   */  
   
-  //const parsedLocation = locationParser(location);
-  const parsedLocation = "flashcards"
+  const parsedLocation = locationParser(location);
 
   return (
     
@@ -72,8 +71,7 @@ export function InitiateSignIn({
             }
             <div className="spacer"></div>
             <div className="flex justify-center">
-              {/**<GoogleButton />*/}
-              <button type="submit">Click here</button>
+              <GoogleButton />
             </div>
           </form>
         </LeftHandColumn>
