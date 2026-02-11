@@ -50,7 +50,8 @@ export function InitiateSignIn({
 
   */  
   
-  const parsedLocation = locationParser(location);
+  //const parsedLocation = locationParser(location);
+  const parsedLocation = ""
 
   return (
     
