@@ -71,7 +71,8 @@ export function InitiateSignIn({
             }
             <div className="spacer"></div>
             <div className="flex justify-center">
-              <GoogleButton />
+              {/**<GoogleButton />*/}
+              <button type="submit">Click here</button>
             </div>
           </form>
         </LeftHandColumn>
