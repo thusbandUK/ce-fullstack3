@@ -51,7 +51,7 @@ export function InitiateSignIn({
   */  
   
   //const parsedLocation = locationParser(location);
-  const parsedLocation = ""
+  const parsedLocation = "flashcards"
 
   return (
     
