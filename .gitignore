@@ -44,6 +44,7 @@ __tests__/ManualAndLinks.txt
 /coverage
 /__tests__/ManualAndLinks.txt
 /__tests__
+/__tests__/
 
 # next.js
 /.next/
