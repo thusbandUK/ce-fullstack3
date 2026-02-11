@@ -4,12 +4,9 @@ import HeaderDivs from '../../ui/dashboard/header';
 export default async function Page({ searchParams }: { searchParams: Promise<{ location: string }> }) {
 
     const { location } = await searchParams;
-
-    console.log(location)
-    
+       
     return (
         <div>
-            <p>Hello</p>
             <HeaderDivs h1Content='Sign in or sign up' />
             <InitiateSignIn
               location={location ? location : ''}

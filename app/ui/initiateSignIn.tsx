@@ -1,10 +1,5 @@
-//import { signIn } from "@/auth";
-//import { authClient } from '../../auth-client';
 import { betterAuthSignIn } from '../lib/actions';
-//import { auth } from '../../auth';
-
 import { locationParser } from '../lib/functions';
-//import ArrowCommand from './dashboard/arrowCommand';
 import BottomRow from './dashboard/bottomRow';
 import LeftHandColumn from './dashboard/leftHandColumn';
 import RightHandColumn from './dashboard/rightHandColumn';
@@ -13,11 +8,9 @@ import IndividualElephantContainer from '../animation/individualElephantContaine
 
 export function InitiateSignIn({
   location,
-  //provider,
   error
-}: { 
+}: {
   location: string | null,
-  //provider?: string,
   error: boolean 
 }) {
   
@@ -56,23 +49,17 @@ export function InitiateSignIn({
   callbackUrl params in the next function (signin page)
 
   */  
-
-  console.log('initiate signIn 1')
+  
   const parsedLocation = locationParser(location);
-  //const whereToRedirect = parsedLocation.length === 0 ? '/account' : '/account?location=' + parsedLocation;
 
-  console.log('initiate signIn 2')
   return (
     
       <BottomRow>
         <LeftHandColumn>
           <div className="spacer"></div>
           <form
-            action={async () => {
-              
+            action={async () => {              
             "use server"
-            console.log('parsedLocation')
-              console.log(parsedLocation)
             await betterAuthSignIn(parsedLocation)        
             }}
           >
@@ -90,18 +77,9 @@ export function InitiateSignIn({
         </LeftHandColumn>
         <RightHandColumn>
           <div className="m-5">
-            {/*
-            <button type="submit">
-              <ArrowCommand
-                command="SIGN IN"
-                borderGray={false}
-                disabled={false}
-              />
-            </button>*/}
             <IndividualElephantContainer />
           </div>
         </RightHandColumn>
-      </BottomRow>
-    
+      </BottomRow>    
   )
 }
