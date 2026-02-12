@@ -396,6 +396,47 @@ export async function getDecryptedUsername(){
 
 }
 
+export async function getDecryptedImageLink(){
+
+  //retrieves session data for user
+  const session = await auth.api.getSession({
+    headers: await headers() // you need to pass the headers object.
+  })
+  
+  //redirects user to login if no session data
+  if (!session){    
+    return;
+  }
+  
+  //collects id for user table and corresponding row of encryptionData table
+  const { id } = session.user;
+
+  //const fetchUsernameQuery = 'SELECT username FROM "user" WHERE id = $1';
+  //const fetchUsernameArgument = [id]
+
+  const client = await pool.connect()
+  /*
+  const fetchedData = await client.query(fetchUsernameQuery, fetchUsernameArgument)
+  
+  const {username} = fetchedData.rows[0]
+
+  if (!username){
+    return
+  }
+
+  const decryptedUsername = await decryptUserData(username, id);*/
+
+  if (!session.user.image){
+    return
+  }
+  const decryptedImageLink = await decryptUserData(session.user.image, id)
+
+  client.release()
+
+  return decryptedImageLink;
+
+}
+
 /*
 This toggles receive_email true or false in the user table
 */
