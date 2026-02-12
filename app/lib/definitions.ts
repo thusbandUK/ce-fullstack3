@@ -47,6 +47,11 @@ export type customMouseEventHandler<T extends React.MouseEventHandler> = Event &
   currentTarget: T;
 }
 
+export type DecryptedValues = {
+  username: string;
+  imageLink: string;
+}
+
 export type ExamboardData = {
   id: number;
   examboard: string;

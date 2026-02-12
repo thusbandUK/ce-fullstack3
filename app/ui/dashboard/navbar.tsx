@@ -2,11 +2,31 @@ import NavLinks from "./nav-links";
 import { auth } from '../../../auth'
 import ChemistryElephantLogo from "./chemistryElephantLogo";
 import TextEnlargeContainer from "./textEnlargeContainer";
-import { fakeSession } from "../../upgradeFiles/miscObjectsAndFunctions";
+import { headers } from "next/headers";
+import { getDecryptedUsername, getDecryptedImageLink } from "@/app/lib/actions";
+import { DecryptedValues } from "@/app/lib/definitions";
 
 export default async function Navbar(){
-    //const session: any = await auth();
-    const session = fakeSession;
+
+    const session = await auth.api.getSession({
+      headers: await headers() // you need to pass the headers object.
+    })
+
+    const decryptedValues: DecryptedValues = {
+      username: "",
+      imageLink: ""
+    }
+
+    if (session) {
+      if (session.user.username){
+        const decryptedUsername = await getDecryptedUsername() ?? "";
+        decryptedValues.username = decryptedUsername;
+      }
+      if (session.user.image){
+        const decryptedImageLink = await getDecryptedImageLink() ?? "";
+        decryptedValues.imageLink = decryptedImageLink;
+      }
+    }
 
 
     return(  
@@ -18,7 +38,6 @@ export default async function Navbar(){
             ></ChemistryElephantLogo>
             <TextEnlargeContainer />
           </div>
-          {/*<div id="enlarge-text-anchor" className="anchor relative"></div>*/}
           <div className="collapse duration-500 justify-end mobile-nav">
             <input type="checkbox" id="menu-checkbox" aria-labelledby="menu-button"/>
             
@@ -45,6 +64,7 @@ export default async function Navbar(){
               <ul id="menu-links-container" className="menu menu-vertical lg:menu-horizontal rounded-box pe-0">
                 <NavLinks 
                   session={session}
+                  decryptedValues={decryptedValues}
                 />
               </ul>
             </div>
@@ -53,9 +73,9 @@ export default async function Navbar(){
           <div className="flex navbar-links-container my-auto desktop-nav">
             <NavLinks 
               session={session}
+              decryptedValues={decryptedValues}
             />
           </div>
-          
         </div>
     )
 }

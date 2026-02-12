@@ -1,9 +1,12 @@
 'use client';
 
 import Link from 'next/link';
+import AccountIcon from './accountIcon';
+import { DecryptedValues } from '@/app/lib/definitions';
 
 // Map of links to display in the side navigation.
 // Depending on the size of the application, this would be stored in a database.
+
 const links = [
   { name: 'Home', href: '/' },
   {
@@ -13,29 +16,11 @@ const links = [
   { name: 'About', href: '/about' },
 ];
 
-export default function NavLinks({session}: {session: any}) {
+export default function NavLinks({session, decryptedValues}: {session: any, decryptedValues: DecryptedValues}) {
 
   const handleToggleMenu = () => {
     const menuCheckbox = document.getElementById('menu-checkbox') as HTMLInputElement;      
     return menuCheckbox.checked = !menuCheckbox.checked;
-  }
-
-  /*
-  The below extracts the first letter / number / symbol either from the username (if there is one) 
-  or the user email address. The else term shouldn't really be necessary but it just avoids any 
-  crashing in the event that some how a user is logged in but there are no session details
-  */
-  
-  let firstInitial = "";
-
-  if (session){
-    if (session.user){
-      let identifier = "";
-        identifier = session.user.name ? session.user.name : session.user.email;
-        firstInitial = identifier.slice(0, 1).toUpperCase();
-    }
-  } else {
-    firstInitial = "N";
   }
   
   return (
@@ -61,8 +46,18 @@ export default function NavLinks({session}: {session: any}) {
         onClick={handleToggleMenu}
       >
         <div className="account-icon flex justify-center">
-            
-           {session ? 
+          <AccountIcon 
+            session={session}
+            decryptedValues={decryptedValues}
+          />
+        </div>
+      </Link>       
+    </>
+  );
+}
+
+/*
+{session ? 
            
            <p className="navlink-account-button">{firstInitial}</p>
           
@@ -71,9 +66,4 @@ export default function NavLinks({session}: {session: any}) {
             <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
           </svg>     
         }
-
-        </div>
-      </Link>       
-    </>
-  );
-}
+*/
