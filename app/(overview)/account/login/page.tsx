@@ -1,12 +1,11 @@
 import { InitiateSignIn } from '../../../ui/initiateSignIn';
 import HeaderDivs from '../../../ui/dashboard/header';
-
-/*import type { Metadata } from 'next'
+import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
   title: 'Login',
 }
- */
+
 /*
 This is the login page, it's probably not really necessary as (implicitly) clicking any signin
 button could direct straight to the page where user inputs email. Consider removing.
@@ -16,7 +15,7 @@ button could direct straight to the page where user inputs email. Consider remov
 export default async function LoginPage({ searchParams }: { searchParams: Promise<{ location: string }> }) {
 
   const { location } = await searchParams;
-  
+
   return (
     <>
       <HeaderDivs h1Content='Sign in or sign up' />
@@ -26,20 +25,4 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
       />
     </>
   );
-}  
-
-/*
-
-    <main className="flex items-center justify-center md:h-screen">
-      <div className="relative mx-auto flex w-full max-w-[400px] flex-col space-y-2.5 p-4 md:-mt-32">
-        <div className="flex h-20 w-full items-end rounded-lg bg-blue-500 p-3 md:h-36">
-          <div className="w-32 text-white md:w-36">
-            <p>Chemistry Elephant</p>
-          </div>
-        </div>
-        <SignIn
-          location={searchParams.location ? searchParams.location : ''}
-        />
-      </div>
-    </main>
-*/
+}

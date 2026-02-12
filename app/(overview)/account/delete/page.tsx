@@ -50,5 +50,3 @@ export const metadata: Metadata = {
         </>
     )
 }
-
-//export default Delete;

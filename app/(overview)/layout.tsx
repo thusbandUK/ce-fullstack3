@@ -1,14 +1,13 @@
 import Navbar from "../ui/dashboard/navbar";
-//import type { Metadata } from 'next'
- /*
+import type { Metadata } from 'next'
+ 
 export const metadata: Metadata = {
   title: {
-    //absolute: 'About',
     template: '%s | Chemistry Elephant',
     default: 'Chemistry Elephant'
   },
 }
-*/
+
 function Layout({
   children,
 }: Readonly<{
