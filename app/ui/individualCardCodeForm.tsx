@@ -73,7 +73,7 @@ export default function IndividualCardCodeForm() {
           </div>
         </div>
       </div>
-      <div className="mt-6 flex justify-end gap-4">
+      <div className="mt-6 flex justify-start gap-4">
         <button type="submit">
           <ArrowCommand
             command="SUBMIT CODE"

@@ -1,5 +1,6 @@
 import MenuItem from "@/app/ui/dashboard/menuItem";
 import IndividualCardCodeForm from "@/app/ui/individualCardCodeForm";
+import HeaderDivs from "@/app/ui/dashboard/header";
 import type { Metadata } from 'next'
  
 export const metadata: Metadata = {
@@ -16,13 +17,17 @@ export default async function Page() {
 
 return (
     <div className="w-full md:w-4/5 mx-auto">
-      <h1>Welcome!</h1>
+      <HeaderDivs
+        h1Content="Welcome!"
+      ></HeaderDivs>
+      <div className="border border-black rounded-lg p-5">
       <p>
         Looks like you have arrived here from Instagram. You can use the links below either 
         to find out the answer to a question from one of our posts or just check out the site.
       </p>
-      <div className="grid md:grid-cols-2 gap-0 mt-10">
-        <div key={1} className="border-2 border-black rounded-lg p-5">
+      </div>
+      <div className="grid md:grid-cols-2 gap-0">
+        <div key={1} className="border order-2 md:order-1 border-black rounded-lg p-5">
           <MenuItem
             heading={'Check out the site'}
             content={'Click select to check out the home page or use the navbar to explore.'}
@@ -34,7 +39,7 @@ return (
           >
           </MenuItem>
         </div>
-        <div key={2} className="border-2 border-black rounded-lg p-5">
+        <div key={2} className="border order-1 md:order-2 border-black rounded-lg p-5">
           <IndividualCardCodeForm></IndividualCardCodeForm>              
         </div>            
       </div>
