@@ -86,17 +86,21 @@ export default function FlashcardPresentation({allFlashcardsData, forceMCQ, logg
     //calls above function w incoming allFlashcardsData
     assignCompleteSet(allFlashcardsData);
 
-    //harvests assessment data for written responses
+    
+    /*harvests assessment data for written responses
+    see note in writtenFlashcard.tsx about the default values
+     */
     function harvestAssessmentData(){
-        //let questionNumbers = Object.keys(feedbackObject);
         let maximumMark = 0;
-        let correctAnswers = 0;
-        responseAssessment.forEach((a) => {
-            Object.keys(a.checkedPoints).forEach((b: string)=> {
+        let correctAnswers = 0;        
+        responseAssessment.forEach((a) => {          
+            Object.keys(a.checkedPoints).forEach((b: string)=> {              
+              if (a.checkedPoints[b as keyof assessedResponse["checkedPoints"]] !== null){
                 maximumMark ++;
                 if (a.checkedPoints[b as keyof assessedResponse["checkedPoints"]]){
                     correctAnswers ++;
                 }
+              }
             })
         })
         return {correctAnswers: correctAnswers, maximumMark: maximumMark};
@@ -154,8 +158,6 @@ export default function FlashcardPresentation({allFlashcardsData, forceMCQ, logg
 
   function askWrittenResponseQuestion(){
     //keep this for the time being, just to check that info is getting updated
-    console.log(responseAssessment);
-        
     const remainingWrittenQuestions: number[] = [];
 
     //filters the correctlyAnsweredQuestions state array and pushes any questions yet to be correctly answered to 
@@ -208,6 +210,18 @@ useEffect(() => {
 }, [forceMCQ])
 
 //this function initiates the written response format of question
+/*
+NOTE: see in above function harvestAssessmentData (line c.93) and also in writtenFlashcard function 
+checklist.forEach, line c. 64 
+the below creates the ResponseAssessment context and it defaults all values of checkedPoints to null.
+The reason for this is a) that in the database, there are null values b) that the maximum mark available
+should not count any such null entries
+the checklist.forEach term (line c. 64) then goes into individual ResponseContext entries and defaults 
+checkedResponse values to false for any checklist items that are not null
+Then, when the user clicks the checkbox, they change the false to true, the total number of marks
+available is the sum of all the true and false values but not the null values
+*/
+
 const handleWrittenClick = () => {
     setShowMenu(false);
     //function creates an array of objects in which assessment data will be stored, then passes it to state to 
@@ -223,10 +237,10 @@ const handleWrittenClick = () => {
             flashcardDataIndex: x,
             response: "",
             checkedPoints: {
-              W: false,
-              X: false,
-              Y: false,
-              Z: false
+              W: null,
+              X: null,
+              Y: null,
+              Z: null
             }
         })        
     })
@@ -265,7 +279,8 @@ const handleWrittenClick = () => {
   }
 
   /*
-    Answer question function
+    Answer question function - event handler for when a response is clicked when user is completing
+    multiple choice questions
     */
 
     const answerQuestion = (suggestedAnswer: string) => {
@@ -309,6 +324,11 @@ const handleWrittenClick = () => {
 const processResponse = () => {
     return setWrittenStage("feedback");
 }
+
+/*
+This submits the checklist but it seems only to advance the logic to the next question. It does
+not appear to include the processing logic of which things got ticked or not
+*/
 
 const handleSubmitChecklist = () => {
     //there is a feedback / response toggle that alternately shows either the flashcard or the assessment checklist, this
@@ -363,7 +383,11 @@ return (
   
     <div className="h-full">
       
-{/** className="w-full md:w-4/5 mx-auto mt-10 p-2" */}
+{/** className="w-full md:w-4/5 mx-auto mt-10 p-2" 
+ * 
+ * handleMaxWritingMark={(marksIncrement) => setMaxWritingMark(maxWritingMark + marksIncrement)}
+ * 
+*/}
             {
               showMenu ?
 

@@ -28,13 +28,15 @@ const WrittenFlashcard = (
     oneFlashcardData,
     submitResponse,
     writtenStage,
-    submitChecklist
+    submitChecklist,
+    //handleMaxWritingMark
   }:
   {
     oneFlashcardData: FlashcardData,
     submitResponse: React.MouseEventHandler<HTMLButtonElement>,
     writtenStage: string,
-    submitChecklist: React.MouseEventHandler<HTMLButtonElement>
+    submitChecklist: React.MouseEventHandler<HTMLButtonElement>,
+    //handleMaxWritingMark: (arg0: number) => void
   }
 ) => {
 
@@ -51,6 +53,24 @@ const WrittenFlashcard = (
       return x !== null;
     })
 
+    /*
+    So, just as the above function filters out null entries, the below accesses the responseAssessment
+    object and sets the checkedPoints value to false for any checkedPoints that do not have a null response
+
+    This logic links with the following functions in the parent component 
+
+    harvestAssessmentData (line c.93)[counts the maximum number of marks, counting only true or false values]
+    handleWrittenClick (line c.227)[initiates the responseAssessmentContext]
+    */
+   
+    checklist.forEach((x) => {
+      if (x !== null){
+        responseAssessment[index].checkedPoints[numericalIndexToLetter(checklist.indexOf(x)) as keyof assessedResponse["checkedPoints"]] = false;
+      }
+    })
+
+    //handleMaxWritingMark(noNullItemsChecklist.length)
+    
     //harvests answer written into the form field and dispatches it to ResponseAssessmentContext
     const handleResponseChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
       return responseAssessment[index].response = event.target.value;

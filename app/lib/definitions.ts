@@ -19,10 +19,10 @@ export type assessedResponse = {
   flashcardDataIndex: number;  
   response: string;
   checkedPoints: {
-    W: boolean;
-    X: boolean;
-    Y: boolean;
-    Z: boolean;
+    W: boolean | null;
+    X: boolean | null;
+    Y: boolean | null;
+    Z: boolean | null;
   }
 }
 
