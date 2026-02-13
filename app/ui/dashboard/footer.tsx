@@ -63,7 +63,7 @@ export default function Footer(){
             </div>
             </nav>
             <aside>
-              <p>Copyright © {new Date().getFullYear()} - All right reserved by Chemistry Elephant</p>
+              <p>Copyright © {new Date().getFullYear()} - All rights reserved by Chemistry Elephant</p>
             </aside>
           </footer>
         </div>
