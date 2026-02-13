@@ -28,7 +28,7 @@ export default function MenuItemRedirect(
     }
 
     return (
-      <div className='border-2 border-black rounded-lg p-5'>
+      <div className='border-2 h-full border-black rounded-lg p-5'>
         <div className={clsx("flex h-full flex-col justify-between",
           {
             'text-black': modalContent === null,
