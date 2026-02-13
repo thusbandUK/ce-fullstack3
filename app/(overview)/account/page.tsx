@@ -4,6 +4,7 @@ import MenuItem from '../../ui/dashboard/menuItem';
 import { auth } from "../../../auth"; // path to your Better Auth server instance
 import { headers } from "next/headers";
 import { getDecryptedUsername } from "../../lib/actions";
+import HeaderDivs from "@/app/ui/dashboard/header";
 
 export default async function Account({ searchParams }: { searchParams: Promise<{ location: string }> }){
   
@@ -47,12 +48,14 @@ export default async function Account({ searchParams }: { searchParams: Promise<
         link: "/account/receive-email"
       }
     }
+
     return (
         <div>
           <div className="w-100 mx-auto mt-5">
-            <div className="rounded-lg flex" style={{border: 'black solid 1px'}}>
-              <h1 className="m-auto md:ml-10 p-5">{ session ? `Welcome, ${decryptedUsername}!` : 'Welcome!'}</h1>
-            </div>          
+            <HeaderDivs
+              h1Content={ session ? `Welcome, ${decryptedUsername}!` : 'Welcome!' }
+            >
+            </HeaderDivs>                     
             <div  className="md:grid md:grid-cols-2 gap-0 w-full items-center justify-center rounded-lg" >
               <div className="border border-black rounded-lg p-5 h-full">
                 <SignOut />                  
