@@ -1,7 +1,7 @@
 import HeaderDivs from "@/app/ui/dashboard/header"
 import Section from "@/app/ui/dashboard/section"
 import SectionBorderless from "@/app/ui/dashboard/sectionBorderless";
-import DOMPurify from "isomorphic-dompurify";
+import ClientDivPurify from "@/app/ui/dashboard/clientDivPurify";
 
 const privacyContent = {
   pageTitle: `Chemistry Elephant – Privacy Notice`,
@@ -202,18 +202,17 @@ export default function Privacy(){
             keyNumber={1}
             topMargin={false}
           >
-            <div 
-              dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(privacyContent.intro)}}
-            ></div>          
+            <ClientDivPurify
+              content={privacyContent.intro}
+            ></ClientDivPurify>
           </Section>
           {
             privacyContent.sections.map((x) => (
               <div key={privacyContent.sections.indexOf(x)}>
                 <SectionBorderless>
-                  <div 
-                    dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(x)}}
-                  >
-                  </div>
+                  <ClientDivPurify
+                    content={x}
+                  ></ClientDivPurify>
                 </SectionBorderless>
               </div>
             ))
@@ -221,3 +220,13 @@ export default function Privacy(){
         </div>
     )
 }
+
+/*
+<div 
+              dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(privacyContent.intro)}}
+            ></div> 
+            <div 
+                    dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(x)}}
+                  >
+                  </div>
+*/
