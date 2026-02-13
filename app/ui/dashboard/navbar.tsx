@@ -18,14 +18,16 @@ export default async function Navbar(){
     }
 
     if (session) {
-      if (session.user.username){
-        const decryptedUsername = await getDecryptedUsername() ?? "";
-        decryptedValues.username = decryptedUsername;
-      }
       if (session.user.image){
         const decryptedImageLink = await getDecryptedImageLink() ?? "";
-        decryptedValues.imageLink = decryptedImageLink;
+        decryptedValues.imageLink = decryptedImageLink;        
       }
+      if (!session.user.image){
+        if (session.user.username){
+          const decryptedUsername = await getDecryptedUsername() ?? "";
+          decryptedValues.username = decryptedUsername;
+        }
+      }      
     }
 
 
