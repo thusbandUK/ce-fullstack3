@@ -22,9 +22,9 @@ export default async function Page({ params }: { params: Promise<{ topic_id: str
     if (!allFlashcardsData){
       redirect(`/flashcards/${examboard_id}/topic`);
     }
-//w-11/12 md:w-4/5 mx-auto mt-10
+
 return (
-    <div className="h-82-vh">
+    <div>
         {allFlashcardsData.length === 0 ?
         null:
         <FlashcardPresentation
@@ -35,5 +35,4 @@ return (
         }       
     </div>
 )
-
 }

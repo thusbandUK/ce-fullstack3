@@ -16,7 +16,7 @@ export default async function Page({ params }: { params: Promise<{ examboard_id:
     const session = await auth.api.getSession({
         headers: await headers() // you need to pass the headers object.
       })   
-//w-11/12 md:w-4/5 mx-auto mt-10
+
 return (
     <div className="">
         {allFlashcardsData.length === 0 ?

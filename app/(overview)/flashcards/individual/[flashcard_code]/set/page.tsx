@@ -32,9 +32,9 @@ export default async function Page({ params }: { params: Promise<{ flashcard_cod
     if (!allFlashcardsData){
       redirect('/flashcards')
     }
-  
+
 return (    
-    <div className="h-82-vh">
+    <div>
         {allFlashcardsData.length === 0 ?
         <p>Sorry, looks like there is no flashcard with that code.</p>
         
@@ -47,5 +47,4 @@ return (
         }       
     </div> 
 )
-
 }

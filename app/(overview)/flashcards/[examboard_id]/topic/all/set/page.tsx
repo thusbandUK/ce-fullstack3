@@ -20,10 +20,9 @@ export default async function Page({ params }: { params: Promise<{ examboard_id:
     if (!allFlashcardsData){
       redirect('/flashcards')
     }
-//
-//style={{height: '84vh'}}
+
 return (
-    <div className="h-82-vh">
+    <div>
         {allFlashcardsData.length === 0 ?
         null:
         <Suspense fallback={<CardSkeleton />}>
@@ -37,5 +36,3 @@ return (
     </div>
 )
 }
-
-// className="w-11/12 md:w-4/5 mx-auto mt-10"
